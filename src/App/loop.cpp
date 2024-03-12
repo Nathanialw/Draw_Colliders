@@ -13,7 +13,7 @@ namespace App {
   bool wait = false;
 
   bool Input (App &app) {
-    if (wait) {
+    if (app.moveImage || app.moveVertex) {
       while (SDL_PollEvent(&event)) {
         if (Keyboard::Event(event, app))
           return true;
@@ -43,7 +43,7 @@ namespace App {
     Render::Present(app);
     while (app.running) {
       Input(app);
-      ::Center::Center::Update_Image();
+      ::Center::Center::Update_Image(app);
       Mouse::Update_Cursor(app);
       Render::Present(app);
     }

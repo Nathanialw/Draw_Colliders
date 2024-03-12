@@ -39,12 +39,28 @@ namespace Graphics {
     std::array<SDL_FRect, 6> buttons;
   };
 
+  enum Shape {
+    AABB,
+    POLYGON,
+    CIRCLE,
+    LINE,
+    POINT,
+    SIZE,
+  };
+
+  struct Shapes {
+    SDL_FRect panel{};
+    std::array<std::vector<SDL_FRect>, Shape::SIZE> shapes;
+    ScrollBar scroll{};
+  };
+
   struct Center_Panel {
-    Button_Bar buttonBar;
-    SDL_FRect panel;
-    SDL_FRect image;
-    SDL_FRect expanderLeft;
-    SDL_FRect expanderRight;
+    Button_Bar buttonBar{};
+    SDL_FRect panel{};
+    SDL_FRect image{};
+    Shapes shapes{};
+    SDL_FRect expanderLeft{};
+    SDL_FRect expanderRight{};
   };
 
   struct Right_Panel {

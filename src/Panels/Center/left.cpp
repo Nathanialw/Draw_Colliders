@@ -38,7 +38,7 @@ namespace Center::Left {
     float w = 40.0f;
     float h = 40.0f;
     float spacing = 5.0f;
-    for (const auto &image: app.appData.left.images) {
+    for (const auto &image: app.interface.left.images) {
       SDL_FRect dRect = {x + spacing, y + spacing, w - (spacing * 2.0f), h - spacing};
       SDL_RenderCopyF(app.context.renderer, image.texture, nullptr, &dRect);
       y += h + spacing;
@@ -53,7 +53,7 @@ namespace Center::Left {
     float spacing = 5.0f;
 
     auto cursor = Mouse::Cursor();
-    for (const auto &image: app.appData.left.images) {
+    for (const auto &image: app.interface.left.images) {
       SDL_FRect dRect = {x + spacing, y + spacing, w - (spacing * 2.0f), h - spacing};
       if (SDL_HasIntersectionF(&cursor, &dRect))
         return image;

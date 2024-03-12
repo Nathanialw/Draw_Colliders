@@ -15,7 +15,7 @@ namespace Window {
       if (texture) {
         Graphics::Image image;
         image.texture = texture;
-        app.appData.left.images.emplace_back(image);
+        app.interface.left.images.emplace_back(image);
         if (setFocus)
           SDL_SetWindowInputFocus(app.context.window);
         return true;

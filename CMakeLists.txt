@@ -3,16 +3,25 @@ project(Box2D_Colliders)
 
 set(CMAKE_CXX_STANDARD 23)
 
+
 add_executable(Box2D_Colliders
         main.cpp lib/nativefiledialog/nfd_common.c lib/nativefiledialog/nfd_zenity.c
 
         src/Utils/log.cpp
 
         src/Graphics/graphics.cpp
+        src/Graphics/text.cpp
         src/Graphics/render.cpp
 
         src/App/core.cpp
         src/App/loop.cpp
+        src/App/data.cpp
+
+        src/App/Bounding_Boxes/line_segment.cpp
+        src/App/Bounding_Boxes/aabb.cpp
+        src/App/Bounding_Boxes/circle.cpp
+        src/App/Bounding_Boxes/point.cpp
+        src/App/Bounding_Boxes/polygon.cpp
 
         src/Input/keyboard.cpp
         src/Input/mouse.cpp

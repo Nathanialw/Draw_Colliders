@@ -40,30 +40,55 @@ namespace Mouse {
     auto cursor = Cursor();
     if (event.type == SDL_MOUSEBUTTONDOWN) {
       if (event.button.button == SDL_BUTTON_LEFT) {
-        if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor)) {
+        if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor))
           return Menu::Top_Menu();
-        }
         if (SDL_HasIntersectionF(&app.panel.top.panel, &cursor))
           return Top::Top_Panel();
         if (SDL_HasIntersectionF(&app.panel.bottom, &cursor))
           return Bottom::Bottom_Panel();
+
         if (SDL_HasIntersectionF(&app.panel.center, &cursor)) {
           if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor)){
+            //modify settings
             return true;
           }
           if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor)) {
               return Center::Center::Set_Edit_Image(app);
+              //use scroll
+              //use search box
           };
           if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor))
+            {
+              //check for vertex under mouse
+              app.vertex = App::Get_Vertex(app, cursor);
+              if (app.vertex.shape == Graphics::SIZE) {
+                return false;
+              }
+              else {
+                return Center::Center::Move_Vertex(app);
+              }
+              //select a vertex
+              //move a vertex
+              //select from shape list
+              //use scroll bar for shape list
               return true;
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor))
+            }
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {
+              //while held save the offset of where the mouse was clicked and the current mouse position
+              //when released save the offset to the original value
               return true;
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor))
+            }
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {
+              //while held save the offset of where the mouse was clicked and the current mouse position
+              //when released save the offset to the original value
               return true;
+            }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
-              for (const auto &button: app.panel.mainPanel.center.buttonBar.buttons) {
-                if (SDL_HasIntersectionF(&button, &cursor)) {};
+              for (int i = 0; i < app.panel.mainPanel.center.buttonBar.buttons.size(); ++i) {
+                if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.buttons[i], &cursor)) {
+                  Center::Center::Click_Button(app, i);
+                };
               }
             }
           }
@@ -136,6 +161,11 @@ namespace Mouse {
             }
           }
         }
+        //run regardless of where the mouse is when it is released, probably for all mouse button release actions
+        if (app.vertex.shape != Graphics::SIZE) {
+          Center::Center::Set_Vertex(app);
+          app.vertex = {Graphics::SIZE, 0, 0};
+        }
         return true;
       }
 
@@ -180,7 +210,7 @@ namespace Mouse {
         }
 
         //run regardless of where the mouse is when it is released, probably for all mouse button release actions
-        Center::Center::Set(app);
+        Center::Center::Set(app, app.interface.center.texture.offset);
         return true;
       }
       return true;

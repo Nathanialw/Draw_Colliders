@@ -16,7 +16,7 @@ namespace Keyboard {
         if (texture) {
           Graphics::Image image;
           image.texture = texture;
-          app.appData.left.images.emplace_back(image);
+          app.interface.left.images.emplace_back(image);
         }
       }
       if (event.key.keysym.sym == SDLK_ESCAPE) {

@@ -33,6 +33,7 @@ namespace Render {
     ::Top::Render_Button_Bar(app);
     ::Menu::Render(app);
     Render_Panel(app, app.panel.bottom, 25, 50, 100);
+    Render_Panel(app, Mouse::Cursor(), 255, 255, 255);
   }
 
   void Present(App::App &app) {
