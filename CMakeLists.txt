@@ -5,7 +5,11 @@ set(CMAKE_CXX_STANDARD 23)
 
 
 add_executable(Box2D_Colliders
-        main.cpp lib/nativefiledialog/nfd_common.c lib/nativefiledialog/nfd_zenity.c
+        main.cpp
+
+        lib/nativefiledialog/nfd_common.c
+        lib/nativefiledialog/nfd_zenity.c
+        lib/SDL_FontCache/SDL_FontCache.c
 
         src/Utils/log.cpp
 

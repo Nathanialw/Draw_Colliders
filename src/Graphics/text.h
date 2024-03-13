@@ -7,7 +7,15 @@
 #define BOX2D_COLLIDERS_TEXT_H
 
 #endif //BOX2D_COLLIDERS_TEXT_H
+#include "../../lib/SDL_FontCache/SDL_FontCache.h"
+#include "string"
+
 
 namespace Text {
+  FC_Font* Load_Font(SDL_Renderer *renderer);
 
+  std::string Get_File_Name(const std::string &filePath);
+
+  void Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const float &x, const float &y);
+  void Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const SDL_Rect &rect);
 }

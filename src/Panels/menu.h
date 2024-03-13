@@ -11,6 +11,7 @@
 #include "../App/core.h"
 
 namespace Menu {
+
   bool Top_Menu();
   void Render(App::App &app);
 }

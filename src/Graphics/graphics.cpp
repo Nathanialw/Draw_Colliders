@@ -22,7 +22,8 @@ namespace Graphics {
     context.flags = SDL_WINDOW_RESIZABLE;
     context.title = "Collider";
     context.window = SDL_CreateWindow(context.title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, context.width, context.height, context.flags);
-    context.renderer = SDL_CreateRenderer(context.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
+//    context.renderer = SDL_CreateRenderer(context.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
+    context.renderer = SDL_CreateRenderer(context.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     return context;
   }
 
@@ -75,13 +76,13 @@ namespace Graphics {
     //left
     panels.mainPanel.left.panel = {0.0f, panels.center.y, leftPanelWidth, panels.center.h};
     panels.mainPanel.left.search = {panels.mainPanel.left.panel.x, panels.mainPanel.left.panel.y, leftPanelWidth, filterHeight};
-    panels.mainPanel.left.body = {panels.mainPanel.left.panel.x, panels.mainPanel.left.panel.y + filterHeight, leftPanelWidth, panels.center.h - filterHeight};
+    panels.mainPanel.left.body = {panels.mainPanel.left.panel.x, panels.mainPanel.left.panel.y + filterHeight, leftPanelWidth - scrollWidth, panels.center.h - filterHeight};
     panels.mainPanel.left.scroll.panel = {panels.mainPanel.left.panel.x + panels.mainPanel.left.panel.w - scrollWidth, panels.mainPanel.left.panel.y + filterHeight, scrollWidth, panels.mainPanel.left.panel.h - filterHeight};
     panels.mainPanel.left.scroll.bar = {panels.mainPanel.left.panel.x + panels.mainPanel.left.panel.w - scrollWidth, panels.mainPanel.left.panel.y + filterHeight, scrollWidth, scrollBarHeight};
 
     //right
     panels.mainPanel.right.panel = {panels.center.w - rightPanelWidth, panels.center.y, rightPanelWidth, panels.center.h};
-    panels.mainPanel.right.body = {panels.mainPanel.right.panel.x, panels.mainPanel.right.panel.y, rightPanelWidth, panels.center.h};
+    panels.mainPanel.right.body = {panels.mainPanel.right.panel.x, panels.mainPanel.right.panel.y, rightPanelWidth - scrollWidth, panels.center.h};
     panels.mainPanel.right.scroll.panel = {panels.mainPanel.right.panel.x + panels.mainPanel.right.panel.w - scrollWidth, panels.mainPanel.right.panel.y, scrollWidth, panels.mainPanel.right.panel.h};
     panels.mainPanel.right.scroll.bar = {panels.mainPanel.right.panel.x + panels.mainPanel.right.panel.w - scrollWidth, panels.mainPanel.right.panel.y, scrollWidth, scrollBarHeight};
 
@@ -104,14 +105,14 @@ namespace Graphics {
     return panels;
   }
 
-  SDL_Texture *Load_Image(const Context &context) {
+  Image_Import Load_Image(const Context &context) {
     nfdchar_t *outPath = nullptr;
     nfdresult_t result = NFD_OpenDialog("png,jpg;pdf", nullptr, &outPath );
 
     const char * filePath;
     if ( result == NFD_CANCEL ||  result == NFD_ERROR ) {
       free(outPath);
-      return nullptr;
+      return {nullptr, ""};
     }
     else if ( result == NFD_OKAY ) {
       filePath = outPath;
@@ -119,14 +120,16 @@ namespace Graphics {
     SDL_Texture* texture = IMG_LoadTexture(context.renderer, filePath);
 //    std::cout << SDL_GetError() << std::endl;
 
+    std::string fileName;
     if ( result == NFD_OKAY ) {
       // std::cout will not work from application, only from IDE or terminal
       /* Generally, applications run from terminal have direct access to STDIN/STDOUT/STDERR, whereas non-terminal-based applications do not.
        * */
 //      puts("Success!");
 //      puts(outPath);
+      fileName = outPath;
       free(outPath);
     }
-    return texture;
+    return {texture, fileName};
   }
 }

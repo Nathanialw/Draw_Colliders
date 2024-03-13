@@ -9,20 +9,13 @@
 #endif //BOX2D_COLLIDERS_DATA_H
 
 #include "../Graphics/graphics.h"
-#include "Bounding_Boxes//polygon.h"
-#include "Bounding_Boxes//point.h"
-#include "Bounding_Boxes//aabb.h"
-#include "Bounding_Boxes//circle.h"
-#include "Bounding_Boxes//line_segment.h"
+#include "Bounding_Boxes/polygon.h"
+#include "Bounding_Boxes/point.h"
+#include "Bounding_Boxes/aabb.h"
+#include "Bounding_Boxes/circle.h"
+#include "Bounding_Boxes/line_segment.h"
 
 namespace Data {
-
-  struct Left {
-    std::vector<Graphics::Image> images;
-    std::vector<std::string> imageNameStr;
-    std::vector<Graphics::Image> imageNames;
-  };
-
   struct Center {
     Graphics::Image texture;
     //vertexes and polygons
@@ -31,8 +24,17 @@ namespace Data {
     std::vector<Line_Segment::Line> lineSegments;
     std::vector<Polygon::Polygon> polygons;
     std::vector<Point::Point> points;
+    int index;
     //list to show/hide polygons
   };
+
+  struct Left {
+    std::vector<Center> images;
+    std::vector<std::string> imageNameStr;
+    std::vector<std::string> imagePathStr;
+    std::vector<Graphics::Image> imageNames;
+  };
+
 
   struct Right {
   };

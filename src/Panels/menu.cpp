@@ -4,14 +4,17 @@
 #include "array"
 #include "SDL2/SDL.h"
 #include "menu.h"
+#include "../Graphics/text.h"
 
 namespace Menu {
+
   struct Button {
-    SDL_Texture* texture;
-    SDL_FRect rect;
+    SDL_Texture* texture{};
+    SDL_FRect rect{};
   };
 
-  std::array<Button, 4> menu = {};
+  std::array<std::string, Graphics::numMenuButtons> text = {"File", "Edit", "Options", "View", "Window", "Help"};
+  std::array<Button, Graphics::numMenuButtons> menu = {};
 
   void Render(App::App &app) {
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
@@ -25,10 +28,10 @@ namespace Menu {
     float w = 50.0f;
     float h = app.panel.menu.panel.h;
     SDL_SetRenderDrawColor(app.context.renderer, 152, 25, 125, 255);
-    for (const auto &button: app.panel.menu.buttons) {
+    for (const auto &button: text) {
       SDL_FRect dRect = {x, y, w, h};
       SDL_RenderDrawRectF(app.context.renderer, &dRect);
-//      SDL_RenderCopyF(app.context.renderer, button.texture, nullptr, &dRect);
+      Text::Render(app.context.renderer, app.context.font, button.c_str(), dRect.x, dRect.y);
       x += w;
     }
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);

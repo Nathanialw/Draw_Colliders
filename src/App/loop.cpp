@@ -15,24 +15,24 @@ namespace App {
   bool Input (App &app) {
     if (app.moveImage || app.moveVertex) {
       while (SDL_PollEvent(&event)) {
-        if (Keyboard::Event(event, app))
-          return true;
         if (Window::Event(event, app))
           return true;
         if (Mouse::Event(event, app))
+          return true;
+        if (Keyboard::Event(event, app))
           return true;
       }
     }
     else {
       int x = 0;
       while (SDL_WaitEvent(&event)) {
-        if (Keyboard::Event(event, app))
-          return true;
         if (Window::Event(event, app))
           return true;
         if (Mouse::Event(event, app))
           return true;
         if (Mouse::Motion(event, app, x))
+          return true;
+        if (Keyboard::Event(event, app))
           return true;
       }
     }

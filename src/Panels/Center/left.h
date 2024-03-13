@@ -12,8 +12,10 @@
 #include "../../App/core.h"
 namespace Center::Left {
 
-  Graphics::Image Select_Image(App::App &app);
+  Data::Center Select_Image(App::App &app);
+  bool Set_Image(App::App &app);
   void Render(App::App &app);
   bool Scroll(App::App &app);
+  bool Filter_Images(App::App &app);
 
 }

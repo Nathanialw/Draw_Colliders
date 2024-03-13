@@ -27,6 +27,5 @@ namespace Center::Center {
   bool Set(App::App &app, SDL_FPoint &point);
   bool Set_Vertex(App::App &app);
   bool Update_Image(App::App &app);
-  bool Set_Edit_Image(App::App &app);
   void Render(App::App &app);
 }

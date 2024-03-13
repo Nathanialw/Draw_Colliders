@@ -7,6 +7,7 @@
 #include "SDL2/SDL.h"
 #include "left.h"
 #include "center.h"
+#include "../../Graphics/text.h"
 
 namespace Center::Center {
   int appMax = 10;
@@ -38,7 +39,7 @@ namespace Center::Center {
     return 4;
   }
   int Unused(App::App &app) {
-    Log(5);
+//    Log(5);
     return 5;
   }
 
@@ -154,13 +155,6 @@ namespace Center::Center {
     }
   }
 
-  bool Set_Edit_Image(App::App &app) {
-    Graphics::Image image = Left::Select_Image(app);
-    if (image.texture)
-      app.interface.center.texture = image;
-    return true;
-  }
-
   void Render_Lines(App::App &app) {
     auto o = App::Calc_Offset(app);
 
@@ -168,14 +162,20 @@ namespace Center::Center {
     for (const auto &line:app.interface.center.lineSegments) {
       std::vector<SDL_FPoint> points;
       for (int i = 0; i < line.vertexes.size(); ++i) {
-          SDL_FRect rect = Vertex_To_Rect(app, line.vertexes[i], o, line.moving[i]);
-          points.push_back({rect.x + o.r, rect.y + o.r});
-          SDL_RenderFillRectF(app.context.renderer, &rect);
-        }
-
-        SDL_RenderDrawLinesF(app.context.renderer, points.data(), (int)points.size());
+        SDL_FRect rect = Vertex_To_Rect(app, line.vertexes[i], o, line.moving[i]);
+        points.push_back({rect.x + o.r, rect.y + o.r});
+        /*          a test for displaying vertex coordinates          */
+        //get the updated vertex value for this while its moving
+        int x = (int)line.vertexes[i].x;
+        int y = (int)line.vertexes[i].y;
+        std::string coords = std::to_string(x) + ", " + std::to_string(y);
+        Text::Render(app.context.renderer, app.context.font, coords.c_str(), rect.x + (o.r * 2), rect.y - o.r);
+        /*                                                            */
+        SDL_RenderFillRectF(app.context.renderer, &rect);
       }
-      SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+      SDL_RenderDrawLinesF(app.context.renderer, points.data(), (int)points.size());
+    }
+    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
   }
 
   void Render_Circles(App::App &app) {

@@ -39,6 +39,13 @@ namespace Mouse {
     //check which panel the mouse is inside of
     auto cursor = Cursor();
     if (event.type == SDL_MOUSEBUTTONDOWN) {
+
+      if (app.filterImages){
+        app.filterImages = false;
+        if (app.filterText.empty())
+          app.filterText = app.filterTextDefault;
+      }
+
       if (event.button.button == SDL_BUTTON_LEFT) {
         if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor))
           return Menu::Top_Menu();
@@ -53,9 +60,18 @@ namespace Mouse {
             return true;
           }
           if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor)) {
-              return Center::Center::Set_Edit_Image(app);
-              //use scroll
+            // select image
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.body, &cursor)) {
+              return Center::Left::Set_Image(app);
+            }
               //use search box
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.search, &cursor)) {
+              return Center::Left::Filter_Images(app);
+            }
+             //use scroll
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.scroll.bar, &cursor)) {
+              return Center::Left::Scroll(app);
+            }
           };
           if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor))
@@ -222,7 +238,7 @@ namespace Mouse {
       if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor))
         return Center::Left::Scroll(app);
       if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor))
-        return true;
+        return Center::Right::Scroll(app);
       return true;
     }
     return false;
@@ -238,15 +254,13 @@ namespace Mouse {
   }
 
   bool Update_Cursor(App::App &app) {
-    auto cursor = Cursor();
     SDL_SystemCursor desiredCursorId = Center::Mouse(app);
 
-    if (SDL_HasIntersectionF(&app.panel.center, &cursor))
-      if (desiredCursorId != app.currentCursorId) {
-        app.currentCursorId = desiredCursorId;
-        Mouse::Set_Cursor(app, desiredCursorId);
-        return true;
-      }
+    if (desiredCursorId != app.currentCursorId) {
+      app.currentCursorId = desiredCursorId;
+      Mouse::Set_Cursor(app, desiredCursorId);
+      return true;
+    }
     return false;
   }
 

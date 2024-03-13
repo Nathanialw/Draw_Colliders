@@ -7,8 +7,14 @@
 #include "string"
 #include "vector"
 #include "array"
+#include "../../lib/SDL_FontCache/SDL_FontCache.h"
 
 namespace Graphics {
+
+  struct Image_Import {
+    SDL_Texture* texture = nullptr;
+    std::string fileName;
+  };
 
   struct Image {
     SDL_Texture* texture = nullptr;
@@ -104,9 +110,10 @@ namespace Graphics {
     std::array<SDL_FRect, 6> buttons{};
   };
 
+  const int numMenuButtons = 6;
   struct Menu {
     SDL_FRect panel{};
-    std::array<SDL_FRect, 6> buttons{};
+    std::array<SDL_FRect, numMenuButtons> buttons{};
   };
 
   struct Panels {
@@ -122,6 +129,7 @@ namespace Graphics {
   struct Context {
     SDL_Renderer *renderer{};
     SDL_Window *window{};
+    FC_Font *font;
 
     int width{};
     int height{};
@@ -129,8 +137,7 @@ namespace Graphics {
     const char* title{};
   };
 
-
   Panels Set_Panels(SDL_Window* window);
   Context CreateWindowAndRenderer();
-  SDL_Texture *Load_Image(const Context &context);
+  Image_Import Load_Image(const Context &context);
 }

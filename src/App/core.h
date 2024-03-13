@@ -49,6 +49,11 @@ namespace App {
     bool moveImage = false;
     bool moveVertex = false;
     Vertex vertex;
+
+    bool filterImages = false;
+    std::string filterText = "Filter...";
+    //set it to italic and greyed out
+    std::string filterTextDefault = "Filter...";
   };
 
   void Close(App &app);

@@ -4,6 +4,7 @@
 
 #include "core.h"
 #include "../Input/mouse.h"
+#include "../Graphics/text.h"
 
 namespace App {
 
@@ -11,13 +12,14 @@ namespace App {
     app.context = Graphics::CreateWindowAndRenderer();
     app.panel = Graphics::Set_Panels(app.context.window);
 
+    app.context.font = Text::Load_Font(app.context.renderer);
     Mouse::Set_Cursor(app, SDL_SYSTEM_CURSOR_ARROW);
   }
 
   void Close(App &app) {
     SDL_DestroyTexture(app.interface.center.texture.texture);
     for (auto &texture: app.interface.left.images) {
-      SDL_DestroyTexture(texture.texture);
+      SDL_DestroyTexture(texture.texture.texture);
     }
     SDL_FreeCursor(app.cursor);
     SDL_DestroyRenderer(app.context.renderer);

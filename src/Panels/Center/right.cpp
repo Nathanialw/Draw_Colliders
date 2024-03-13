@@ -24,4 +24,9 @@ namespace Center::Right {
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
   };
 
+
+  bool Scroll(App::App &app) {
+
+    return true;
+  }
 }

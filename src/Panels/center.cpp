@@ -13,8 +13,13 @@ namespace Center {
     auto cursor = Mouse::Cursor();
 
     if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor)) {
-      if (Left::Select_Image(app).texture) {
-        return SDL_SYSTEM_CURSOR_HAND;
+      if (SDL_HasIntersectionF(&app.panel.mainPanel.left.search, &cursor)) {
+        return SDL_SYSTEM_CURSOR_IBEAM;
+      }
+      if (SDL_HasIntersectionF(&app.panel.mainPanel.left.body, &cursor)) {
+        if (Left::Select_Image(app).texture.texture) {
+          return SDL_SYSTEM_CURSOR_HAND;
+        }
       }
     }
 

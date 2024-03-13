@@ -13,5 +13,6 @@
 
 namespace Center::Right {
   void Render(App::App &app);
+  bool Scroll(App::App &app);
 
 }
