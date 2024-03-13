@@ -43,12 +43,25 @@ namespace Center::Left {
     float h = 40.0f;
     float spacing = 5.0f;
     for (int i = 0; i < app.interface.left.images.size(); ++i) {
-      SDL_FRect dRect = {x + spacing, y + spacing, w - (spacing * 2.0f), h - spacing};
+      SDL_FRect dRect = {x + spacing, y + spacing, w - (spacing * 2.0f), h};
+      if (app.interface.left.selected == i)      {
+        SDL_FRect rect = {
+            dRect.x + spacing,
+            dRect.y,
+            app.panel.mainPanel.left.body.w - (spacing * 2.0f),
+            dRect.h,
+        };
+        SDL_SetRenderDrawColor(app.context.renderer, 100, 100, 200, 255);
+        SDL_RenderFillRectF(app.context.renderer, &rect);
+        SDL_SetRenderDrawColor(app.context.renderer, 155, 155, 155, 255);
+        SDL_RenderDrawRectF(app.context.renderer, &rect);
+        SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+      }
       SDL_RenderCopyF(app.context.renderer, app.interface.left.images[i].texture.texture, nullptr, &dRect);
       SDL_Rect rect = {
-          (int)dRect.x + (int)dRect.w,
+          (int)dRect.x + (int)dRect.w + (int)spacing,
           (int)dRect.y,
-          (int)app.panel.mainPanel.left.body.w - (int)dRect.w - (int)(spacing * 2.0f),
+          (int)app.panel.mainPanel.left.body.w - (int)dRect.w - (int)(spacing * 3.0f),
           (int)dRect.h,
       };
       Text::Render(app.context.renderer, app.context.font, app.interface.left.imageNameStr[i].c_str(), rect);
@@ -64,10 +77,13 @@ namespace Center::Left {
     float spacing = 5.0f;
 
     auto cursor = Mouse::Cursor();
-    for (const auto &image: app.interface.left.images) {
-      SDL_FRect dRect = {x + spacing, y + spacing, w - (spacing * 2.0f), h - spacing};
+    for (int i = 0; i < app.interface.left.images.size(); ++i) {
+
+      SDL_FRect dRect = {x + spacing, y + spacing, app.panel.mainPanel.left.body.w - (spacing * 3.0f), h};
       if (SDL_HasIntersectionF(&cursor, &dRect)) {
-        return image;
+        //mouseover highlighting
+//        app.interface.left.selected = i;
+        return app.interface.left.images[i];
       }
       y += h + spacing;
     }
@@ -78,8 +94,11 @@ namespace Center::Left {
     auto image = Select_Image(app);
       if (image.texture.texture) {
         if (app.interface.center.texture.texture) {
-          //needs to go back where it was
           Data::Center currentImage = app.interface.center;
+          if (currentImage.index == image.index)
+            return false;
+          //needs to go back where it was
+          app.interface.left.selected = image.index;
           app.interface.left.images[currentImage.index] = currentImage;
         }
         app.interface.center = image;

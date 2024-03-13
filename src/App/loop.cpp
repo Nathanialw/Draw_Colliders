@@ -13,7 +13,15 @@ namespace App {
   bool wait = false;
 
   bool Input (App &app) {
-    if (app.moveImage || app.moveVertex) {
+    if (!app.wait || app.moveImage || app.moveVertex) {
+      if (!app.wait) {
+        app.timer++;
+        if (app.timer > 1000) {
+          app.timer = 0;
+          app.wait = true;
+        }
+      }
+
       while (SDL_PollEvent(&event)) {
         if (Window::Event(event, app))
           return true;

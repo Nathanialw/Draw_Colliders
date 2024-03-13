@@ -7,6 +7,7 @@
 #include "../Graphics/graphics.h"
 #include "vector"
 #include "data.h"
+#include "Settings/serialise.h"
 
 
 namespace App {
@@ -32,6 +33,15 @@ namespace App {
     int indexVertex = 0;
   };
 
+  enum Mouse_Selected {
+    SHAPE,
+    VERTEX,
+    VERTEXLIST,
+    IMAGELIST,
+    MENU
+//    FILTERBOX ?? maybe
+  };
+
   struct App {
     Graphics::Panels panel;
     Graphics::Context context;
@@ -42,6 +52,8 @@ namespace App {
     bool running = true;
     SDL_Cursor* cursor = nullptr;
     int max = 10;
+    int timer = 0;
+    bool wait = true;
     SDL_SystemCursor currentCursorId = SDL_SYSTEM_CURSOR_ARROW;
 
     SDL_Point initialPosition{};
@@ -54,6 +66,8 @@ namespace App {
     std::string filterText = "Filter...";
     //set it to italic and greyed out
     std::string filterTextDefault = "Filter...";
+
+    Serialise::Datafile datafile;
   };
 
   void Close(App &app);

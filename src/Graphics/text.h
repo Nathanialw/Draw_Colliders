@@ -16,6 +16,6 @@ namespace Text {
 
   std::string Get_File_Name(const std::string &filePath);
 
-  void Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const float &x, const float &y);
-  void Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const SDL_Rect &rect);
+  FC_Rect Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const float &x, const float &y);
+  FC_Rect Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const SDL_Rect &rect);
 }

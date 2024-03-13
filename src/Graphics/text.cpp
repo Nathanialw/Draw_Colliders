@@ -10,12 +10,12 @@ namespace Text {
     return font;
   }
 
-  void Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const float &x, const float &y) {
-    FC_Draw(font, renderer, x, y, text);
+  FC_Rect Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const float &x, const float &y) {
+    return FC_Draw(font, renderer, x, y, text);
   }
 
-  void Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const SDL_Rect &rect) {
-    FC_DrawBoxContainedLine(font, renderer, rect, text);
+  FC_Rect Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const SDL_Rect &rect) {
+    return FC_DrawBoxContainedLine(font, renderer, rect, text);
   }
 
   std::string Get_File_Name(const std::string &filePath) {
@@ -24,7 +24,7 @@ namespace Text {
     for (int i = string.size() - 1; i > 0; --i) {
       if (string[i] == '.')
         string.erase(i, string.size());
-      if (string[i] == '/' || string[i] == '\\') {
+      else if (string[i] == '/' || string[i] == '\\') {
         string.erase(0, i + 1);
         return string;
       }

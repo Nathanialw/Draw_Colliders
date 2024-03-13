@@ -21,6 +21,9 @@ add_executable(Box2D_Colliders
         src/App/loop.cpp
         src/App/data.cpp
 
+        src/App/Settings/serialise.cpp
+        src/App/Settings/save.cpp
+
         src/App/Bounding_Boxes/line_segment.cpp
         src/App/Bounding_Boxes/aabb.cpp
         src/App/Bounding_Boxes/circle.cpp

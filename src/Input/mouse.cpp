@@ -247,6 +247,7 @@ namespace Mouse {
   bool Motion(const SDL_Event &event, App::App &app, int &x) {
     if (event.type == SDL_MOUSEMOTION) {
       x++;
+      app.wait = false;
       if (x > app.max)
         return true;
     }

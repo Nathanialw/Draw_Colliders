@@ -6,6 +6,7 @@
 #include "../Input/mouse.h"
 #include "../Graphics/text.h"
 
+
 namespace App {
 
   void Init (App &app) {
@@ -14,6 +15,9 @@ namespace App {
 
     app.context.font = Text::Load_Font(app.context.renderer);
     Mouse::Set_Cursor(app, SDL_SYSTEM_CURSOR_ARROW);
+
+
+
   }
 
   void Close(App &app) {

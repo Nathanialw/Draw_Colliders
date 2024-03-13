@@ -139,5 +139,6 @@ namespace Graphics {
 
   Panels Set_Panels(SDL_Window* window);
   Context CreateWindowAndRenderer();
+  SDL_Texture* Load_Texture(const Context &context, const std::string &filePath);
   Image_Import Load_Image(const Context &context);
 }

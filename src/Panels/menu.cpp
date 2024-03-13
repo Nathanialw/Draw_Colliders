@@ -27,12 +27,16 @@ namespace Menu {
     float y = app.panel.menu.panel.y;
     float w = 50.0f;
     float h = app.panel.menu.panel.h;
+    float spacing = 5.0f;
     SDL_SetRenderDrawColor(app.context.renderer, 152, 25, 125, 255);
     for (const auto &button: text) {
-      SDL_FRect dRect = {x, y, w, h};
-      SDL_RenderDrawRectF(app.context.renderer, &dRect);
-      Text::Render(app.context.renderer, app.context.font, button.c_str(), dRect.x, dRect.y);
-      x += w;
+      SDL_FRect dRect = {x + spacing, y, w, h};
+      //render to text, not every frame
+      auto rect = Text::Render(app.context.renderer, app.context.font, button.c_str(), dRect.x, dRect.y);
+      rect.w += (int)spacing * 2;
+      rect.x -= (int)spacing;
+      SDL_RenderDrawRect(app.context.renderer, &rect);
+      x += (float)rect.w;
     }
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
   }

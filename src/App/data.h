@@ -24,11 +24,12 @@ namespace Data {
     std::vector<Line_Segment::Line> lineSegments;
     std::vector<Polygon::Polygon> polygons;
     std::vector<Point::Point> points;
-    int index;
+    int index = 0;
     //list to show/hide polygons
   };
 
   struct Left {
+    int selected = 0;
     std::vector<Center> images;
     std::vector<std::string> imageNameStr;
     std::vector<std::string> imagePathStr;

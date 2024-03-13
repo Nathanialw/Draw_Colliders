@@ -6,8 +6,11 @@
 #include "SDL2/SDL.h"
 #include "../Graphics/graphics.h"
 #include "../App/core.h"
+#include "../Graphics/text.h"
+#include "../App/Settings/save.h"
 
 namespace Keyboard {
+
 
   bool Event(const SDL_Event &event, App::App &app) {
 
@@ -46,9 +49,25 @@ namespace Keyboard {
             image.index = app.interface.left.images.size();
 
             app.interface.left.images.emplace_back(image);
-            app.interface.left.imageNameStr.emplace_back(imageImport.fileName);
+            app.interface.left.imageNameStr.emplace_back(Text::Get_File_Name(imageImport.fileName));
+            app.interface.left.imagePathStr.emplace_back(imageImport.fileName);
+
+            //load the image to the center if there is no image
+            if (!app.interface.center.texture.texture)
+              app.interface.center = image;
           }
         }
+
+        if (event.key.keysym.sym == SDLK_s) {
+          Save::State(app);
+          app.datafile.Write(app.datafile, "save.txt");
+        }
+
+        if (event.key.keysym.sym == SDLK_l) {
+          Save::Load(app);
+//          app.datafile.Read(app.datafile, "save.txt");
+        }
+
         if (event.key.keysym.sym == SDLK_ESCAPE) {
           app.running = !app.running;
         }

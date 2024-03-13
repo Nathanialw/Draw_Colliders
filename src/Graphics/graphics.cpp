@@ -105,6 +105,10 @@ namespace Graphics {
     return panels;
   }
 
+  SDL_Texture* Load_Texture(const Context &context, const std::string &filePath) {
+    return IMG_LoadTexture(context.renderer, filePath.c_str());
+  }
+
   Image_Import Load_Image(const Context &context) {
     nfdchar_t *outPath = nullptr;
     nfdresult_t result = NFD_OpenDialog("png,jpg;pdf", nullptr, &outPath );

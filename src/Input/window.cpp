@@ -27,9 +27,13 @@ namespace Window {
         app.interface.left.imageNameStr.emplace_back(Text::Get_File_Name(fileName));
         app.interface.left.imagePathStr.emplace_back(fileName);
 
+        //load the image to the center if there is no image
+        if (!app.interface.center.texture.texture)
+          app.interface.center = image;
 
         if (setFocus)
           SDL_SetWindowInputFocus(app.context.window);
+
         return true;
       }
     }
