@@ -8,7 +8,7 @@
 
 #include "../App/core.h"
 #include "mouse.h"
-#include "../Utils/log.h"
+#include "../Utils/utils.h"
 
 #include "../Panels/menu.h"
 #include "../Panels/top.h"
@@ -77,16 +77,19 @@ namespace Mouse {
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor))
             {
               //check for vertex under mouse
+              //select a vertex
               app.vertex = App::Get_Vertex(app, cursor);
-              if (app.vertex.shape == Graphics::SIZE) {
+              if (app.vertex.shape == Graphics::SIZE)
+              //select a shape
+                app.vertex = App::Get_Shape(app, cursor);
+              if (app.vertex.shape == Graphics::SIZE)
                 return false;
-              }
               else {
+              //move selected vertexes
                 return Center::Center::Move_Vertex(app);
               }
-              //select a vertex
-              //move a vertex
               //select from shape list
+
               //use scroll bar for shape list
               return true;
             }

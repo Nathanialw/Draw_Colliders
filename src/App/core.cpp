@@ -15,9 +15,6 @@ namespace App {
 
     app.context.font = Text::Load_Font(app.context.renderer);
     Mouse::Set_Cursor(app, SDL_SYSTEM_CURSOR_ARROW);
-
-
-
   }
 
   void Close(App &app) {
@@ -29,6 +26,13 @@ namespace App {
     SDL_DestroyRenderer(app.context.renderer);
     SDL_DestroyWindow(app.context.window);
     SDL_Quit();
+  }
+
+  void New(App &app) {
+    Data::Left newLeft;
+    Data::Center newCenter;
+    app.interface.left = newLeft;
+    app.interface.center = newCenter;
   }
 
   Offsets Calc_Offset(const App &app) {
@@ -57,6 +61,19 @@ namespace App {
     rect.x -= (float) app.interface.center.texture.offset.x;
     rect.y -= (float) app.interface.center.texture.offset.y;
     return rect;
+  }
+
+  f2 Vertex_To_Screen(const App &app, const SDL_FPoint &vertex, const Offsets &o, bool moveVertex) {
+    SDL_FRect rect;
+    rect.x = (vertex.x * app.interface.center.texture.scale) + o.x;
+    rect.y = (vertex.y * app.interface.center.texture.scale) + o.y;
+    if (app.moveImage || moveVertex) {
+      rect.x -= (float) app.offset.x;
+      rect.y -= (float) app.offset.y;
+    }
+    rect.x -= (float) app.interface.center.texture.offset.x;
+    rect.y -= (float) app.interface.center.texture.offset.y;
+    return {rect.x, rect.y};
   }
 
   Vertex Get_Vertex(App &app, const SDL_FRect &cursor) {
@@ -105,6 +122,71 @@ namespace App {
           return {Graphics::LINE, i, j};
         }
       }
+    }
+    return {Graphics::SIZE, 0};
+  }
+
+  Vertex Get_Shape(App &app, const SDL_FRect &cursor) {
+    auto o = Calc_Offset(app);
+    auto &shape = app.interface.center;
+    std::vector<f2> mouseVertexes;
+    mouseVertexes.push_back({cursor.x, cursor.y});
+    mouseVertexes.push_back({cursor.x + cursor.w, cursor.y});
+    mouseVertexes.push_back({cursor.x + cursor.w, cursor.y + cursor.h});
+    mouseVertexes.push_back({cursor.x , cursor.y + cursor.h});
+    std::vector<f2> shapeVertexes;
+
+    for (int i = 0; i < shape.polygons.size(); ++i) {
+      for (int j = 0; j < shape.polygons[i].vertexes.size(); ++j) {
+        f2 v = Vertex_To_Screen(app, shape.polygons[i].vertexes[j], o, shape.polygons[i].moving[j]);
+        shapeVertexes.emplace_back(v);
+      }
+      if (PolygonOverlap_SAT(mouseVertexes, shapeVertexes)) {
+        for (auto && move : shape.polygons[i].moving)
+          move = true;
+        return {Graphics::POLYGON, i, -1};
+      }
+      shapeVertexes.clear();
+    }
+
+    for (int i = 0; i < shape.rects.size(); ++i) {
+      for (int j = 0; j < shape.rects[i].vertexes.size(); ++j) {
+        f2 v = Vertex_To_Screen(app, shape.rects[i].vertexes[j], o, shape.rects[i].moving[j]);
+        shapeVertexes.emplace_back(v);
+      }
+      if (PolygonOverlap_SAT(mouseVertexes, shapeVertexes)) {
+        for (auto && move : shape.rects[i].moving)
+          move = true;
+        return {Graphics::AABB, i, -1};
+      }
+      shapeVertexes.clear();
+    }
+
+    for (int i = 0; i < shape.circles.size(); ++i) {
+      for (int j = 0; j < shape.circles[i].vertexes.size(); ++j) {
+        f2 v = Vertex_To_Screen(app, shape.circles[i].vertexes[j], o, shape.circles[i].moving[j]);
+        shapeVertexes.emplace_back(v);
+      }
+      //instead use a circle collision algorithm
+      if (PolygonOverlap_SAT(mouseVertexes, shapeVertexes)) {
+        for (auto && move : shape.circles[i].moving)
+          move = true;
+        return {Graphics::CIRCLE, i, -1};
+      }
+      shapeVertexes.clear();
+    }
+
+    for (int i = 0; i < shape.lineSegments.size(); ++i) {
+      for (int j = 0; j < shape.lineSegments[i].vertexes.size(); ++j) {
+          f2 v = Vertex_To_Screen(app, shape.lineSegments[i].vertexes[j], o, shape.lineSegments[i].moving[j]);
+          shapeVertexes.emplace_back(v);
+        }
+        if (PolygonOverlap_SAT(mouseVertexes, shapeVertexes)) {
+          for (auto && move : shape.lineSegments[i].moving)
+            move = true;
+          return {Graphics::LINE, i, -1};
+        }
+        shapeVertexes.clear();
     }
     return {Graphics::SIZE, 0};
   }

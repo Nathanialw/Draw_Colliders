@@ -11,7 +11,7 @@ add_executable(Box2D_Colliders
         lib/nativefiledialog/nfd_zenity.c
         lib/SDL_FontCache/SDL_FontCache.c
 
-        src/Utils/log.cpp
+        src/Utils/utils.cpp
 
         src/Graphics/graphics.cpp
         src/Graphics/text.cpp

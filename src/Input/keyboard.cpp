@@ -8,6 +8,7 @@
 #include "../App/core.h"
 #include "../Graphics/text.h"
 #include "../App/Settings/save.h"
+#include "mouse.h"
 
 namespace Keyboard {
 
@@ -65,7 +66,15 @@ namespace Keyboard {
 
         if (event.key.keysym.sym == SDLK_l) {
           Save::Load(app);
-//          app.datafile.Read(app.datafile, "save.txt");
+        }
+
+        if (event.key.keysym.sym == SDLK_q) {
+          App::New(app);
+        }
+
+        if (event.key.keysym.sym == SDLK_w) {
+          auto cursor = Mouse::Cursor();
+          app.vertex = App::Get_Shape(app, cursor);
         }
 
         if (event.key.keysym.sym == SDLK_ESCAPE) {

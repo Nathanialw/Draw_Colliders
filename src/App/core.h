@@ -8,7 +8,7 @@
 #include "vector"
 #include "data.h"
 #include "Settings/serialise.h"
-
+#include "../Utils/utils.h"
 
 namespace App {
 
@@ -71,10 +71,12 @@ namespace App {
   };
 
   void Close(App &app);
+  void New(App &app);
   void Init (App &app);
   Offsets Calc_Offset(const App &app);
   SDL_FRect Vertex_To_Rect(const App &app, const SDL_FPoint &vertex, const Offsets &o, bool moveVertex);
 
   Vertex Get_Vertex(App &app, const SDL_FRect &cursor);
+  Vertex Get_Shape(App &app, const SDL_FRect &cursor);
 
 }

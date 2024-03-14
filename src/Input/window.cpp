@@ -6,7 +6,7 @@
 #include "window.h"
 #include "../Graphics/graphics.h"
 #include "SDL2/SDL_image.h"
-#include "../Utils/log.h"
+#include "../Utils/utils.h"
 #include "../Graphics/text.h"
 
 namespace Window {

@@ -3,7 +3,7 @@
 //
 #include "iostream"
 
-#include "../../Utils/log.h"
+#include "../../Utils/utils.h"
 #include "SDL2/SDL.h"
 #include "left.h"
 #include "center.h"
@@ -83,7 +83,6 @@ namespace Center::Center {
     app.max = appMax;
     point.x = point.x - (float)app.offset.x / app.interface.center.texture.scale;
     point.y = point.y - (float)app.offset.y / app.interface.center.texture.scale;
-    app.offset = {0, 0};
     app.moveVertex = false;
     return true;
   }
@@ -113,9 +112,18 @@ namespace Center::Center {
       case Graphics::AABB: {
         if (!app.interface.center.rects.empty())
           if (!app.interface.center.rects[app.vertex.indexPolygon].vertexes.empty()) {
-            Set_vertex(app, app.interface.center.rects[app.vertex.indexPolygon].vertexes[app.vertex.indexVertex]);
-            app.interface.center.rects[app.vertex.indexPolygon].moving[app.vertex.indexVertex] = false;
+            if (app.vertex.indexVertex == -1) {
+              for (int i = 0; i < app.interface.center.rects[app.vertex.indexPolygon].vertexes.size() ; ++i) {
+                Set_vertex(app, app.interface.center.rects[app.vertex.indexPolygon].vertexes[i]);
+                app.interface.center.rects[app.vertex.indexPolygon].moving[i] = false;
+              }
+            }
+            else {
+              Set_vertex(app, app.interface.center.rects[app.vertex.indexPolygon].vertexes[app.vertex.indexVertex]);
+              app.interface.center.rects[app.vertex.indexPolygon].moving[app.vertex.indexVertex] = false;
+            }
           }
+        app.offset = {0, 0};
         return true;
       }
       case Graphics::POINT: {
@@ -123,33 +131,63 @@ namespace Center::Center {
           Set_vertex(app, app.interface.center.points[app.vertex.indexPolygon].vertex);
           app.interface.center.points[app.vertex.indexPolygon].moving = false;
         }
+        app.offset = {0, 0};
         return true;
       }
       case Graphics::POLYGON: {
         if (!app.interface.center.polygons.empty())
           if (!app.interface.center.polygons[app.vertex.indexPolygon].vertexes.empty()) {
-            Set_vertex(app, app.interface.center.polygons[app.vertex.indexPolygon].vertexes[app.vertex.indexVertex]);
-            app.interface.center.polygons[app.vertex.indexPolygon].moving[app.vertex.indexVertex] = false;
+            if (app.vertex.indexVertex == -1) {
+              for (int i = 0; i < app.interface.center.polygons[app.vertex.indexPolygon].vertexes.size() ; ++i) {
+                Set_vertex(app, app.interface.center.polygons[app.vertex.indexPolygon].vertexes[i]);
+                app.interface.center.polygons[app.vertex.indexPolygon].moving[i] = false;
+              }
+            }
+            else {
+              Set_vertex(app, app.interface.center.polygons[app.vertex.indexPolygon].vertexes[app.vertex.indexVertex]);
+              app.interface.center.polygons[app.vertex.indexPolygon].moving[app.vertex.indexVertex] = false;
+            }
           }
+        app.offset = {0, 0};
         return true;
       }
       case Graphics::CIRCLE: {
         if (!app.interface.center.circles.empty())
           if (!app.interface.center.circles[app.vertex.indexPolygon].vertexes.empty()) {
-            Set_vertex(app, app.interface.center.circles[app.vertex.indexPolygon].vertexes[app.vertex.indexVertex]);
-            app.interface.center.circles[app.vertex.indexPolygon].moving[app.vertex.indexVertex] = false;
+            if (app.vertex.indexVertex == -1) {
+              for (int i = 0; i < app.interface.center.circles[app.vertex.indexPolygon].vertexes.size() ; ++i) {
+                Set_vertex(app, app.interface.center.circles[app.vertex.indexPolygon].vertexes[i]);
+                app.interface.center.circles[app.vertex.indexPolygon].moving[i] = false;
+                //set radius
+              }
+            }
+            else {
+              Set_vertex(app, app.interface.center.circles[app.vertex.indexPolygon].vertexes[app.vertex.indexVertex]);
+              app.interface.center.circles[app.vertex.indexPolygon].moving[app.vertex.indexVertex] = false;
+            }
           }
+        app.offset = {0, 0};
         return true;
       }
       case Graphics::LINE: {
         if (!app.interface.center.lineSegments.empty())
           if (!app.interface.center.lineSegments[app.vertex.indexPolygon].vertexes.empty()) {
-            Set_vertex(app, app.interface.center.lineSegments[app.vertex.indexPolygon].vertexes[app.vertex.indexVertex]);
-            app.interface.center.lineSegments[app.vertex.indexPolygon].moving[app.vertex.indexVertex] = false;
+            if (app.vertex.indexVertex == -1) {
+              for (int i = 0; i < app.interface.center.lineSegments[app.vertex.indexPolygon].vertexes.size(); ++i) {
+                Set_vertex(app, app.interface.center.lineSegments[app.vertex.indexPolygon].vertexes[i]);
+                app.interface.center.lineSegments[app.vertex.indexPolygon].moving[i] = false;
+              }
+            }
+            else {
+              Set_vertex(app, app.interface.center.lineSegments[app.vertex.indexPolygon].vertexes[app.vertex.indexVertex]);
+              app.interface.center.lineSegments[app.vertex.indexPolygon].moving[app.vertex.indexVertex] = false;
+            }
           }
+        app.offset = {0, 0};
         return true;
       }
       case Graphics::SIZE: {
+        app.offset = {0, 0};
         return false;
       }
     }
