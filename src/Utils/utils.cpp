@@ -36,9 +36,19 @@ bool Rect_Intersect(const SDL_FRect &entity, const SDL_FRect &target) {
   return false;
 };
 
-bool PolygonOverlap_SAT(std::vector<f2> &r1, std::vector<f2> &r2) {
-  std::vector<f2> *poly1 = &r1;
-  std::vector<f2> *poly2 = &r2;
+bool Circle_Intersect(float cx, float cy, float radius, const SDL_FRect &rect) {
+  float closestX = (cx < rect.x ? rect.x : (cx > rect.x + rect.w ? rect.x + rect.w : cx));
+  float closestY = (cy < rect.y ? rect.y : (cy > rect.y + rect.h ? rect.y + rect.h : cy));
+  float dx = closestX - cx;
+  float dy = closestY - cy;
+
+  return ( dx * dx + dy * dy ) <= radius * radius;
+}
+
+/// this one only works for convex polygons, need one for concave polygons
+bool PolygonOverlap_SAT(std::vector<SDL_FPoint> &r1, std::vector<SDL_FPoint> &r2) {
+  std::vector<SDL_FPoint> *poly1 = &r1;
+  std::vector<SDL_FPoint> *poly2 = &r2;
 
   for (int shape = 0; shape < 2; shape++) {
     if (shape == 1) {
@@ -72,6 +82,30 @@ bool PolygonOverlap_SAT(std::vector<f2> &r1, std::vector<f2> &r2) {
         return false;
     }
   }
-
   return true;
+}
+
+bool Point_In_Polygon(const std::vector<SDL_FPoint> &point, const std::vector<SDL_FPoint> &polygon) {
+  int n = polygon.size();
+  int counter = 0;
+  double x_intercept = 0.0;
+  float x = point[0].x;
+  float y = point[0].y;
+
+  auto p1 = polygon[0];
+  for (int i = 0; i < n + 1; ++i) {
+    auto p2 = polygon[i % n];
+    if (y > std::min(p1.y, p2.y)) {
+      if (y <= std::max(p1.y, p2.y)) {
+        if (x <= std::max(p1.x, p2.x)) {
+          if (p1.y != p2.y)
+            x_intercept = (y - p1.y) * (p2.x - p1.x) / static_cast<double>(p2.y - p1.y) + p1.x;
+          if (p1.x == p2.x || x <= x_intercept)
+            counter++;
+        }
+      }
+    }
+    p1 = p2;
+  }
+  return counter % 2 == 1;
 }

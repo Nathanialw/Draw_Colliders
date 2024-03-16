@@ -38,18 +38,86 @@ namespace Center::Center {
       app.interface.center.lineSegments.emplace_back(Line_Segment::Create(app.panel.mainPanel.center));
     return 4;
   }
-  int Unused(App::App &app) {
-//    Log(5);
+  int Delete_Selected_Shape(App::App &app) {
+    switch (app.selectedShape.shape) {
+      case Graphics::SIZE:
+        return false;
+      case Graphics::POLYGON: {
+        auto &polygon = app.interface.center.polygons;
+        polygon.erase(polygon.begin() + app.selectedShape.indexPolygon, polygon.begin() + app.selectedShape.indexPolygon + 1);
+        polygon.shrink_to_fit();
+        app.selectedShape.shape = Graphics::SIZE;
+        app.selectedShape.indexPolygon = 0;
+        app.selectedVertex.shape = Graphics::SIZE;
+        app.selectedVertex.indexPolygon = 0;
+        app.selectedVertex.indexVertex = 0;
+        return true;
+      }
+      case Graphics::AABB: {
+        auto &rect = app.interface.center.rects;
+        rect.erase(rect.begin() + app.selectedShape.indexPolygon, rect.begin() + app.selectedShape.indexPolygon + 1);
+        rect.shrink_to_fit();
+        app.selectedShape.shape = Graphics::SIZE;
+        app.selectedShape.indexPolygon = 0;
+        return true;
+      }
+      case Graphics::CIRCLE: {
+        auto &circles = app.interface.center.circles;
+        circles.erase(circles.begin() + app.selectedShape.indexPolygon, circles.begin() + app.selectedShape.indexPolygon + 1);
+        circles.shrink_to_fit();
+        app.selectedShape.shape = Graphics::SIZE;
+        app.selectedShape.indexPolygon = 0;
+        return true;
+      }
+      case Graphics::LINE: {
+        auto &line = app.interface.center.lineSegments;
+        line.erase(line.begin() + app.selectedShape.indexPolygon, line.begin() + app.selectedShape.indexPolygon + 1);
+        line.shrink_to_fit();
+        app.selectedShape.shape = Graphics::SIZE;
+        app.selectedShape.indexPolygon = 0;
+        return true;
+      }
+      case Graphics::POINT: {
+        auto &point = app.interface.center.points;
+        point.erase(point.begin() + app.selectedShape.indexPolygon, point.begin() + app.selectedShape.indexPolygon + 1);
+        point.shrink_to_fit();
+        app.selectedShape.shape = Graphics::SIZE;
+        app.selectedShape.indexPolygon = 0;
+        return true;
+      }
+    }
+    return 5;
+  }
+  int Create_Vertex_If_Polygon_Selected(App::App &app) {
+    if (app.selectedShape.shape == Graphics::POLYGON) {
+      app.interface.center.polygons[app.selectedShape.indexPolygon].vertexes.push_back({0.0f, 0.0f});
+      app.interface.center.polygons[app.selectedShape.indexPolygon].moving.push_back(false);
+    }
+    return 5;
+  }
+  int Delete_Vertex_If_Polygon_Selected(App::App &app) {
+    if (app.selectedVertex.shape == Graphics::POLYGON) {
+      auto &polygon = app.interface.center.polygons[app.selectedVertex.indexPolygon];
+      polygon.vertexes.erase(polygon.vertexes.begin() + app.selectedVertex.indexVertex, polygon.vertexes.begin() + app.selectedVertex.indexVertex + 1);
+      polygon.moving.erase(polygon.moving.begin() + app.selectedVertex.indexVertex, polygon.moving.begin() + app.selectedVertex.indexVertex + 1);
+      polygon.vertexes.shrink_to_fit();
+      polygon.moving.shrink_to_fit();
+      app.selectedVertex.shape = Graphics::SIZE;
+      app.selectedVertex.indexVertex = 0;
+      app.selectedVertex.indexPolygon = 0;
+    }
     return 5;
   }
 
-  std::array<Edit_Button, 6> editButtons = {
+  std::array<Edit_Button, Graphics::ButtonBarSize> editButtons = {
       Create_Point_Button,
       Create_Circle_Button,
       Create_Line_Button,
       Create_Rect_Button,
       Create_Polygon_Button,
-      Unused,
+      Delete_Selected_Shape,
+      Create_Vertex_If_Polygon_Selected,
+      Delete_Vertex_If_Polygon_Selected,
   };
 
   int Click_Button(App::App &app, const int &i) {
@@ -81,19 +149,31 @@ namespace Center::Center {
 
   bool Set_vertex(App::App &app, SDL_FPoint &point) {
     app.max = appMax;
-    point.x = point.x - (float)app.offset.x / app.interface.center.texture.scale;
-    point.y = point.y - (float)app.offset.y / app.interface.center.texture.scale;
+    point.x = point.x - ((float)app.offset.x / app.interface.center.texture.scale);
+    point.y = point.y - ((float)app.offset.y / app.interface.center.texture.scale);
     app.moveVertex = false;
     return true;
   }
 
   bool Update_Image(App::App &app) {
     if (app.moveImage || app.moveVertex) {
-      int x;
-      int y;
-      SDL_GetMouseState(&x, &y);
-      app.offset = {app.initialPosition.x - x, app.initialPosition.y - y};
-      return true;
+      if (app.vertex.shape == Graphics::CIRCLE && app.vertex.indexVertex == 1) {
+        int x;
+        int y;
+        SDL_GetMouseState(&x, &y);
+        auto r = (app.interface.center.circles[app.vertex.indexPolygon].vertexes[1].y - app.interface.center.circles[app.vertex.indexPolygon].vertexes[0].y) * app.interface.center.texture.scale;
+        int oY = app.initialPosition.y - y;
+        if (oY > r) oY = r;
+        app.offset = {0, oY};
+        return true;
+      }
+      else {
+        int x;
+        int y;
+        SDL_GetMouseState(&x, &y);
+        app.offset = {app.initialPosition.x - x, app.initialPosition.y - y};
+        return true;
+      }
     }
     return false;
   }
@@ -104,6 +184,36 @@ namespace Center::Center {
     point.y = point.y + (float)app.offset.y;
     app.offset = {0, 0};
     app.moveImage = false;
+    return true;
+  }
+
+  bool Set_Rect_Vertexes(App::App &app) {
+    for (int i = 0; i < app.interface.center.rects[app.vertex.indexPolygon].vertexes.size() ; ++i) {
+      if (app.vertex.indexVertex == 0) { //top left
+        if (i == 1)
+          app.interface.center.rects[app.vertex.indexPolygon].vertexes[1].y -= app.offset.y / app.interface.center.texture.scale;
+        else if (i == 3)
+          app.interface.center.rects[app.vertex.indexPolygon].vertexes[3].x -= app.offset.x / app.interface.center.texture.scale;
+      }
+      if (app.vertex.indexVertex == 1) { //top right
+        if (i == 0)
+          app.interface.center.rects[app.vertex.indexPolygon].vertexes[0].y -= app.offset.y / app.interface.center.texture.scale;
+        else if (i == 2)
+          app.interface.center.rects[app.vertex.indexPolygon].vertexes[2].x -= app.offset.x / app.interface.center.texture.scale;
+      }
+      if (app.vertex.indexVertex == 2) { //bottom right
+        if (i == 1)
+          app.interface.center.rects[app.vertex.indexPolygon].vertexes[1].x -= app.offset.x / app.interface.center.texture.scale;
+        else if (i == 3)
+          app.interface.center.rects[app.vertex.indexPolygon].vertexes[3].y -= app.offset.y / app.interface.center.texture.scale;
+      }
+      if (app.vertex.indexVertex == 3) { // bottom left
+        if (i == 2)
+          app.interface.center.rects[app.vertex.indexPolygon].vertexes[2].y -= app.offset.y / app.interface.center.texture.scale;
+        else if (i == 0)
+          app.interface.center.rects[app.vertex.indexPolygon].vertexes[0].x -= app.offset.x / app.interface.center.texture.scale;
+      }
+    }
     return true;
   }
 
@@ -119,6 +229,7 @@ namespace Center::Center {
               }
             }
             else {
+              Set_Rect_Vertexes(app);
               Set_vertex(app, app.interface.center.rects[app.vertex.indexPolygon].vertexes[app.vertex.indexVertex]);
               app.interface.center.rects[app.vertex.indexPolygon].moving[app.vertex.indexVertex] = false;
             }
@@ -250,14 +361,47 @@ namespace Center::Center {
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
   }
 
+  void Update_Vertex_Render(App::App &app, SDL_FRect &rect, const int &i, const int &j) {
+    if (app.moveVertex && app.vertex.shape == Graphics::AABB) {
+      if (app.vertex.indexPolygon == i) {
+        if (app.vertex.indexVertex == 0) { //top left
+          if (j == 1)
+            rect.y -= app.offset.y;
+          else if (j == 3)
+            rect.x -= app.offset.x;
+        }
+        if (app.vertex.indexVertex == 1) { //top right
+          if (j == 0)
+            rect.y -= app.offset.y;
+          else if (j == 2)
+            rect.x -= app.offset.x;
+        }
+        if (app.vertex.indexVertex == 2) { //bottom right
+          if (j == 1)
+            rect.x -= app.offset.x;
+          else if (j == 3)
+            rect.y -= app.offset.y;
+        }
+        if (app.vertex.indexVertex == 3) { // bottom left
+          if (j == 2)
+            rect.y -= app.offset.y;
+          else if (j == 0)
+            rect.x -= app.offset.x;
+        }
+      }
+    }
+  }
+
   void Render_Rects(App::App &app) {
     auto o = App::Calc_Offset(app);
     SDL_SetRenderDrawColor(app.context.renderer, 255, 0, 0, 255);
 
-    for (const auto &aabb:app.interface.center.rects) {
+    for (int i = 0; i < app.interface.center.rects.size(); ++i) {
       std::vector<SDL_FPoint> points;
-      for (int i = 0; i < aabb.vertexes.size(); ++i) {
-        SDL_FRect rect = Vertex_To_Rect(app, aabb.vertexes[i], o, aabb.moving[i]);
+
+      for (int j = 0; j < app.interface.center.rects[i].vertexes.size(); ++j) {
+        SDL_FRect rect = Vertex_To_Rect(app, app.interface.center.rects[i].vertexes[j], o, app.interface.center.rects[i].moving[j]);
+        Update_Vertex_Render(app, rect, i, j);
         points.push_back({rect.x + o.r, rect.y + o.r});
         SDL_RenderFillRectF(app.context.renderer, &rect);
       }

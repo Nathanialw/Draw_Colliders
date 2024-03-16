@@ -11,11 +11,19 @@ struct f2 {
   float y;
 };
 
+struct i2 {
+  int x;
+  int y;
+};
+
 void Log(const auto &string);
 void Log(const int &string);
 void Log(const float &string);
 void Log(const std::string &string);
 void Log(const char* &string);
 
+
 bool Rect_Intersect(const SDL_FRect &entity, const SDL_FRect &target);
-bool PolygonOverlap_SAT(std::vector<f2> &r1, std::vector<f2> &r2);
+bool Circle_Intersect(float cx, float cy, float radius, const SDL_FRect &rect);
+bool PolygonOverlap_SAT(std::vector<SDL_FPoint> &r1, std::vector<SDL_FPoint> &r2);
+bool Point_In_Polygon(const std::vector<SDL_FPoint> &point, const std::vector<SDL_FPoint> &polygon);

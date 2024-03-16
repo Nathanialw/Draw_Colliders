@@ -6,6 +6,7 @@
 #include "SDL2/SDL_mouse.h"
 #include "../Graphics/graphics.h"
 #include "vector"
+#include "array"
 #include "data.h"
 #include "Settings/serialise.h"
 #include "../Utils/utils.h"
@@ -31,6 +32,11 @@ namespace App {
     Graphics::Shape shape = Graphics::AABB;
     int indexPolygon = 0;
     int indexVertex = 0;
+  };
+
+  struct Shape {
+    Graphics::Shape shape = Graphics::AABB;
+    int indexPolygon = 0;
   };
 
   enum Mouse_Selected {
@@ -60,6 +66,8 @@ namespace App {
     SDL_Point offset = {0, 0};
     bool moveImage = false;
     bool moveVertex = false;
+    Shape selectedShape;
+    Vertex selectedVertex;
     Vertex vertex;
 
     bool filterImages = false;
@@ -74,6 +82,7 @@ namespace App {
   void New(App &app);
   void Init (App &app);
   Offsets Calc_Offset(const App &app);
+  SDL_FPoint Offset_From_Image_Center(const App &app, const SDL_FPoint &point);
   SDL_FRect Vertex_To_Rect(const App &app, const SDL_FPoint &vertex, const Offsets &o, bool moveVertex);
 
   Vertex Get_Vertex(App &app, const SDL_FRect &cursor);

@@ -11,11 +11,14 @@ namespace Save {
 
   void State(App::App &app) {
     std::array<std::string, 5> shapeStr = {"point", "circle", "lineSegment", "aabb", "polygon"};
+    //resets the in memory data to save the file
+    Serialise::Datafile datafile;
+    app.datafile = datafile;
 
     app.datafile["header"]["name"].Set_String("name of save file");
     //maybe more than 1
     app.datafile["header"]["folder"].Set_String("path to folder with images");
-    app.datafile["header"]["numImages"].Set_Int(app.interface.left.imagePathStr.size());
+    app.datafile["header"]["image_count"].Set_Int(app.interface.left.imagePathStr.size());
 
     for (int i = 0; i < app.interface.left.imagePathStr.size(); ++i) {
       app.datafile["image[" + std::to_string(i) + "]"]["name"].Set_String(app.interface.left.imageNameStr[i]);
@@ -70,7 +73,6 @@ namespace Save {
         }
         k++;
       }
-      int s = 90;
     }
   }
 
@@ -81,7 +83,7 @@ namespace Save {
 
     std::array<std::string, 5> shapeStr = {"point", "circle", "lineSegment", "aabb", "polygon"};
     //minus the header
-    auto num = app.datafile["header"]["numImages"].Get_Int();
+    auto num = app.datafile["header"]["image_count"].Get_Int();
     //clear values
     Data::Left newLeft;
     app.interface.left = newLeft;

@@ -21,6 +21,24 @@
 
 namespace Mouse {
 
+  Uint32 doubleClickTimer = 0;
+  bool doubleClick = false;
+
+  bool Double_Click() {
+    const Uint32 clickSpeed = 500;
+    const Uint32 timer = (SDL_GetTicks() - doubleClickTimer);
+    if (doubleClickTimer > 0) {
+      if (timer <= clickSpeed) {
+        doubleClickTimer = 0;
+        doubleClick = true;
+      }
+      else if (timer > clickSpeed) {
+        doubleClickTimer = 0;
+      }
+    }
+    return true;
+  }
+
   bool Set_Cursor(App::App &app, const SDL_SystemCursor &cursor) {
     SDL_FreeCursor(app.cursor);
     app.cursor = SDL_CreateSystemCursor(cursor);
@@ -37,8 +55,10 @@ namespace Mouse {
 
   bool Event(const SDL_Event &event, App::App &app) {
     //check which panel the mouse is inside of
+
     auto cursor = Cursor();
     if (event.type == SDL_MOUSEBUTTONDOWN) {
+      Double_Click();
 
       if (app.filterImages){
         app.filterImages = false;
@@ -79,13 +99,42 @@ namespace Mouse {
               //check for vertex under mouse
               //select a vertex
               app.vertex = App::Get_Vertex(app, cursor);
-              if (app.vertex.shape == Graphics::SIZE)
+              bool vertexSelected = false;
+              if (app.vertex.shape != Graphics::SIZE) {
+                vertexSelected = true;
+                app.selectedVertex.shape = app.vertex.shape;
+                app.selectedVertex.indexVertex = app.vertex.indexVertex;
+                app.selectedVertex.indexPolygon = app.vertex.indexPolygon;
+                return Center::Center::Move_Vertex(app);
+              }
               //select a shape
-                app.vertex = App::Get_Shape(app, cursor);
+              //we want to grab the vertexes too so we can move them when we move the shape
+              app.vertex = App::Get_Shape(app, cursor);
               if (app.vertex.shape == Graphics::SIZE)
                 return false;
               else {
               //move selected vertexes
+                if (doubleClick && app.selectedShape.shape == Graphics::POLYGON) {
+                  //create vertex at mouse
+                  //need to calculate which edge the mouse is closest to and insert the vertex between those 2 points
+                  i2 m;
+                  SDL_GetMouseState(&m.x, &m.y);
+                  SDL_FPoint pos = {(float)m.x, (float)m.y};
+                  pos = Offset_From_Image_Center(app, pos);
+                  app.interface.center.polygons[app.vertex.indexPolygon].vertexes.push_back({pos.x,pos.y});
+                  app.interface.center.polygons[app.vertex.indexPolygon].moving.push_back(false);
+                  doubleClick = false;
+                  doubleClickTimer = 0;
+                  return true;
+                }
+                else if (!vertexSelected) {
+                  doubleClickTimer = SDL_GetTicks();
+//                  app.selectedVertex.shape = app.vertex.shape;
+//                  app.selectedVertex.indexVertex = app.vertex.indexVertex;
+//                  app.selectedVertex.indexPolygon = app.vertex.indexPolygon;
+                }
+                app.selectedShape.shape = app.vertex.shape;
+                app.selectedShape.indexPolygon = app.vertex.indexPolygon;
                 return Center::Center::Move_Vertex(app);
               }
               //select from shape list
