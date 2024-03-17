@@ -36,6 +36,16 @@ bool Rect_Intersect(const SDL_FRect &entity, const SDL_FRect &target) {
   return false;
 };
 
+SDL_FRect Rect_To_FRect(const SDL_Rect &rect) {
+  SDL_FRect fRect;
+  fRect.x = (float)rect.x;
+  fRect.y = (float)rect.y;
+  fRect.w = (float)rect.w;
+  fRect.h = (float)rect.h;
+
+  return fRect;
+}
+
 bool Circle_Intersect(float cx, float cy, float radius, const SDL_FRect &rect) {
   float closestX = (cx < rect.x ? rect.x : (cx > rect.x + rect.w ? rect.x + rect.w : cx));
   float closestY = (cy < rect.y ? rect.y : (cy > rect.y + rect.h ? rect.y + rect.h : cy));

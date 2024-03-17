@@ -53,30 +53,34 @@ namespace Mouse {
     return {(float)x - 5.0f, (float)y - 5.0f, 10.0f, 10.0f};
   }
 
-  bool Event(const SDL_Event &event, App::App &app) {
-    //check which panel the mouse is inside of
+  bool Down(const SDL_Event &event, App::App &app) {
+    // check which panel the mouse is inside of
 
     auto cursor = Cursor();
     if (event.type == SDL_MOUSEBUTTONDOWN) {
       Double_Click();
 
-      if (app.filterImages){
+      if (app.filterImages) {
         app.filterImages = false;
         if (app.filterText.empty())
           app.filterText = app.filterTextDefault;
       }
 
+      Menu::Clear();
+
       if (event.button.button == SDL_BUTTON_LEFT) {
         if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor))
-          return Menu::Top_Menu();
+          if (Menu::Open(app)) {
+            return true;
+          }
         if (SDL_HasIntersectionF(&app.panel.top.panel, &cursor))
           return Top::Top_Panel();
         if (SDL_HasIntersectionF(&app.panel.bottom, &cursor))
           return Bottom::Bottom_Panel();
 
         if (SDL_HasIntersectionF(&app.panel.center, &cursor)) {
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor)){
-            //modify settings
+          if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor)) {
+            // modify settings
             return true;
           }
           if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor)) {
@@ -84,20 +88,23 @@ namespace Mouse {
             if (SDL_HasIntersectionF(&app.panel.mainPanel.left.body, &cursor)) {
               return Center::Left::Set_Image(app);
             }
-              //use search box
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.search, &cursor)) {
+            // use search box
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.search,
+                                     &cursor)) {
               return Center::Left::Filter_Images(app);
             }
-             //use scroll
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.scroll.bar, &cursor)) {
+            // use scroll
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.scroll.bar,
+                                     &cursor)) {
               return Center::Left::Scroll(app);
             }
           };
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor))
-            {
-              //check for vertex under mouse
-              //select a vertex
+          if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel,
+                                   &cursor)) {
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image,
+                                     &cursor)) {
+              // check for vertex under mouse
+              // select a vertex
               app.vertex = App::Get_Vertex(app, cursor);
               bool vertexSelected = false;
               if (app.vertex.shape != Graphics::SIZE) {
@@ -107,54 +114,61 @@ namespace Mouse {
                 app.selectedVertex.indexPolygon = app.vertex.indexPolygon;
                 return Center::Center::Move_Vertex(app);
               }
-              //select a shape
-              //we want to grab the vertexes too so we can move them when we move the shape
+              // select a shape
+              // we want to grab the vertexes too so we can move them when we move the shape
               app.vertex = App::Get_Shape(app, cursor);
               if (app.vertex.shape == Graphics::SIZE)
                 return false;
               else {
-              //move selected vertexes
-                if (doubleClick && app.selectedShape.shape == Graphics::POLYGON) {
-                  //create vertex at mouse
-                  //need to calculate which edge the mouse is closest to and insert the vertex between those 2 points
+                // move selected vertexes
+                if (doubleClick &&
+                    app.selectedShape.shape == Graphics::POLYGON) {
+                  // create vertex at mouse
+                  // need to calculate which edge the mouse is closest to and insert the vertex between those 2 points
                   i2 m;
                   SDL_GetMouseState(&m.x, &m.y);
                   SDL_FPoint pos = {(float)m.x, (float)m.y};
                   pos = Offset_From_Image_Center(app, pos);
-                  app.interface.center.polygons[app.vertex.indexPolygon].vertexes.push_back({pos.x,pos.y});
-                  app.interface.center.polygons[app.vertex.indexPolygon].moving.push_back(false);
+                  app.interface.center.polygons[app.vertex.indexPolygon]
+                      .vertexes.push_back({pos.x, pos.y});
+                  app.interface.center.polygons[app.vertex.indexPolygon]
+                      .moving.push_back(false);
                   doubleClick = false;
                   doubleClickTimer = 0;
                   return true;
-                }
-                else if (!vertexSelected) {
+                } else if (!vertexSelected) {
                   doubleClickTimer = SDL_GetTicks();
-//                  app.selectedVertex.shape = app.vertex.shape;
-//                  app.selectedVertex.indexVertex = app.vertex.indexVertex;
-//                  app.selectedVertex.indexPolygon = app.vertex.indexPolygon;
+                  //                  app.selectedVertex.shape = app.vertex.shape;
+                  //                  app.selectedVertex.indexVertex = app.vertex.indexVertex;
+                  //                  app.selectedVertex.indexPolygon = app.vertex.indexPolygon;
                 }
                 app.selectedShape.shape = app.vertex.shape;
                 app.selectedShape.indexPolygon = app.vertex.indexPolygon;
                 return Center::Center::Move_Vertex(app);
               }
-              //select from shape list
+              // select from shape list
 
-              //use scroll bar for shape list
+              // use scroll bar for shape list
               return true;
             }
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {
-              //while held save the offset of where the mouse was clicked and the current mouse position
-              //when released save the offset to the original value
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight,
+                                     &cursor)) {
+              // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
               return true;
             }
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {
-              //while held save the offset of where the mouse was clicked and the current mouse position
-              //when released save the offset to the original value
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft,
+                                     &cursor)) {
+              // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
               return true;
             }
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
-              for (int i = 0; i < app.panel.mainPanel.center.buttonBar.buttons.size(); ++i) {
-                if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.buttons[i], &cursor)) {
+            if (SDL_HasIntersectionF(
+                    &app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
+              for (int i = 0;
+                   i < app.panel.mainPanel.center.buttonBar.buttons.size();
+                   ++i) {
+                if (SDL_HasIntersectionF(
+                        &app.panel.mainPanel.center.buttonBar.buttons[i],
+                        &cursor)) {
                   Center::Center::Click_Button(app, i);
                 };
               }
@@ -162,8 +176,7 @@ namespace Mouse {
           }
         }
         return true;
-      }
-      else if (event.button.button == SDL_BUTTON_RIGHT) {
+      } else if (event.button.button == SDL_BUTTON_RIGHT) {
         if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor)) {
           return true;
         }
@@ -180,8 +193,7 @@ namespace Mouse {
             return true;
         }
         return true;
-      }
-      else if (event.button.button == SDL_BUTTON_MIDDLE) {
+      } else if (event.button.button == SDL_BUTTON_MIDDLE) {
         if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor)) {
           return true;
         }
@@ -194,14 +206,19 @@ namespace Mouse {
             return true;
           if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor))
             return true;
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor))
+          if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel,
+                                   &cursor)) {
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image,
+                                     &cursor))
               return Center::Center::Move(app);
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor))
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight,
+                                     &cursor))
               return true;
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor))
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft,
+                                     &cursor))
               return true;
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor))
+            if (SDL_HasIntersectionF(
+                    &app.panel.mainPanel.center.buttonBar.panel, &cursor))
               return true;
           }
         }
@@ -209,6 +226,11 @@ namespace Mouse {
       }
       return true;
     }
+    return false;
+  }
+
+  bool Up(const SDL_Event &event, App::App &app) {
+    auto cursor = Cursor();
 
     if (event.type == SDL_MOUSEBUTTONUP) {
       if (event.button.button == SDL_BUTTON_LEFT) {
@@ -295,6 +317,14 @@ namespace Mouse {
     }
     return false;
   };
+
+  bool Event(const SDL_Event &event, App::App &app) {
+    if (Up(event, app))
+      return true;
+    if (Down(event, app))
+      return true;
+    return false;
+  }
 
   bool Motion(const SDL_Event &event, App::App &app, int &x) {
     if (event.type == SDL_MOUSEMOTION) {

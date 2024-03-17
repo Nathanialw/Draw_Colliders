@@ -12,6 +12,7 @@
 
 namespace Menu {
 
-  bool Top_Menu();
+  void Clear();
+  bool Open(App::App& app);
   void Render(App::App &app);
 }

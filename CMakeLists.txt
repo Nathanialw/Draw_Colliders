@@ -33,6 +33,7 @@ add_executable(Box2D_Colliders
         src/Input/keyboard.cpp
         src/Input/mouse.cpp
         src/Input/window.cpp
+        src/Input/actions.cpp
 
         src/Panels/menu.cpp
         src/Panels/top.cpp
