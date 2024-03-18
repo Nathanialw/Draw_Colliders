@@ -26,6 +26,14 @@ void Log(const char* &string) {
   std::cout << string << std::endl;
 }
 
+float distance(const SDL_FPoint &a, const SDL_FPoint &b) {
+  return std::sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y));
+}
+
+float dotProduct(const SDL_FPoint &a, const SDL_FPoint &b) {
+  return a.x * b.x + a.y * b.y;
+}
+
 bool Rect_Intersect(const SDL_FRect &entity, const SDL_FRect &target) {
   if ((entity.y <= target.y + target.h) &&
       (entity.x <= target.x + target.w) &&
@@ -35,6 +43,31 @@ bool Rect_Intersect(const SDL_FRect &entity, const SDL_FRect &target) {
   }
   return false;
 };
+
+float distanceToLineSegment(const SDL_FPoint &p, const SDL_FPoint &a, const SDL_FPoint &b) {
+  SDL_FPoint ap = {p.x - a.x, p.y - a.y};
+  SDL_FPoint ab = {b.x - a.x, b.y - a.y};
+
+  float dot = dotProduct(ap, ab);
+  float segLenSq = dotProduct(ab, ab);
+
+  float t = dot / segLenSq;
+
+  if (t < 0.0) {
+    return distance(p, a);
+  }
+
+  if (t > 1.0) {
+    return distance(p, b);
+  }
+
+  SDL_FPoint closestPoint = {a.x + t * ab.x, a.y + t * ab.y};
+  return distance(p, closestPoint);
+}
+
+bool Point_FRect_Intersect(const SDL_FPoint &p, const SDL_FRect &r) {
+  return ( (p.x >= r.x) && (p.x < (r.x + r.w)) && (p.y >= r.y) && (p.y < (r.y + r.h)) ) ? true : false;
+}
 
 SDL_FRect Rect_To_FRect(const SDL_Rect &rect) {
   SDL_FRect fRect;

@@ -6,8 +6,15 @@
 #include "menu.h"
 #include "../Graphics/text.h"
 #include "../Input/mouse.h"
+#include "../Utils/utils.h"
 
 namespace Menu {
+
+  SDL_Color color[2] = {
+      {0, 0, 0, 255},
+      {0, 0, 255, 255},
+  };
+
 
   struct Button {
     SDL_Texture* texture{};
@@ -15,11 +22,12 @@ namespace Menu {
     SDL_FRect subPanel{};
     bool cache = false;
     bool render = false;
+    int colorIndex = 0;
   };
 
   std::array<std::string, Graphics::numMenuButtons> text = {"File", "Edit", "Options", "View", "Window", "Help"};
 
-  std::array<std::string, 7> file = {"New", "Open", "", "Close", "", "", ""};
+  std::array<std::string, 7> file = {"New", "Open", " ", "Close", " ", " ", "Quit"};
   std::array<std::string, 7> edit = {"Delete Shape", "Delete Vertex", "New Polygon", "New AABB", "New Circle", "New Point", "New Line"};
   std::array<std::string, 7> options = {"", "", "", "", "", "", ""};
   std::array<std::string, 7> view = {"", "", "", "", "", "", ""};
@@ -36,7 +44,7 @@ namespace Menu {
   std::array<Button, Graphics::numMenuButtons> menu = {};
 
   void Render_Panel(App::App &app) {
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, color[0]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.menu.panel);
     SDL_SetRenderDrawColor(app.context.renderer, 152, 25, 125, 255);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.menu.panel);
@@ -49,7 +57,6 @@ namespace Menu {
     float w = 50.0f;
     float h = app.panel.menu.panel.h;
     float spacing = 5.0f;
-    SDL_SetRenderDrawColor(app.context.renderer, 152, 25, 125, 255);
     for (int i = 0; i < text.size(); ++i) {
 
       SDL_FRect dRect = {x + spacing, y, w, h};
@@ -57,7 +64,9 @@ namespace Menu {
       auto rect = Text::Render(app.context.renderer, app.context.font, text[i].c_str(), dRect.x, dRect.y);
       rect.w += (int)spacing * 2;
       rect.x -= (int)spacing;
-      SDL_RenderDrawRect(app.context.renderer, &rect);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, color[menu[i].colorIndex]);
+      SDL_RenderFillRect(app.context.renderer, &rect);
+      Text::Render(app.context.renderer, app.context.font, text[i].c_str(), dRect.x, dRect.y);
       //cache the rect
       if (!menu[i].cache) {
         menu[i].rect = Rect_To_FRect(rect);
@@ -67,6 +76,10 @@ namespace Menu {
             100.0f,
             300.0f
         };
+        app.menu.x =  0.0f;
+        app.menu.y =  0.0f;
+        app.menu.w += (float)rect.w;
+        app.menu.h =  (float)rect.h;
         menu[i].cache = true;
       }
       x += (float)rect.w;
@@ -117,9 +130,10 @@ namespace Menu {
     Render_Subpanel(app);
   }
 
-  void Clear() {
+  void Clear(App::App& app) {
     for (auto &button: menu) {
       button.render = false;
+      app.menuOpen = false;
     }
   }
 
@@ -129,11 +143,42 @@ namespace Menu {
     for (auto &button: menu) {
       if (Rect_Intersect(button.rect, cursor)) {
         //toggle rendering panel at index
-        button.render = true;
+        button.render = !button.render;
+        app.menuOpen = !app.menuOpen;
         return true;
       }
     }
     return false;
+  }
+
+  void Update(App::App& app) {
+    auto cursor = Mouse::Cursor_Point();
+    //if cursor is in the menu at all
+    if (Point_FRect_Intersect(cursor, app.menu)) {
+      for (auto &button: menu) {
+        button.render = false;
+        //point inside Rect instead
+
+        if (Point_FRect_Intersect(cursor, button.rect)) {
+          //highlight
+          button.colorIndex = 1;
+          //toggle rendering panel at index
+          if (app.menuOpen) {
+            button.render = true;
+          }
+        }
+        else {
+          button.colorIndex = 0;
+        }
+      }
+    }
+    else {
+      for (auto &button: menu) {
+        if (!button.render) {
+          button.colorIndex = 0;
+        }
+      }
+    }
   }
   //check with option is clicked
   //open panel with more options that can be clicked

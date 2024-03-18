@@ -15,6 +15,7 @@
 
 namespace Mouse {
   SDL_FRect Cursor();
+  SDL_FPoint Cursor_Point();
   bool Update_Cursor(App::App &app);
   void Render(App::App &app);
   bool Set_Cursor(App::App &app, const SDL_SystemCursor &cursor);

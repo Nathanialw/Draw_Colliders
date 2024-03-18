@@ -62,6 +62,9 @@ namespace App {
     bool wait = true;
     SDL_SystemCursor currentCursorId = SDL_SYSTEM_CURSOR_ARROW;
 
+    bool menuOpen = false;
+    SDL_FRect menu{};
+
     SDL_Point initialPosition{};
     SDL_Point offset = {0, 0};
     bool moveImage = false;

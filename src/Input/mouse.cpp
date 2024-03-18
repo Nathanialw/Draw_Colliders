@@ -8,6 +8,7 @@
 
 #include "../App/core.h"
 #include "mouse.h"
+#include "actions.h"
 #include "../Utils/utils.h"
 
 #include "../Panels/menu.h"
@@ -53,6 +54,13 @@ namespace Mouse {
     return {(float)x - 5.0f, (float)y - 5.0f, 10.0f, 10.0f};
   }
 
+  SDL_FPoint Cursor_Point() {
+    int x;
+    int y;
+    SDL_GetMouseState(&x, &y);
+    return {(float)x, (float)y};
+  }
+
   bool Down(const SDL_Event &event, App::App &app) {
     // check which panel the mouse is inside of
 
@@ -66,13 +74,13 @@ namespace Mouse {
           app.filterText = app.filterTextDefault;
       }
 
-      Menu::Clear();
-
       if (event.button.button == SDL_BUTTON_LEFT) {
         if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor))
           if (Menu::Open(app)) {
             return true;
           }
+        Menu::Clear(app);
+
         if (SDL_HasIntersectionF(&app.panel.top.panel, &cursor))
           return Top::Top_Panel();
         if (SDL_HasIntersectionF(&app.panel.bottom, &cursor))
@@ -125,14 +133,7 @@ namespace Mouse {
                     app.selectedShape.shape == Graphics::POLYGON) {
                   // create vertex at mouse
                   // need to calculate which edge the mouse is closest to and insert the vertex between those 2 points
-                  i2 m;
-                  SDL_GetMouseState(&m.x, &m.y);
-                  SDL_FPoint pos = {(float)m.x, (float)m.y};
-                  pos = Offset_From_Image_Center(app, pos);
-                  app.interface.center.polygons[app.vertex.indexPolygon]
-                      .vertexes.push_back({pos.x, pos.y});
-                  app.interface.center.polygons[app.vertex.indexPolygon]
-                      .moving.push_back(false);
+                  Action::Add_Vertex(app);
                   doubleClick = false;
                   doubleClickTimer = 0;
                   return true;

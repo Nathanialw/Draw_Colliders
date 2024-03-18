@@ -49,7 +49,7 @@ namespace Keyboard {
         }
 
         if (event.key.keysym.sym == SDLK_s) {
-          if (Action::Load(app))
+          if (Action::Save(app))
             return true;
         }
 
@@ -79,6 +79,8 @@ namespace Keyboard {
         }
 
         if (event.key.keysym.sym == SDLK_ESCAPE) {
+          if (Action::Quit_Application(app))
+            return true;
         }
         return true;
       }

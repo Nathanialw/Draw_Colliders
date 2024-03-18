@@ -12,7 +12,8 @@
 
 namespace Menu {
 
-  void Clear();
+  void Clear(App::App& app);
   bool Open(App::App& app);
+  void Update(App::App& app);
   void Render(App::App &app);
 }

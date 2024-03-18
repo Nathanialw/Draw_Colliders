@@ -33,6 +33,17 @@ namespace Graphics {
     return windowSize;
   }
 
+  void Set_Render_Draw_Color(SDL_Renderer *renderer, const SDL_Color &color) {
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+  }
+
+  void Set_Render_Draw_Color(SDL_Renderer *renderer, const int &r, const int &g, const int &b, const int &a) {
+    SDL_SetRenderDrawColor(renderer, r, g, b, a);
+  }
+  void Reset_Render_Draw_Color(SDL_Renderer *renderer) {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+  }
+
   void Update() {
 
   }

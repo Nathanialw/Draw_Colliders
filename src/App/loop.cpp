@@ -7,6 +7,7 @@
 #include "../Input/mouse.h"
 
 #include "../Panels/Center/center.h"
+#include "../Panels/menu.h"
 
 namespace App {
   SDL_Event event;
@@ -53,6 +54,7 @@ namespace App {
       Input(app);
       ::Center::Center::Update_Image(app);
       Mouse::Update_Cursor(app);
+      Menu::Update(app);
       Render::Present(app);
     }
   }

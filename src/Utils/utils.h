@@ -25,7 +25,9 @@ void Log(const char* &string);
 SDL_FRect Rect_To_FRect(const SDL_Rect &rect);
 
 
+float distanceToLineSegment(const SDL_FPoint &p, const SDL_FPoint &a, const SDL_FPoint &b);
 bool Rect_Intersect(const SDL_FRect &entity, const SDL_FRect &target);
+bool Point_FRect_Intersect(const SDL_FPoint &p, const SDL_FRect &r);
 bool Circle_Intersect(float cx, float cy, float radius, const SDL_FRect &rect);
 bool PolygonOverlap_SAT(std::vector<SDL_FPoint> &r1, std::vector<SDL_FPoint> &r2);
 bool Point_In_Polygon(const std::vector<SDL_FPoint> &point, const std::vector<SDL_FPoint> &polygon);

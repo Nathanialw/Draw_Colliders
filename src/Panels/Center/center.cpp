@@ -8,6 +8,7 @@
 #include "left.h"
 #include "center.h"
 #include "../../Graphics/text.h"
+#include "../../Input/actions.h"
 
 namespace Center::Center {
   int appMax = 10;
@@ -39,73 +40,15 @@ namespace Center::Center {
     return 4;
   }
   int Delete_Selected_Shape(App::App &app) {
-    switch (app.selectedShape.shape) {
-      case Graphics::SIZE:
-        return false;
-      case Graphics::POLYGON: {
-        auto &polygon = app.interface.center.polygons;
-        polygon.erase(polygon.begin() + app.selectedShape.indexPolygon, polygon.begin() + app.selectedShape.indexPolygon + 1);
-        polygon.shrink_to_fit();
-        app.selectedShape.shape = Graphics::SIZE;
-        app.selectedShape.indexPolygon = 0;
-        app.selectedVertex.shape = Graphics::SIZE;
-        app.selectedVertex.indexPolygon = 0;
-        app.selectedVertex.indexVertex = 0;
-        return true;
-      }
-      case Graphics::AABB: {
-        auto &rect = app.interface.center.rects;
-        rect.erase(rect.begin() + app.selectedShape.indexPolygon, rect.begin() + app.selectedShape.indexPolygon + 1);
-        rect.shrink_to_fit();
-        app.selectedShape.shape = Graphics::SIZE;
-        app.selectedShape.indexPolygon = 0;
-        return true;
-      }
-      case Graphics::CIRCLE: {
-        auto &circles = app.interface.center.circles;
-        circles.erase(circles.begin() + app.selectedShape.indexPolygon, circles.begin() + app.selectedShape.indexPolygon + 1);
-        circles.shrink_to_fit();
-        app.selectedShape.shape = Graphics::SIZE;
-        app.selectedShape.indexPolygon = 0;
-        return true;
-      }
-      case Graphics::LINE: {
-        auto &line = app.interface.center.lineSegments;
-        line.erase(line.begin() + app.selectedShape.indexPolygon, line.begin() + app.selectedShape.indexPolygon + 1);
-        line.shrink_to_fit();
-        app.selectedShape.shape = Graphics::SIZE;
-        app.selectedShape.indexPolygon = 0;
-        return true;
-      }
-      case Graphics::POINT: {
-        auto &point = app.interface.center.points;
-        point.erase(point.begin() + app.selectedShape.indexPolygon, point.begin() + app.selectedShape.indexPolygon + 1);
-        point.shrink_to_fit();
-        app.selectedShape.shape = Graphics::SIZE;
-        app.selectedShape.indexPolygon = 0;
-        return true;
-      }
-    }
+    Action::Delete_Shape(app);
     return 5;
   }
   int Create_Vertex_If_Polygon_Selected(App::App &app) {
-    if (app.selectedShape.shape == Graphics::POLYGON) {
-      app.interface.center.polygons[app.selectedShape.indexPolygon].vertexes.push_back({0.0f, 0.0f});
-      app.interface.center.polygons[app.selectedShape.indexPolygon].moving.push_back(false);
-    }
+    Action::Add_Vertex_Center(app);
     return 5;
   }
   int Delete_Vertex_If_Polygon_Selected(App::App &app) {
-    if (app.selectedVertex.shape == Graphics::POLYGON) {
-      auto &polygon = app.interface.center.polygons[app.selectedVertex.indexPolygon];
-      polygon.vertexes.erase(polygon.vertexes.begin() + app.selectedVertex.indexVertex, polygon.vertexes.begin() + app.selectedVertex.indexVertex + 1);
-      polygon.moving.erase(polygon.moving.begin() + app.selectedVertex.indexVertex, polygon.moving.begin() + app.selectedVertex.indexVertex + 1);
-      polygon.vertexes.shrink_to_fit();
-      polygon.moving.shrink_to_fit();
-      app.selectedVertex.shape = Graphics::SIZE;
-      app.selectedVertex.indexVertex = 0;
-      app.selectedVertex.indexPolygon = 0;
-    }
+    Action::Delete_Vertex(app);
     return 5;
   }
 
