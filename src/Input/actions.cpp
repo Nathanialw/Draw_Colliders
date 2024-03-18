@@ -13,11 +13,16 @@ namespace Action {
       auto &shape = app.interface.center.shapes[app.selectedShape.shape];
       shape.erase(shape.begin() + app.selectedShape.indexPolygon, shape.begin() + app.selectedShape.indexPolygon + 1);
       shape.shrink_to_fit();
+      auto &shapeList = app.interface.shapeList.shapeList[app.selectedShape.shape];
+      shapeList.erase(shapeList.begin() + app.selectedShape.indexPolygon + 1, shapeList.begin() + app.selectedShape.indexPolygon + 2);
       app.selectedShape.shape = Graphics::SIZE;
       app.selectedShape.indexPolygon = 0;
       app.selectedVertex.indexPolygon = 0;
       app.selectedVertex.indexVertex = 0;
       app.selectedVertex.shape = Graphics::SIZE;
+      app.vertex.shape = Graphics::SIZE;
+      app.vertex.indexPolygon = 0;
+      app.vertex.indexVertex = 0;
       return true;
     }
     return false;
@@ -34,6 +39,9 @@ namespace Action {
       app.selectedVertex.shape = Graphics::SIZE;
       app.selectedVertex.indexVertex = 0;
       app.selectedVertex.indexPolygon = 0;
+      app.vertex.shape = Graphics::SIZE;
+      app.vertex.indexPolygon = 0;
+      app.vertex.indexVertex = 0;
       return true;
     }
     if (app.selectedVertex.shape == Graphics::POINT) {

@@ -105,6 +105,15 @@ namespace Center::Left {
       app.interface.center = image;
       app.selectedShape.shape = Graphics::SIZE;
       app.selectedVertex.shape = Graphics::SIZE;
+
+      //clear and repopulate shape list
+      Data::Shape_List shapeList;
+      for (int i = 0; i < Graphics::Shape::SIZE; ++i) {
+        for (int j = 0; j < app.interface.center.shapes[i].size(); ++j) {
+          shapeList.shapeList[i].push_back(std::to_string(j));
+        }
+      }
+      app.interface.shapeList = shapeList;
       return true;
     }
     return false;

@@ -163,6 +163,10 @@ namespace Mouse {
                 };
               }
             }
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.panel, &cursor)) {
+              auto vertex = Center::Center::Select_From_Shape_List_Names(app);
+              app.selectedShape = {vertex.shape, vertex.indexPolygon};
+            }
           }
         }
         return true;

@@ -16,15 +16,23 @@
 #include "Bounding_Boxes/line_segment.h"
 
 namespace Data {
+  struct Shape_List {
+    std::array<std::vector<std::string>, Graphics::Shape::SIZE> shapeList;
+
+    Shape_List () {
+      shapeList[Graphics::POINT].emplace_back("Points");
+      shapeList[Graphics::CIRCLE].emplace_back("Circles");
+      shapeList[Graphics::LINE].emplace_back("Lines");
+      shapeList[Graphics::AABB].emplace_back("AABBs");
+      shapeList[Graphics::POLYGON].emplace_back("Polygons");
+    }
+  };
+
+
   struct Center {
     Graphics::Image texture;
-    //vertices and polygons
     std::array<std::vector<Shape::Shape>, Graphics::SIZE> shapes;
-//    std::vector<Shape::Shape> circles;
-//    std::vector<Shape::Shape> rects;
-//    std::vector<Shape::Shape> lineSegments;
-//    std::vector<Shape::Shape> polygons;
-//    std::vector<Shape::Shape> points;
+
     int index = 0;
     //list to show/hide polygons
   };

@@ -110,9 +110,9 @@ namespace Save {
         app.interface.left.imageNameStr[i] = name;
         app.interface.left.imagePathStr[i] = path;
 
-//        load the image to the center if there is no image
 
       }
+//        load the image to the center if there is no image
 
       auto &shapes = app.interface.left.images[i];
       //need to save the number of each shape
@@ -154,7 +154,6 @@ namespace Save {
         shapes.shapes[Graphics::POLYGON].resize(shape_count);
       for (int l = 0; l < shape_count; ++l) {
         int vertex_count = image[shapeStr[4]][std::to_string(l)]["vertex_count"].Get_Int();
-//
         if (vertex_count != 0 && shapes.shapes[Graphics::POLYGON][l].vertices.size() <= vertex_count) {
           shapes.shapes[Graphics::POLYGON][l].vertices.resize(vertex_count);
           shapes.shapes[Graphics::POLYGON][l].moving.resize(vertex_count);
@@ -169,6 +168,13 @@ namespace Save {
 
       if (setCenter) {
         app.interface.center = app.interface.left.images[0];
+        Data::Shape_List shapeList;
+        for (int i = 0; i < Graphics::Shape::SIZE; ++i) {
+          for (int j = 0; j < app.interface.center.shapes[i].size(); ++j) {
+            shapeList.shapeList[i].push_back(std::to_string(j));
+          }
+        }
+        app.interface.shapeList = shapeList;
         setCenter = false;
       }
     }

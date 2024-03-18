@@ -10,6 +10,10 @@ void Log(const auto &string) {
   std::cout << string << std::endl;
 }
 
+void Log(const unsigned long &string) {
+  std::cout << string << std::endl;
+}
+
 void Log(const int &string) {
   std::cout << string << std::endl;
 }

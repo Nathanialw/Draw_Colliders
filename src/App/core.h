@@ -18,6 +18,7 @@ namespace App {
     Data::Center center;
     Data::Right right;
     Data::Menu menu;
+    Data::Shape_List shapeList;
     Data::App_Buttons appButtons;
     Data::Edit_Buttons editButtons;
   };

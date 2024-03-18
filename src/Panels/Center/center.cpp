@@ -9,34 +9,48 @@
 #include "center.h"
 #include "../../Graphics/text.h"
 #include "../../Input/actions.h"
+#include "../../Input/mouse.h"
 
 namespace Center::Center {
   int appMax = 10;
   int imageMoveMax = 20;
 
   int Create_Circle_Button(App::App &app) {
-    if (app.interface.center.texture.texture)
+    if (app.interface.center.texture.texture) {
+      app.interface.shapeList.shapeList[Graphics::CIRCLE].emplace_back(std::to_string(app.interface.center.shapes[Graphics::CIRCLE].size()));
       app.interface.center.shapes[Graphics::CIRCLE].emplace_back(Circle::Create(app.panel.mainPanel.center));
+    }
     return 0;
   }
   int Create_Point_Button(App::App &app) {
-    if (app.interface.center.texture.texture)
+    if (app.interface.center.texture.texture) {
+      app.interface.shapeList.shapeList[Graphics::POINT].emplace_back(std::to_string(app.interface.center.shapes[Graphics::POINT].size()));
       app.interface.center.shapes[Graphics::POINT].emplace_back(Point::Create(app.panel.mainPanel.center));
+    }
     return 1;
   }
   int Create_Polygon_Button(App::App &app) {
-    if (app.interface.center.texture.texture)
+    if (app.interface.center.texture.texture) {
+      app.interface.shapeList.shapeList[Graphics::POLYGON].emplace_back(std::to_string(app.interface.center.shapes[Graphics::POLYGON].size()));
       app.interface.center.shapes[Graphics::POLYGON].emplace_back(Polygon::Create(app.panel.mainPanel.center));
+    }
     return 2;
   }
   int Create_Rect_Button(App::App &app) {
-    if (app.interface.center.texture.texture)
+    if (app.interface.center.texture.texture) {
+      std::string i = std::to_string(app.interface.center.shapes[Graphics::AABB].size());
+      Log(i);
+      app.interface.shapeList.shapeList[Graphics::AABB].emplace_back(i);
       app.interface.center.shapes[Graphics::AABB].emplace_back(AABB::Create());
+    }
     return 3;
   }
   int Create_Line_Button(App::App &app) {
-    if (app.interface.center.texture.texture)
+    if (app.interface.center.texture.texture) {
+      auto i = std::to_string(app.interface.center.shapes[Graphics::LINE].size());
+      app.interface.shapeList.shapeList[Graphics::LINE].emplace_back(i);
       app.interface.center.shapes[Graphics::LINE].emplace_back(Line_Segment::Create(app.panel.mainPanel.center));
+    }
     return 4;
   }
   int Delete_Selected_Shape(App::App &app) {
@@ -183,9 +197,11 @@ namespace Center::Center {
 
     if (!app.interface.center.shapes[app.vertex.shape].empty()) {
       if (!app.interface.center.shapes[app.vertex.shape][app.vertex.indexPolygon].vertices.empty()) {
-        if (app.vertex.indexVertex == -1) {
-          for (int i = 0; i < app.interface.center.shapes[app.selectedShape.shape][app.vertex.indexPolygon].vertices.size(); ++i) {
-            Set_vertex(app, app.interface.center.shapes[app.selectedShape.shape][app.vertex.indexPolygon].vertices[i]);
+        if (app.vertex.indexVertex == -1 && app.selectedShape.indexPolygon < app.interface.center.shapes[app.selectedShape.shape].size()) {
+          if (app.selectedShape.shape == Graphics::SIZE)
+            return false;
+          for (int i = 0; i < app.interface.center.shapes[app.selectedShape.shape][app.selectedShape.indexPolygon].vertices.size(); ++i) {
+            Set_vertex(app, app.interface.center.shapes[app.selectedShape.shape][app.selectedShape.indexPolygon].vertices[i]);
             app.interface.center.shapes[app.selectedShape.shape][app.vertex.indexPolygon].moving[i] = false;
           }
         } else {
@@ -326,6 +342,68 @@ namespace Center::Center {
     Render_Shapes(app);
   }
 
+  void Render_Shape_List_Names(App::App &app) {
+    float x = app.panel.mainPanel.center.shapes.panel.x;
+    float y = app.panel.mainPanel.center.shapes.panel.y;
+    float w = 40.0f;
+    float h = 25.0f;
+    float spacing = 2.0f;
+
+    for (int j = 0; j < Graphics::Shape::SIZE; ++j) {
+      for (int i = 0; i < app.interface.shapeList.shapeList[j].size(); ++i) {
+        SDL_FRect dRect = {x + spacing, y + spacing, w - (spacing * 2.0f), h};
+        if (j == app.selectedShape.shape && (i - 1) == app.selectedShape.indexPolygon) {
+          SDL_FRect rect = {
+              dRect.x + spacing,
+              dRect.y,
+              app.panel.mainPanel.center.shapes.panel.w - (spacing * 2.0f),
+              dRect.h,
+          };
+          SDL_SetRenderDrawColor(app.context.renderer, 100, 100, 200, 255);
+          SDL_RenderFillRectF(app.context.renderer, &rect);
+          SDL_SetRenderDrawColor(app.context.renderer, 155, 155, 155, 255);
+          SDL_RenderDrawRectF(app.context.renderer, &rect);
+          SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+        }
+
+        SDL_Rect rect = {
+            (int)dRect.x + (int)spacing,
+            (int)dRect.y,
+            (int)app.panel.mainPanel.center.shapes.panel.w - (int)(spacing * 3.0f),
+            (int)dRect.h,
+        };
+        Text::Render(app.context.renderer, app.context.font, app.interface.shapeList.shapeList[j][i].c_str(), rect);
+        y += h + spacing;
+      }
+    }
+  }
+
+  App::Shape Select_From_Shape_List_Names(App::App &app) {
+    float x = app.panel.mainPanel.center.shapes.panel.x;
+    float y = app.panel.mainPanel.center.shapes.panel.y;
+    float w = 40.0f;
+    float h = 25.0f;
+    float spacing = 2.0f;
+
+    for (int j = 0; j < Graphics::Shape::SIZE; ++j) {
+      for (int i = 0; i < app.interface.shapeList.shapeList[j].size(); ++i) {
+        SDL_FRect dRect = {x + spacing, y + spacing, w - (spacing * 2.0f), h};
+        SDL_FRect rect = {
+            dRect.x + spacing,
+            dRect.y,
+            app.panel.mainPanel.center.shapes.panel.w - (spacing * 2.0f),
+            dRect.h,
+        };
+        auto cursor = Mouse::Cursor_Point();
+        if (Point_FRect_Intersect(cursor, rect) && i != 0)
+          return {Graphics::Shape(j), i - 1};
+
+        y += h + spacing;
+      }
+    }
+    return {Graphics::Shape::SIZE, 0};
+  }
+
   void Render_Shape_List(App::App &app) {
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.panel);
@@ -333,6 +411,8 @@ namespace Center::Center {
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.panel);
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderLeft);
+
+    Render_Shape_List_Names(app);
 
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.scroll.panel);
