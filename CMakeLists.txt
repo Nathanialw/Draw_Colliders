@@ -29,6 +29,7 @@ add_executable(Box2D_Colliders
         src/App/Bounding_Boxes/circle.cpp
         src/App/Bounding_Boxes/point.cpp
         src/App/Bounding_Boxes/polygon.cpp
+        src/App/Bounding_Boxes/shape.cpp
 
         src/Input/keyboard.cpp
         src/Input/mouse.cpp

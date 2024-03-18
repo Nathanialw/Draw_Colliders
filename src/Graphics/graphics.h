@@ -40,18 +40,18 @@ namespace Graphics {
     SDL_FRect search;
   };
 
-  const int ButtonBarSize = 8;
+  const int ButtonBarSize = 9;
   struct Button_Bar {
     SDL_FRect panel;
     std::array<SDL_FRect, ButtonBarSize> buttons;
   };
 
   enum Shape {
-    AABB,
-    POLYGON,
+    POINT,
     CIRCLE,
     LINE,
-    POINT,
+    AABB,
+    POLYGON,
     SIZE,
   };
 

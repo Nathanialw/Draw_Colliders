@@ -7,12 +7,17 @@
 
 
 namespace Point {
-  Point Create(const Graphics::Center_Panel &panel) {
-    Point point = {
-        0.0f,
-        0.0f,
-        false
-    };
+  Shape::Shape Create(const Graphics::Center_Panel &panel) {
+    Shape::Shape point;
+    point.vertices.push_back({0.0f, 0.0f });
+    point.moving.push_back(false);
+    return point;
+  };
+
+  Shape::Shape Create(const float &x, const float &y) {
+    Shape::Shape point;
+    point.vertices.push_back({x, y });
+    point.moving.push_back(false);
     return point;
   };
 }

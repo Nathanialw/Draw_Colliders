@@ -26,14 +26,14 @@ namespace Mouse {
   bool doubleClick = false;
 
   bool Double_Click() {
-    const Uint32 clickSpeed = 500;
+    const Uint32 clickSpeed = 150;
     const Uint32 timer = (SDL_GetTicks() - doubleClickTimer);
     if (doubleClickTimer > 0) {
       if (timer <= clickSpeed) {
         doubleClickTimer = 0;
         doubleClick = true;
       }
-      else if (timer > clickSpeed) {
+      else {
         doubleClickTimer = 0;
       }
     }
@@ -97,20 +97,16 @@ namespace Mouse {
               return Center::Left::Set_Image(app);
             }
             // use search box
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.search,
-                                     &cursor)) {
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.search, &cursor)) {
               return Center::Left::Filter_Images(app);
             }
             // use scroll
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.scroll.bar,
-                                     &cursor)) {
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.scroll.bar, &cursor)) {
               return Center::Left::Scroll(app);
             }
           };
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel,
-                                   &cursor)) {
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image,
-                                     &cursor)) {
+          if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor)) {
               // check for vertex under mouse
               // select a vertex
               app.vertex = App::Get_Vertex(app, cursor);
@@ -123,12 +119,12 @@ namespace Mouse {
                 return Center::Center::Move_Vertex(app);
               }
               // select a shape
-              // we want to grab the vertexes too so we can move them when we move the shape
+              // we want to grab the vertices too so we can move them when we move the shape
               app.vertex = App::Get_Shape(app, cursor);
               if (app.vertex.shape == Graphics::SIZE)
                 return false;
               else {
-                // move selected vertexes
+                // move selected vertices
                 if (doubleClick &&
                     app.selectedShape.shape == Graphics::POLYGON) {
                   // create vertex at mouse
@@ -152,24 +148,17 @@ namespace Mouse {
               // use scroll bar for shape list
               return true;
             }
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight,
-                                     &cursor)) {
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {
               // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
               return true;
             }
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft,
-                                     &cursor)) {
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {
               // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
               return true;
             }
-            if (SDL_HasIntersectionF(
-                    &app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
-              for (int i = 0;
-                   i < app.panel.mainPanel.center.buttonBar.buttons.size();
-                   ++i) {
-                if (SDL_HasIntersectionF(
-                        &app.panel.mainPanel.center.buttonBar.buttons[i],
-                        &cursor)) {
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
+              for (int i = 0; i < app.panel.mainPanel.center.buttonBar.buttons.size(); ++i) {
+                if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.buttons[i], &cursor)) {
                   Center::Center::Click_Button(app, i);
                 };
               }
@@ -207,19 +196,14 @@ namespace Mouse {
             return true;
           if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor))
             return true;
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel,
-                                   &cursor)) {
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image,
-                                     &cursor))
+          if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor))
               return Center::Center::Move(app);
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight,
-                                     &cursor))
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor))
               return true;
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft,
-                                     &cursor))
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor))
               return true;
-            if (SDL_HasIntersectionF(
-                    &app.panel.mainPanel.center.buttonBar.panel, &cursor))
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor))
               return true;
           }
         }
@@ -253,10 +237,7 @@ namespace Mouse {
           }
         }
         //run regardless of where the mouse is when it is released, probably for all mouse button release actions
-        if (app.vertex.shape != Graphics::SIZE) {
-          Center::Center::Set_Vertex(app);
-          app.vertex = {Graphics::SIZE, 0, 0};
-        }
+        Center::Center::Set_Vertex(app);
         return true;
       }
 

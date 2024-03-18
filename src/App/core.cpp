@@ -69,7 +69,7 @@ namespace App {
     rect.y = (vertex.y * app.interface.center.texture.scale) + o.y - o.r;
     rect.w = o.r * 2.0f;
     rect.h = o.r * 2.0f;
-    if (app.moveImage || moveVertex) {
+    if (app.moveImage || moveVertex || app.zoomToMouse) {
       rect.x -= (float) app.offset.x;
       rect.y -= (float) app.offset.y;
     }
@@ -82,7 +82,7 @@ namespace App {
     SDL_FRect rect;
     rect.x = (vertex.x * app.interface.center.texture.scale) + o.x;
     rect.y = (vertex.y * app.interface.center.texture.scale) + o.y;
-    if (app.moveImage || moveVertex) {
+    if (app.moveImage || moveVertex || app.zoomToMouse) {
       rect.x -= (float) app.offset.x;
       rect.y -= (float) app.offset.y;
     }
@@ -93,114 +93,84 @@ namespace App {
 
   Vertex Get_Vertex(App &app, const SDL_FRect &cursor) {
     auto o = Calc_Offset(app);
-    auto &shape = app.interface.center;
+    auto &shape = app.interface.center.shapes;
 
-    for (int i = 0; i < shape.points.size(); ++i) {
-      auto vRect = Vertex_To_Rect(app, shape.points[i].vertex, o, shape.points[i].moving);
-      if (SDL_HasIntersectionF(&vRect, &cursor)){
-        shape.points[i].moving = true;
-        return {Graphics::POINT, i, 0};
-      }
-    }
-    for (int i = 0; i < shape.polygons.size(); ++i) {
-      for (int j = 0; j < shape.polygons[i].vertexes.size(); ++j) {
-        auto vRect = Vertex_To_Rect(app, shape.polygons[i].vertexes[j], o, shape.polygons[i].moving[i]);
-        if (SDL_HasIntersectionF(&vRect, &cursor)) {
-          shape.polygons[i].moving[j] = true;
-          return {Graphics::POLYGON, i, j};
+    for (int k = 0; k < Graphics::SIZE; ++k) {
+      if (k == Graphics::CIRCLE) {
+        for (int i = 0; i < shape[k].size(); ++i) {
+          auto vRect = Vertex_To_Rect(app, shape[k][i].vertices[1], o, shape[k][i].moving[1]);
+          if (SDL_HasIntersectionF(&vRect, &cursor)) {
+            shape[k][i].moving[1] = true;
+            return {(Graphics::Shape) k, i, 1};
+          }
         }
       }
-    }
-    for (int i = 0; i < shape.rects.size(); ++i) {
-      for (int j = 0; j < shape.rects[i].vertexes.size(); ++j) {
-        auto vRect = Vertex_To_Rect(app, shape.rects[i].vertexes[j], o, shape.rects[i].moving[j]);
-        if (SDL_HasIntersectionF(&vRect, &cursor)) {
-          shape.rects[i].moving[j] = true;
-          return {Graphics::AABB, i, j};
-        }
-      }
-    }
-    for (int i = 0; i < shape.circles.size(); ++i) {
-      auto vRect = Vertex_To_Rect(app, shape.circles[i].vertexes[1], o, shape.circles[i].moving[1]);
-      if (SDL_HasIntersectionF(&vRect, &cursor)){
-        shape.circles[i].moving[1] = true;
-        return {Graphics::CIRCLE, i, 1};
-      }
-    }
-    for (int i = 0; i < shape.lineSegments.size(); ++i) {
-      for (int j = 0; j < shape.lineSegments[i].vertexes.size(); ++j) {
-        auto vRect = Vertex_To_Rect(app, shape.lineSegments[i].vertexes[j], o, shape.lineSegments[i].moving[j]);
-        if (SDL_HasIntersectionF(&vRect, &cursor)) {
-          shape.lineSegments[i].moving[j] = true;
-          return {Graphics::LINE, i, j};
+      else {
+        for (int i = 0; i < shape[k].size(); ++i) {
+          for (int j = 0; j < shape[k][i].vertices.size(); ++j) {
+            auto vRect = Vertex_To_Rect(app, shape[k][i].vertices[j], o, shape[k][i].moving[j]);
+            if (SDL_HasIntersectionF(&vRect, &cursor)) {
+              shape[k][i].moving[j] = true;
+              return {(Graphics::Shape)k, i, j};
+            }
+          }
         }
       }
     }
     return {Graphics::SIZE, 0};
   }
 
+  Vertex Move (Data::Center &shape, const int &k, const int &i) {
+    for (auto &&move: shape.shapes[k][i].moving)
+      move = true;
+    return {(Graphics::Shape) k, i, -1};
+  }
+
+  Vertex Check_If_Selected(App &app, const SDL_FRect &cursor, const Graphics::Shape &selectedShape, const int &index) {
+    if (selectedShape != Graphics::SIZE) {
+      auto &shape = app.interface.center;
+      auto o = Calc_Offset(app);
+      std::vector<SDL_FPoint> mouseVertexes;
+      mouseVertexes.push_back({cursor.x, cursor.y});
+      mouseVertexes.push_back({cursor.x + cursor.w, cursor.y});
+      mouseVertexes.push_back({cursor.x + cursor.w, cursor.y + cursor.h});
+      mouseVertexes.push_back({cursor.x, cursor.y + cursor.h});
+      std::vector<SDL_FPoint> shapeVertexes;
+
+      for (int j = 0; j < shape.shapes[selectedShape][index].vertices.size(); ++j) {
+        SDL_FPoint v = Vertex_To_Screen(app, shape.shapes[selectedShape][index].vertices[j], o, shape.shapes[selectedShape][index].moving[j]);
+        shapeVertexes.emplace_back(v);
+      }
+      if (selectedShape == Graphics::CIRCLE) {
+          if (Circle_Intersect(shapeVertexes[0].x, shapeVertexes[0].y, shapeVertexes[1].y - shapeVertexes[0].y, cursor))
+            return Move(shape, selectedShape, index);
+        }
+      else if (selectedShape == Graphics::POLYGON) {
+        if (Point_In_Polygon(mouseVertexes, shapeVertexes))
+          return Move(shape, selectedShape, index);
+      }
+      else if (selectedShape == Graphics::AABB || selectedShape == Graphics::LINE) {
+        if (PolygonOverlap_SAT(mouseVertexes, shapeVertexes))
+          return Move(shape, selectedShape, index);
+      }
+    }
+    return {Graphics::SIZE, 0};
+  }
+
   Vertex Get_Shape(App &app, const SDL_FRect &cursor) {
-    auto o = Calc_Offset(app);
-    auto &shape = app.interface.center;
-    std::vector<SDL_FPoint> mouseVertexes;
-    mouseVertexes.push_back({cursor.x, cursor.y});
-    mouseVertexes.push_back({cursor.x + cursor.w, cursor.y});
-    mouseVertexes.push_back({cursor.x + cursor.w, cursor.y + cursor.h});
-    mouseVertexes.push_back({cursor.x , cursor.y + cursor.h});
-    std::vector<SDL_FPoint> shapeVertexes;
+    auto &shapes = app.interface.center.shapes;
 
-    for (int i = 0; i < shape.polygons.size(); ++i) {
-      for (int j = 0; j < shape.polygons[i].vertexes.size(); ++j) {
-        SDL_FPoint v = Vertex_To_Screen(app, shape.polygons[i].vertexes[j], o, shape.polygons[i].moving[j]);
-        shapeVertexes.emplace_back(v);
-      }
-      /// this one only works for convex polygons, need one for concave polygons
-//      if (PolygonOverlap_SAT(mouseVertexes, shapeVertexes)) {
-      if (Point_In_Polygon(mouseVertexes, shapeVertexes)) {
-        for (auto && move : shape.polygons[i].moving)
-          move = true;
-        return {Graphics::POLYGON, i, -1};
-      }
-      shapeVertexes.clear();
-    }
+    //check if I already have a shape first, return it if I still have it selected
+    auto shape = Check_If_Selected(app, cursor, app.selectedShape.shape, app.selectedShape.indexPolygon);
+    if (shape.shape != Graphics::SIZE)
+      return shape;
 
-    for (int i = 0; i < shape.rects.size(); ++i) {
-      for (int j = 0; j < shape.rects[i].vertexes.size(); ++j) {
-        SDL_FPoint v = Vertex_To_Screen(app, shape.rects[i].vertexes[j], o, shape.rects[i].moving[j]);
-        shapeVertexes.emplace_back(v);
+    for (int k = 0; k < Graphics::SIZE; ++k) {
+      for (int i = shapes[k].size() - 1; i >= 0; --i) {
+        shape = Check_If_Selected(app, cursor, (Graphics::Shape)k, i);
+        if (shape.shape != Graphics::SIZE)
+          return shape;
       }
-      if (PolygonOverlap_SAT(mouseVertexes, shapeVertexes)) {
-        for (auto && move : shape.rects[i].moving)
-          move = true;
-        return {Graphics::AABB, i, -1};
-      }
-      shapeVertexes.clear();
-    }
-
-    for (int i = 0; i < shape.circles.size(); ++i) {
-      for (int j = 0; j < shape.circles[i].vertexes.size(); ++j) {
-        SDL_FPoint v = Vertex_To_Screen(app, shape.circles[i].vertexes[j], o, shape.circles[i].moving[j]);
-        shapeVertexes.emplace_back(v);
-      }
-      if (Circle_Intersect(shapeVertexes[0].x, shapeVertexes[0].y, shapeVertexes[1].y - shapeVertexes[0].y, cursor)) {
-        for (auto && move : shape.circles[i].moving)
-          move = true;
-        return {Graphics::CIRCLE, i, -1};
-      }
-      shapeVertexes.clear();
-    }
-
-    for (int i = 0; i < shape.lineSegments.size(); ++i) {
-      for (int j = 0; j < shape.lineSegments[i].vertexes.size(); ++j) {
-          SDL_FPoint v = Vertex_To_Screen(app, shape.lineSegments[i].vertexes[j], o, shape.lineSegments[i].moving[j]);
-          shapeVertexes.emplace_back(v);
-        }
-        if (PolygonOverlap_SAT(mouseVertexes, shapeVertexes)) {
-          for (auto && move : shape.lineSegments[i].moving)
-            move = true;
-          return {Graphics::LINE, i, -1};
-        }
-        shapeVertexes.clear();
     }
     return {Graphics::SIZE, 0};
   }

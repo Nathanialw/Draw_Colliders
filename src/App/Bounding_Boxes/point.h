@@ -9,13 +9,11 @@
 #endif //BOX2D_COLLIDERS_POINT_H
 
 #include "../../Graphics/graphics.h"
+#include "shape.h"
 
 
 namespace Point {
-  struct Point {
-    SDL_FPoint vertex{};
-    bool moving = false;
-  };
 
-  Point Create(const Graphics::Center_Panel &panel);
+  Shape::Shape Create(const Graphics::Center_Panel &panel);
+  Shape::Shape Create(const float &x, const float &y);
 }

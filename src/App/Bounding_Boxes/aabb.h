@@ -9,15 +9,11 @@
 #endif //BOX2D_COLLIDERS_AABB_H
 
 #include "../../Graphics/graphics.h"
+#include "shape.h"
 
 
 namespace AABB {
 
-  struct Rect {
-    std::array<SDL_FPoint, 4> vertexes;
-    std::array<bool, 4> moving{ false, false, false, false};
-  };
-
-  Rect Create(const Graphics::Center_Panel &panel);
+  Shape::Shape Create();
 
 }

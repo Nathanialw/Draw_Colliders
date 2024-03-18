@@ -29,13 +29,13 @@ namespace App {
   };
 
   struct Vertex {
-    Graphics::Shape shape = Graphics::AABB;
+    Graphics::Shape shape = Graphics::SIZE;
     int indexPolygon = 0;
     int indexVertex = 0;
   };
 
   struct Shape {
-    Graphics::Shape shape = Graphics::AABB;
+    Graphics::Shape shape = Graphics::SIZE;
     int indexPolygon = 0;
   };
 
@@ -61,18 +61,20 @@ namespace App {
     int timer = 0;
     bool wait = true;
     SDL_SystemCursor currentCursorId = SDL_SYSTEM_CURSOR_ARROW;
+    bool zoomToMouse = true;
 
     bool menuOpen = false;
     SDL_FRect menu{};
 
     SDL_Point initialPosition{};
-    SDL_Point offset = {0, 0};
+    SDL_FPoint offset = {0.0f, 0.0f};
     bool moveImage = false;
     bool moveVertex = false;
     Shape selectedShape;
     Vertex selectedVertex;
     Vertex vertex;
 
+    int imageIndex = 0;
     bool filterImages = false;
     std::string filterText = "Filter...";
     //set it to italic and greyed out

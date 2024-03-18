@@ -17,6 +17,7 @@ namespace Action {
   bool Add_Vertex(App::App &app);
   bool Add_Vertex_Center(App::App &app);
   bool Add_Image(App::App &app);
+  bool Remove_Image(App::App &app);
   bool New_Project(App::App &app);
   bool Close_Project(App::App &app);
   bool Quit_Project(App::App &app);

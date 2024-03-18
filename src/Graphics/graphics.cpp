@@ -44,10 +44,6 @@ namespace Graphics {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   }
 
-  void Update() {
-
-  }
-
   float Cap(const float &panelHeight, float h) {
     if (h > panelHeight)
       return panelHeight;
@@ -121,8 +117,8 @@ namespace Graphics {
   }
 
   Image_Import Load_Image(const Context &context) {
-    nfdchar_t *outPath = nullptr;
-    nfdresult_t result = NFD_OpenDialog("png,jpg;pdf", nullptr, &outPath );
+    nfdchar_t *outPath;
+    nfdresult_t result = NFD_OpenDialog("png,jpg;pdf", nullptr, &outPath);
 
     const char * filePath;
     if ( result == NFD_CANCEL ||  result == NFD_ERROR ) {
@@ -133,15 +129,38 @@ namespace Graphics {
       filePath = outPath;
     }
     SDL_Texture* texture = IMG_LoadTexture(context.renderer, filePath);
-//    std::cout << SDL_GetError() << std::endl;
 
     std::string fileName;
     if ( result == NFD_OKAY ) {
-      // std::cout will not work from application, only from IDE or terminal
-      /* Generally, applications run from terminal have direct access to STDIN/STDOUT/STDERR, whereas non-terminal-based applications do not.
-       * */
-//      puts("Success!");
-//      puts(outPath);
+      fileName = outPath;
+      free(outPath);
+    }
+    return {texture, fileName};
+  }
+
+  Image_Import Load_Images(const Context &context) {
+    nfdpathset_t pathSet;
+    nfdresult_t result = NFD_OpenDialogMultiple("png,jpg;pdf", nullptr, &pathSet);
+    nfdchar_t *outPath = nullptr;
+
+    const char * filePath;
+    if ( result == NFD_CANCEL ||  result == NFD_ERROR ) {
+      free(outPath);
+      return {nullptr, ""};
+    }
+    else if ( result == NFD_OKAY ) {
+      size_t i;
+      for ( i = 0; i < NFD_PathSet_GetCount(&pathSet); ++i )
+      {
+        outPath = NFD_PathSet_GetPath(&pathSet, i);
+      }
+      filePath = outPath;
+      NFD_PathSet_Free(&pathSet);
+    }
+    SDL_Texture* texture = IMG_LoadTexture(context.renderer, filePath);
+
+    std::string fileName;
+    if ( result == NFD_OKAY ) {
       fileName = outPath;
       free(outPath);
     }

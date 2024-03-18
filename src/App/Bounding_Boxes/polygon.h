@@ -11,14 +11,9 @@
 
 #include "line_segment.h"
 #include "../../Graphics/graphics.h"
+#include "shape.h"
 
 namespace Polygon {
 
-  struct Polygon {
-    std::vector<SDL_FPoint> vertexes{};
-    std::vector<bool> moving{};
-
-  };
-
-  Polygon Create(const Graphics::Center_Panel &panel);
+  Shape::Shape Create(const Graphics::Center_Panel &panel);
 }

@@ -9,55 +9,16 @@
 
 namespace Action {
   bool Delete_Shape(App::App &app) {
-    switch (app.selectedShape.shape) {
-      case Graphics::SIZE:
-        return false;
-
-      case Graphics::POLYGON: {
-        auto &polygon = app.interface.center.polygons;
-        //              polygon[app.selectedShape.indexPolygon].vertexes.clear();
-        //              polygon[app.selectedShape.indexPolygon].moving.clear();
-        polygon.erase(polygon.begin() + app.selectedShape.indexPolygon, polygon.begin() + app.selectedShape.indexPolygon + 1);
-        polygon.shrink_to_fit();
-        app.selectedShape.shape = Graphics::SIZE;
-        app.selectedShape.indexPolygon = 0;
-        app.selectedVertex.shape = Graphics::SIZE;
-        app.selectedVertex.indexPolygon = 0;
-        app.selectedVertex.indexVertex = 0;
-        return true;
-      }
-      case Graphics::AABB: {
-        auto &rect = app.interface.center.rects;
-        rect.erase(rect.begin() + app.selectedShape.indexPolygon, rect.begin() + app.selectedShape.indexPolygon + 1);
-        rect.shrink_to_fit();
-        app.selectedShape.shape = Graphics::SIZE;
-        app.selectedShape.indexPolygon = 0;
-        return true;
-      }
-      case Graphics::CIRCLE: {
-        auto &circles = app.interface.center.circles;
-        circles.erase(circles.begin() + app.selectedShape.indexPolygon, circles.begin() + app.selectedShape.indexPolygon + 1);
-        circles.shrink_to_fit();
-        app.selectedShape.shape = Graphics::SIZE;
-        app.selectedShape.indexPolygon = 0;
-        return true;
-      }
-      case Graphics::LINE: {
-        auto &line = app.interface.center.lineSegments;
-        line.erase(line.begin() + app.selectedShape.indexPolygon, line.begin() + app.selectedShape.indexPolygon + 1);
-        line.shrink_to_fit();
-        app.selectedShape.shape = Graphics::SIZE;
-        app.selectedShape.indexPolygon = 0;
-        return true;
-      }
-      case Graphics::POINT: {
-        auto &point = app.interface.center.points;
-        point.erase(point.begin() + app.selectedShape.indexPolygon, point.begin() + app.selectedShape.indexPolygon + 1);
-        point.shrink_to_fit();
-        app.selectedShape.shape = Graphics::SIZE;
-        app.selectedShape.indexPolygon = 0;
-        return true;
-      }
+    if (app.selectedShape.shape != Graphics::SIZE) {
+      auto &shape = app.interface.center.shapes[app.selectedShape.shape];
+      shape.erase(shape.begin() + app.selectedShape.indexPolygon, shape.begin() + app.selectedShape.indexPolygon + 1);
+      shape.shrink_to_fit();
+      app.selectedShape.shape = Graphics::SIZE;
+      app.selectedShape.indexPolygon = 0;
+      app.selectedVertex.indexPolygon = 0;
+      app.selectedVertex.indexVertex = 0;
+      app.selectedVertex.shape = Graphics::SIZE;
+      return true;
     }
     return false;
   }
@@ -65,15 +26,25 @@ namespace Action {
   bool Delete_Vertex(App::App &app) {
     //delete vertex
     if (app.selectedVertex.shape == Graphics::POLYGON) {
-      auto &polygon = app.interface.center.polygons[app.selectedVertex.indexPolygon];
-      polygon.vertexes.erase(polygon.vertexes.begin() + app.selectedVertex.indexVertex, polygon.vertexes.begin() + app.selectedVertex.indexVertex + 1);
+      auto &polygon = app.interface.center.shapes[Graphics::POLYGON][app.selectedVertex.indexPolygon];
+      polygon.vertices.erase(polygon.vertices.begin() + app.selectedVertex.indexVertex, polygon.vertices.begin() + app.selectedVertex.indexVertex + 1);
       polygon.moving.erase(polygon.moving.begin() + app.selectedVertex.indexVertex, polygon.moving.begin() + app.selectedVertex.indexVertex + 1);
-      polygon.vertexes.shrink_to_fit();
+      polygon.vertices.shrink_to_fit();
       polygon.moving.shrink_to_fit();
       app.selectedVertex.shape = Graphics::SIZE;
       app.selectedVertex.indexVertex = 0;
       app.selectedVertex.indexPolygon = 0;
       return true;
+    }
+    if (app.selectedVertex.shape == Graphics::POINT) {
+//      auto &point = app.interface.center.points[app.selectedVertex.indexPolygon];
+//      polygon.vertices.erase(polygon.vertices.begin() + app.selectedVertex.indexVertex, polygon.vertices.begin() + app.selectedVertex.indexVertex + 1);
+//      polygon.moving.erase(polygon.moving.begin() + app.selectedVertex.indexVertex, polygon.moving.begin() + app.selectedVertex.indexVertex + 1);
+//      polygon.vertices.shrink_to_fit();
+//      polygon.moving.shrink_to_fit();
+//      app.selectedVertex.shape = Graphics::SIZE;
+//      app.selectedVertex.indexVertex = 0;
+//      app.selectedVertex.indexPolygon = 0;
     }
     return false;
   }
@@ -103,18 +74,18 @@ namespace Action {
       SDL_FPoint pos = {(float)m.x, (float)m.y};
       pos = Offset_From_Image_Center(app, pos);
       //instead of push back, insert vertex between the 2 closest vertices to the mouse
-      auto &vertices = app.interface.center.polygons[app.selectedShape.indexPolygon].vertexes;
+      auto &vertices = app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].vertices;
       int index = Get_Vertex_Position(vertices, pos);
 
       if (index > vertices.size())
         vertices.push_back({pos.x,pos.y});
       else
-      vertices.insert(vertices.begin() + index, {pos.x,pos.y});
-      auto &moving = app.interface.center.polygons[app.selectedShape.indexPolygon].moving;
+        vertices.insert(vertices.begin() + index, {pos.x,pos.y});
+      auto &moving = app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].moving;
       if (index > moving.size())
         moving.push_back(false);
       else
-      moving.insert(moving.begin() + index, false);
+        moving.insert(moving.begin() + index, false);
       return true;
     }
     return false;
@@ -122,8 +93,8 @@ namespace Action {
 
   bool Add_Vertex_Center(App::App &app) {
     if (app.selectedShape.shape == Graphics::POLYGON) {
-      app.interface.center.polygons[app.selectedShape.indexPolygon].vertexes.push_back({0.0f, 0.0f});
-      app.interface.center.polygons[app.selectedShape.indexPolygon].moving.push_back(false);
+      app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].vertices.push_back({0.0f, 0.0f});
+      app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].moving.push_back(false);
       return true;
     }
     return false;
@@ -144,6 +115,31 @@ namespace Action {
       // load the image to the center if there is no image
       if (!app.interface.center.texture.texture)
         app.interface.center = image;
+      return true;
+    }
+    return false;
+  }
+
+  bool Remove_Image(App::App &app) {
+    if (app.interface.left.images.size() > app.imageIndex) {
+
+      SDL_DestroyTexture(app.interface.left.images[app.imageIndex].texture.texture);
+      app.interface.left.images.erase(app.interface.left.images.begin() + app.imageIndex);
+//      app.interface.left.imageNames.erase(app.interface.left.imageNames.begin() + app.imageIndex);
+      app.interface.left.imagePathStr.erase(app.interface.left.imagePathStr.begin() + app.imageIndex);
+      app.interface.left.imageNameStr.erase(app.interface.left.imageNameStr.begin() + app.imageIndex);
+
+      if (app.interface.center.index == app.imageIndex)
+        app.interface.center = {};
+
+      for (int i = app.imageIndex; i < app.interface.left.images.size(); ++i) {
+        app.interface.left.images[i].index--;
+      }
+      app.imageIndex = 0;
+      app.interface.left.selected = 0;
+      if (!app.interface.left.images.empty())
+        app.interface.center = app.interface.left.images[0];
+
       return true;
     }
     return false;

@@ -78,6 +78,11 @@ namespace Keyboard {
             return true;
         }
 
+        if (event.key.keysym.sym == SDLK_y) {
+          if (Action::Remove_Image(app))
+            return true;
+        }
+
         if (event.key.keysym.sym == SDLK_ESCAPE) {
           if (Action::Quit_Application(app))
             return true;

@@ -18,12 +18,13 @@
 namespace Data {
   struct Center {
     Graphics::Image texture;
-    //vertexes and polygons
-    std::vector<Circle::Circle> circles;
-    std::vector<AABB::Rect> rects;
-    std::vector<Line_Segment::Line> lineSegments;
-    std::vector<Polygon::Polygon> polygons;
-    std::vector<Point::Point> points;
+    //vertices and polygons
+    std::array<std::vector<Shape::Shape>, Graphics::SIZE> shapes;
+//    std::vector<Shape::Shape> circles;
+//    std::vector<Shape::Shape> rects;
+//    std::vector<Shape::Shape> lineSegments;
+//    std::vector<Shape::Shape> polygons;
+//    std::vector<Shape::Shape> points;
     int index = 0;
     //list to show/hide polygons
   };

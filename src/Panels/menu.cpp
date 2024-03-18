@@ -152,6 +152,7 @@ namespace Menu {
   }
 
   void Update(App::App& app) {
+    app.zoomToMouse = false;
     auto cursor = Mouse::Cursor_Point();
     //if cursor is in the menu at all
     if (Point_FRect_Intersect(cursor, app.menu)) {

@@ -83,6 +83,7 @@ namespace Center::Left {
       if (SDL_HasIntersectionF(&cursor, &dRect)) {
         //mouseover highlighting
 //        app.interface.left.selected = i;
+        app.imageIndex = i;
         return app.interface.left.images[i];
       }
       y += h + spacing;
@@ -92,18 +93,20 @@ namespace Center::Left {
 
   bool Set_Image(App::App &app) {
     auto image = Select_Image(app);
-      if (image.texture.texture) {
-        if (app.interface.center.texture.texture) {
-          Data::Center currentImage = app.interface.center;
-          if (currentImage.index == image.index)
-            return false;
-          //needs to go back where it was
-          app.interface.left.selected = image.index;
-          app.interface.left.images[currentImage.index] = currentImage;
-        }
-        app.interface.center = image;
-        return true;
+    if (image.texture.texture) {
+      if (app.interface.center.texture.texture) {
+        Data::Center currentImage = app.interface.center;
+        if (currentImage.index == image.index)
+          return false;
+        //needs to go back where it was
+        app.interface.left.selected = image.index;
+        app.interface.left.images[currentImage.index] = currentImage;
       }
+      app.interface.center = image;
+      app.selectedShape.shape = Graphics::SIZE;
+      app.selectedVertex.shape = Graphics::SIZE;
+      return true;
+    }
     return false;
   }
 
