@@ -66,11 +66,12 @@ namespace Mouse {
     if (event.type == SDL_MOUSEBUTTONDOWN) {
       Double_Click();
 
-      if (app.filterImages) {
-        app.filterImages = false;
-        if (app.filterText.empty())
-          app.filterText = app.filterTextDefault;
-      }
+//      if (app.filterImages) {
+//        app.filterImages = false;
+//        app.interface.left.filteredIndexes.clear();
+//        if (app.filterText.empty())
+//          app.filterText = app.filterTextDefault;
+//      }
 
       if (event.button.button == SDL_BUTTON_LEFT) {
         if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor))

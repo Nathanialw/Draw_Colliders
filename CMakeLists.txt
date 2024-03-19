@@ -3,7 +3,6 @@ project(Box2D_Colliders)
 
 set(CMAKE_CXX_STANDARD 23)
 
-
 add_executable(Box2D_Colliders
         main.cpp
 

@@ -118,7 +118,7 @@ namespace Graphics {
 
   Image_Import Load_Image(const Context &context) {
     nfdchar_t *outPath;
-    nfdresult_t result = NFD_OpenDialog("png,jpg;pdf", nullptr, &outPath);
+    nfdresult_t result = NFD_OpenDialog("png,jpg", nullptr, &outPath);
 
     const char * filePath;
     if ( result == NFD_CANCEL ||  result == NFD_ERROR ) {
@@ -143,7 +143,7 @@ namespace Graphics {
     Graphics::Image_Import image{};
 
     nfdpathset_t pathSet;
-    nfdresult_t result = NFD_OpenDialogMultiple("png,jpg;pdf", nullptr, &pathSet);
+    nfdresult_t result = NFD_OpenDialogMultiple("png,jpg", nullptr, &pathSet);
 
     if ( result == NFD_CANCEL ||  result == NFD_ERROR ) {
       NFD_PathSet_Free(&pathSet);

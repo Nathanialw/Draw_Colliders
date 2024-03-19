@@ -1,12 +1,20 @@
 //
 // Created by nathanial on 3/10/24.
 //
+#include <algorithm>
 #include "../../App/core.h"
 #include "../../Input/mouse.h"
 
 #include "SDL2/SDL.h"
 #include "../../Utils/utils.h"
 #include "../../Graphics/text.h"
+
+#include <iterator>
+#include <unistd.h>
+#include <vector>
+#include <ranges>
+#include <iostream>
+#include <string>
 
 namespace Center::Left {
 
@@ -19,7 +27,10 @@ namespace Center::Left {
 
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.left.search);
-    SDL_SetRenderDrawColor(app.context.renderer, 125, 125, 125, 255);
+    if (app.filterImages && app.interface.left.filteredIndexes.empty())
+      SDL_SetRenderDrawColor(app.context.renderer, 255, 125, 125, 255);
+    else
+      SDL_SetRenderDrawColor(app.context.renderer, 125, 125, 125, 255);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.left.search);
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 
@@ -42,30 +53,61 @@ namespace Center::Left {
     float w = 40.0f;
     float h = 40.0f;
     float spacing = 5.0f;
-    for (int i = 0; i < app.interface.left.images.size(); ++i) {
-      SDL_FRect dRect = {x + spacing, y + spacing, w - (spacing * 2.0f), h};
-      if (app.interface.left.selected == i)      {
-        SDL_FRect rect = {
-            dRect.x + spacing,
-            dRect.y,
-            app.panel.mainPanel.left.body.w - (spacing * 2.0f),
-            dRect.h,
+
+    if (app.filterImages && !app.interface.left.filteredIndexes.empty()) {
+      for (int i = 0; i < app.interface.left.filteredIndexes.size(); ++i) {
+        const int &index = app.interface.left.filteredIndexes[i];
+        SDL_FRect dRect = {x + spacing, y + spacing, w - (spacing * 2.0f), h};
+        if (app.interface.left.selected == index) {
+          SDL_FRect rect = {
+              dRect.x + spacing,
+              dRect.y,
+              app.panel.mainPanel.left.body.w - (spacing * 2.0f),
+              dRect.h,
+          };
+          SDL_SetRenderDrawColor(app.context.renderer, 100, 100, 200, 255);
+          SDL_RenderFillRectF(app.context.renderer, &rect);
+          SDL_SetRenderDrawColor(app.context.renderer, 155, 155, 155, 255);
+          SDL_RenderDrawRectF(app.context.renderer, &rect);
+          SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+        }
+        SDL_RenderCopyF(app.context.renderer, app.interface.left.images[index].texture.texture, nullptr, &dRect);
+        SDL_Rect rect = {
+            (int) dRect.x + (int) dRect.w + (int) spacing,
+            (int) dRect.y,
+            (int) app.panel.mainPanel.left.body.w - (int) dRect.w - (int) (spacing * 3.0f),
+            (int) dRect.h,
         };
-        SDL_SetRenderDrawColor(app.context.renderer, 100, 100, 200, 255);
-        SDL_RenderFillRectF(app.context.renderer, &rect);
-        SDL_SetRenderDrawColor(app.context.renderer, 155, 155, 155, 255);
-        SDL_RenderDrawRectF(app.context.renderer, &rect);
-        SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+        Text::Render(app.context.renderer, app.context.font, app.interface.left.imageNameStr[index].c_str(), rect);
+        y += h + spacing;
       }
-      SDL_RenderCopyF(app.context.renderer, app.interface.left.images[i].texture.texture, nullptr, &dRect);
-      SDL_Rect rect = {
-          (int)dRect.x + (int)dRect.w + (int)spacing,
-          (int)dRect.y,
-          (int)app.panel.mainPanel.left.body.w - (int)dRect.w - (int)(spacing * 3.0f),
-          (int)dRect.h,
-      };
-      Text::Render(app.context.renderer, app.context.font, app.interface.left.imageNameStr[i].c_str(), rect);
-      y += h + spacing;
+    }
+    else {
+      for (int i = 0; i < app.interface.left.images.size(); ++i) {
+        SDL_FRect dRect = {x + spacing, y + spacing, w - (spacing * 2.0f), h};
+        if (app.interface.left.selected == i) {
+          SDL_FRect rect = {
+              dRect.x + spacing,
+              dRect.y,
+              app.panel.mainPanel.left.body.w - (spacing * 2.0f),
+              dRect.h,
+          };
+          SDL_SetRenderDrawColor(app.context.renderer, 100, 100, 200, 255);
+          SDL_RenderFillRectF(app.context.renderer, &rect);
+          SDL_SetRenderDrawColor(app.context.renderer, 155, 155, 155, 255);
+          SDL_RenderDrawRectF(app.context.renderer, &rect);
+          SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+        }
+        SDL_RenderCopyF(app.context.renderer, app.interface.left.images[i].texture.texture, nullptr, &dRect);
+        SDL_Rect rect = {
+            (int) dRect.x + (int) dRect.w + (int) spacing,
+            (int) dRect.y,
+            (int) app.panel.mainPanel.left.body.w - (int) dRect.w - (int) (spacing * 3.0f),
+            (int) dRect.h,
+        };
+        Text::Render(app.context.renderer, app.context.font, app.interface.left.imageNameStr[i].c_str(), rect);
+        y += h + spacing;
+      }
     }
   }
 
@@ -95,16 +137,29 @@ namespace Center::Left {
     float spacing = 5.0f;
 
     auto cursor = Mouse::Cursor();
-    for (int i = 0; i < app.interface.left.images.size(); ++i) {
+    if (app.filterImages && !app.interface.left.filteredIndexes.empty()) {
+      for (int i = 0; i < app.interface.left.filteredIndexes.size(); ++i) {
+        const int &index = app.interface.left.filteredIndexes[i];
 
-      SDL_FRect dRect = {x + spacing, y + spacing, app.panel.mainPanel.left.body.w - (spacing * 3.0f), h};
-      if (SDL_HasIntersectionF(&cursor, &dRect)) {
-        //mouseover highlighting
-//        app.interface.left.selected = i;
-        app.imageIndex = i;
-        return app.interface.left.images[i];
+        SDL_FRect dRect = {x + spacing, y + spacing, app.panel.mainPanel.left.body.w - (spacing * 3.0f), h};
+        if (SDL_HasIntersectionF(&cursor, &dRect)) {
+          app.imageIndex = index;
+          return app.interface.left.images[index];
+        }
+        y += h + spacing;
       }
-      y += h + spacing;
+    }
+    else {
+      for (int i = 0; i < app.interface.left.images.size(); ++i) {
+        SDL_FRect dRect = {x + spacing, y + spacing, app.panel.mainPanel.left.body.w - (spacing * 3.0f), h};
+        if (SDL_HasIntersectionF(&cursor, &dRect)) {
+          //mouseover highlighting
+    //        app.interface.left.selected = i;
+          app.imageIndex = i;
+          return app.interface.left.images[i];
+        }
+        y += h + spacing;
+      }
     }
     return {nullptr};
   };
@@ -139,6 +194,7 @@ namespace Center::Left {
 
   bool Filter_Images(App::App &app) {
     //set flag to redirect keyboard input to text input
+    app.interface.left.filteredIndexes.clear();
     app.filterImages = true;
     app.filterText = "";
     return true;

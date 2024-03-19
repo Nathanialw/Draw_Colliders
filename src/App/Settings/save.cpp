@@ -28,54 +28,55 @@ namespace Save {
     app.datafile["header"]["image_count"].Set_Int(app.interface.left.imagePathStr.size());
 
     for (int i = 0; i < app.interface.left.imagePathStr.size(); ++i) {
-      app.datafile["image[" + std::to_string(i) + "]"]["name"].Set_String(app.interface.left.imageNameStr[i]);
-      app.datafile["image[" + std::to_string(i) + "]"]["path"].Set_String(app.interface.left.imagePathStr[i]);
-      app.datafile["image[" + std::to_string(i) + "]"]["scale"].Set_Real(app.interface.left.images[i].texture.scale);
+      auto &image = app.datafile["image[" + std::to_string(i) + "]"];
+      image["name"].Set_String(app.interface.left.imageNameStr[i]);
+      image["path"].Set_String(app.interface.left.imagePathStr[i]);
+      image["scale"].Set_Real(app.interface.left.images[i].texture.scale);
       int k = 0;
-      app.datafile["image[" + std::to_string(i) + "]"][shapeStr[0]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::POINT].size());
+      image[shapeStr[0]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::POINT].size());
       for (const auto &point: app.interface.left.images[i].shapes[Graphics::POINT]) {
-        app.datafile["image[" + std::to_string(i) + "]"][shapeStr[0]][std::to_string(k)]["x"].Set_Real(point.vertices[0].x);
-        app.datafile["image[" + std::to_string(i) + "]"][shapeStr[0]][std::to_string(k)]["y"].Set_Real(point.vertices[0].y);
+        image[shapeStr[0]][std::to_string(k)]["x"].Set_Real(point.vertices[0].x);
+        image[shapeStr[0]][std::to_string(k)]["y"].Set_Real(point.vertices[0].y);
         k++;
       }
       k = 0;
-      app.datafile["image[" + std::to_string(i) + "]"][shapeStr[1]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::CIRCLE].size());
+      image[shapeStr[1]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::CIRCLE].size());
       for (const auto &circle: app.interface.left.images[i].shapes[Graphics::CIRCLE]) {
-        app.datafile["image[" + std::to_string(i) + "]"][shapeStr[1]][std::to_string(k)]["x"].Set_Real(circle.vertices[0].x);
-        app.datafile["image[" + std::to_string(i) + "]"][shapeStr[1]][std::to_string(k)]["y"].Set_Real(circle.vertices[0].y);
-        app.datafile["image[" + std::to_string(i) + "]"][shapeStr[1]][std::to_string(k)]["r"].Set_Real(circle.vertices[1].y - circle.vertices[0].y);
+        image[shapeStr[1]][std::to_string(k)]["x"].Set_Real(circle.vertices[0].x);
+        image[shapeStr[1]][std::to_string(k)]["y"].Set_Real(circle.vertices[0].y);
+        image[shapeStr[1]][std::to_string(k)]["r"].Set_Real(circle.vertices[1].y - circle.vertices[0].y);
         k++;
       }
       k = 0;
-      app.datafile["image[" + std::to_string(i) + "]"][shapeStr[2]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::LINE].size());
+      image[shapeStr[2]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::LINE].size());
       for (const auto &line: app.interface.left.images[i].shapes[Graphics::LINE]) {
         int vertexCount = 0;
         for (const auto &vertex : line.vertices) {
-          app.datafile["image[" + std::to_string(i) + "]"][shapeStr[2]][std::to_string(k)][std::to_string(vertexCount)]["x"].Set_Real(vertex.x);
-          app.datafile["image[" + std::to_string(i) + "]"][shapeStr[2]][std::to_string(k)][std::to_string(vertexCount)]["y"].Set_Real(vertex.y);
+          image[shapeStr[2]][std::to_string(k)][std::to_string(vertexCount)]["x"].Set_Real(vertex.x);
+          image[shapeStr[2]][std::to_string(k)][std::to_string(vertexCount)]["y"].Set_Real(vertex.y);
           vertexCount++;
         }
         k++;
       }
       k = 0;
-      app.datafile["image[" + std::to_string(i) + "]"][shapeStr[3]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::AABB].size());
+      image[shapeStr[3]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::AABB].size());
       for (const auto &aabb: app.interface.left.images[i].shapes[Graphics::AABB]) {
         int vertexCount = 0;
         for (const auto &vertex : aabb.vertices) {
-          app.datafile["image[" + std::to_string(i) + "]"][shapeStr[3]][std::to_string(k)][std::to_string(vertexCount)]["x"].Set_Real(vertex.x);
-          app.datafile["image[" + std::to_string(i) + "]"][shapeStr[3]][std::to_string(k)][std::to_string(vertexCount)]["y"].Set_Real(vertex.y);
+          image[shapeStr[3]][std::to_string(k)][std::to_string(vertexCount)]["x"].Set_Real(vertex.x);
+          image[shapeStr[3]][std::to_string(k)][std::to_string(vertexCount)]["y"].Set_Real(vertex.y);
           vertexCount++;
         }
         k++;
       }
       k = 0;
-      app.datafile["image[" + std::to_string(i) + "]"][shapeStr[4]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::POLYGON].size());
+      image[shapeStr[4]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::POLYGON].size());
       for (const auto &polygon: app.interface.left.images[i].shapes[Graphics::POLYGON]) {
         int vertexCount = 0;
-        app.datafile["image[" + std::to_string(i) + "]"][shapeStr[4]][std::to_string(k)]["vertex_count"].Set_Int(polygon.vertices.size());
+        image[shapeStr[4]][std::to_string(k)]["vertex_count"].Set_Int(polygon.vertices.size());
         for (const auto &vertex : polygon.vertices) {
-          app.datafile["image[" + std::to_string(i) + "]"][shapeStr[4]][std::to_string(k)][std::to_string(vertexCount)]["x"].Set_Real(vertex.x);
-          app.datafile["image[" + std::to_string(i) + "]"][shapeStr[4]][std::to_string(k)][std::to_string(vertexCount)]["y"].Set_Real(vertex.y);
+          image[shapeStr[4]][std::to_string(k)][std::to_string(vertexCount)]["x"].Set_Real(vertex.x);
+          image[shapeStr[4]][std::to_string(k)][std::to_string(vertexCount)]["y"].Set_Real(vertex.y);
           vertexCount++;
         }
         k++;
@@ -88,7 +89,7 @@ namespace Save {
   // Save As
   bool Save_As(App::App &app) {
     nfdchar_t *outPath;
-    auto result = NFD_SaveDialog("txt;pdf", nullptr, &outPath);
+    auto result = NFD_SaveDialog("txt", nullptr, &outPath);
 
     if (result == NFD_CANCEL ||  result == NFD_ERROR ) {
       free(outPath);
@@ -105,11 +106,12 @@ namespace Save {
   }
 
   void Load (App::App &app, const std::string &fileName) {
+    //maybe have a dialog box here to say why the load failed
     if (!app.datafile.Read(app.datafile, fileName))
       return;
 
     std::array<std::string, 5> shapeStr = {"point", "circle", "lineSegment", "aabb", "polygon"};
-    //maybe have a dialog box here to say the load failed
+    //maybe have a dialog box here to say why the load failed
     if (app.datafile["header"]["image_count"].Get_String().empty())
       return;
     //minus the header
@@ -211,7 +213,7 @@ namespace Save {
 //  Load As
   bool Load_As(App::App &app) {
     nfdchar_t *outPath;
-    auto result = NFD_OpenDialog("txt;pdf", nullptr, &outPath);
+    auto result = NFD_OpenDialog("txt", nullptr, &outPath);
     if (result == NFD_CANCEL ||  result == NFD_ERROR ) {
       free(outPath);
       return false;

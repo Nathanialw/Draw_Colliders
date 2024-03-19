@@ -41,6 +41,7 @@ namespace Data {
     int selected = 0;
     std::vector<Center> images;
     std::vector<std::string> imageNameStr;
+    std::vector<int> filteredIndexes;
     std::vector<std::string> imagePathStr;
     std::vector<Graphics::Image> imageNames;
   };

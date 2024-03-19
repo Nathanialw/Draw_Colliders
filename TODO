@@ -3,7 +3,6 @@
 -exporting XML
 -exporting JSON
 -exporting SQLite
--filter images list
 -right side buttons
 -complete main menu dropdowns
 -scroll bars

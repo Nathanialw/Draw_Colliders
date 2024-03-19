@@ -68,6 +68,7 @@ namespace App {
     app.selectedShape = shape;
     app.imageIndex = 0;
     app.filterImages = false;
+    app.interface.left.filteredIndexes.clear();
     app.moveImage = false;
     app.moveVertex = false;
     app.initialPosition = {0, 0};
