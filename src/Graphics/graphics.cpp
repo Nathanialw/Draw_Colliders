@@ -139,33 +139,30 @@ namespace Graphics {
     return {texture, fileName};
   }
 
-  Image_Import Load_Images(const Context &context) {
+  std::vector<Graphics::Image_Import> Load_Images(const Context &context) {
+    std::vector<Graphics::Image_Import> imageImport;
+    Graphics::Image_Import image;
+
     nfdpathset_t pathSet;
     nfdresult_t result = NFD_OpenDialogMultiple("png,jpg;pdf", nullptr, &pathSet);
-    nfdchar_t *outPath = nullptr;
 
-    const char * filePath;
     if ( result == NFD_CANCEL ||  result == NFD_ERROR ) {
-      free(outPath);
-      return {nullptr, ""};
+      NFD_PathSet_Free(&pathSet);
+      return imageImport;
     }
     else if ( result == NFD_OKAY ) {
       size_t i;
-      for ( i = 0; i < NFD_PathSet_GetCount(&pathSet); ++i )
-      {
+      nfdchar_t *outPath;
+      for ( i = 0; i < NFD_PathSet_GetCount(&pathSet); ++i ) {
         outPath = NFD_PathSet_GetPath(&pathSet, i);
+        image.fileName = outPath;
+        image.texture = IMG_LoadTexture(context.renderer, image.fileName.c_str());
+        imageImport.emplace_back(image);
       }
-      filePath = outPath;
-      NFD_PathSet_Free(&pathSet);
     }
-    SDL_Texture* texture = IMG_LoadTexture(context.renderer, filePath);
 
-    std::string fileName;
-    if ( result == NFD_OKAY ) {
-      fileName = outPath;
-      free(outPath);
-    }
-    return {texture, fileName};
+    NFD_PathSet_Free(&pathSet);
+    return imageImport;
   }
 
   Texture Load_Icons(SDL_Renderer *renderer) {

@@ -18,3 +18,4 @@ release
 .ninja_deps
 .ninja_log
 build.ninja
+/save.txt

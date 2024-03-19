@@ -8,3 +8,9 @@
 #define BOX2D_COLLIDERS_SQLITE_H
 
 #endif //BOX2D_COLLIDERS_SQLITE_H
+
+
+namespace SQLite {
+
+  void Publish();
+}

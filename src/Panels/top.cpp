@@ -30,7 +30,7 @@ namespace Top {
     return 4;
   }
   int Add_Sprites(App::App &app) {
-    Action::Add_Sprites(app);
+    Action::Add_Images(app);
     return 3;
   }
   int Publish(App::App &app) {

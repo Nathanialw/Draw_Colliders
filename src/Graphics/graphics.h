@@ -169,6 +169,7 @@ namespace Graphics {
   Context CreateWindowAndRenderer();
   SDL_Texture* Load_Texture(const Context &context, const std::string &filePath);
   Image_Import Load_Image(const Context &context);
+  std::vector<Graphics::Image_Import> Load_Images(const Context &context);
   void Set_Render_Draw_Color(SDL_Renderer *renderer, const SDL_Color &color);
   void Set_Render_Draw_Color(SDL_Renderer *renderer, const int &r, const int &g, const int &b, const int &a);
   void Reset_Render_Draw_Color(SDL_Renderer *renderer);

@@ -7,3 +7,9 @@
 #define BOX2D_COLLIDERS_JSON_H
 
 #endif //BOX2D_COLLIDERS_JSON_H
+
+
+namespace JSON {
+
+  void Publish();
+}

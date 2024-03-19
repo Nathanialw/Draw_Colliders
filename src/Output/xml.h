@@ -7,3 +7,11 @@
 #define BOX2D_COLLIDERS_XML_H
 
 #endif //BOX2D_COLLIDERS_XML_H
+
+
+namespace XML {
+
+
+  void Publish();
+
+}

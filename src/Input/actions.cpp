@@ -3,10 +3,8 @@
 //
 
 #include "actions.h"
-#include "../App/core.h"
 #include "../App/Settings/save.h"
 #include "../Graphics/text.h"
-//#include "../Graphics/graphics.h"
 
 namespace Action {
   bool Delete_Shape(App::App &app, const Graphics::Shape &shap, const int &shapeIndex) {
@@ -126,21 +124,35 @@ namespace Action {
     return false;
   }
 
+  void Import_Image(Data::Center &center, Data::Left &left, const Graphics::Image_Import &imageImport) {
+    Data::Center image;
+    image.texture.texture = imageImport.texture;
+    image.index = left.images.size();
+
+    left.images.emplace_back(image);
+    left.imageNameStr.emplace_back(Text::Get_File_Name(imageImport.fileName));
+    left.imagePathStr.emplace_back(imageImport.fileName);
+
+    // load the image to the center if there is no image
+    if (!center.texture.texture)
+      center = image;
+  }
+
   bool Add_Image(App::App &app) {
     auto imageImport = Graphics::Load_Image(app.context);
     if (imageImport.texture) {
-      Data::Center image;
-      image.texture.texture = imageImport.texture;
-      image.index = app.interface.left.images.size();
+      Import_Image(app.interface.center, app.interface.left, imageImport);
+      return true;
+    }
+    return false;
+  }
 
-      app.interface.left.images.emplace_back(image);
-      app.interface.left.imageNameStr.emplace_back(
-          Text::Get_File_Name(imageImport.fileName));
-      app.interface.left.imagePathStr.emplace_back(imageImport.fileName);
-
-      // load the image to the center if there is no image
-      if (!app.interface.center.texture.texture)
-        app.interface.center = image;
+  bool Add_Images(App::App &app) {
+    std::vector<Graphics::Image_Import> imagesImport = Graphics::Load_Images(app.context);
+    if (!imagesImport.empty()) {
+      for (const auto &imageImport : imagesImport) {
+        Import_Image(app.interface.center, app.interface.left, imageImport);
+      }
       return true;
     }
     return false;
@@ -183,10 +195,6 @@ namespace Action {
 
   bool Open_Project(App::App &app) {
     Save::Load(app);
-    return true;
-  }
-
-  bool Add_Sprites(App::App &app) {
     return true;
   }
 
