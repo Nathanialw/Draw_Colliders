@@ -6,20 +6,27 @@
 #include "../App/core.h"
 #include "../App/Settings/save.h"
 #include "../Graphics/text.h"
+//#include "../Graphics/graphics.h"
 
 namespace Action {
-  bool Delete_Shape(App::App &app) {
-    if (app.selectedShape.shape != Graphics::SIZE) {
-      auto &shape = app.interface.center.shapes[app.selectedShape.shape];
-      shape.erase(shape.begin() + app.selectedShape.indexPolygon, shape.begin() + app.selectedShape.indexPolygon + 1);
-      shape.shrink_to_fit();
-      auto &shapeList = app.interface.shapeList.shapeList[app.selectedShape.shape];
-      shapeList.erase(shapeList.begin() + app.selectedShape.indexPolygon + 1, shapeList.begin() + app.selectedShape.indexPolygon + 2);
+  bool Delete_Shape(App::App &app, const Graphics::Shape &shap, const int &shapeIndex) {
+    auto &shape = app.interface.center.shapes[shap];
+    shape.erase(shape.begin() + shapeIndex, shape.begin() + shapeIndex + 1);
+    shape.shrink_to_fit();
+    auto &shapeList = app.interface.shapeList.shapeList[shap];
+    shapeList.erase(shapeList.begin() + shapeIndex + 1, shapeList.begin() + shapeIndex + 2);
+    shapeList.shrink_to_fit();
+
+    if (shap == app.selectedShape.shape && shapeIndex == app.selectedShape.indexPolygon) {
       app.selectedShape.shape = Graphics::SIZE;
       app.selectedShape.indexPolygon = 0;
-      app.selectedVertex.indexPolygon = 0;
-      app.selectedVertex.indexVertex = 0;
-      app.selectedVertex.shape = Graphics::SIZE;
+    }
+    return true;
+  }
+
+  bool Delete_Shape(App::App &app) {
+    if (app.selectedShape.shape != Graphics::SIZE) {
+      Delete_Shape(app, app.selectedShape.shape, app.selectedShape.indexPolygon );
       app.vertex.shape = Graphics::SIZE;
       app.vertex.indexPolygon = 0;
       app.vertex.indexVertex = 0;
@@ -32,10 +39,14 @@ namespace Action {
     //delete vertex
     if (app.selectedVertex.shape == Graphics::POLYGON) {
       auto &polygon = app.interface.center.shapes[Graphics::POLYGON][app.selectedVertex.indexPolygon];
-      polygon.vertices.erase(polygon.vertices.begin() + app.selectedVertex.indexVertex, polygon.vertices.begin() + app.selectedVertex.indexVertex + 1);
-      polygon.moving.erase(polygon.moving.begin() + app.selectedVertex.indexVertex, polygon.moving.begin() + app.selectedVertex.indexVertex + 1);
-      polygon.vertices.shrink_to_fit();
-      polygon.moving.shrink_to_fit();
+      if (polygon.vertices.size() < 4)
+        Delete_Shape(app, app.selectedVertex.shape, app.selectedVertex.indexPolygon);
+      else {
+        polygon.vertices.erase(polygon.vertices.begin() + app.selectedVertex.indexVertex, polygon.vertices.begin() + app.selectedVertex.indexVertex + 1);
+        polygon.moving.erase(polygon.moving.begin() + app.selectedVertex.indexVertex, polygon.moving.begin() + app.selectedVertex.indexVertex + 1);
+        polygon.vertices.shrink_to_fit();
+        polygon.moving.shrink_to_fit();
+      }
       app.selectedVertex.shape = Graphics::SIZE;
       app.selectedVertex.indexVertex = 0;
       app.selectedVertex.indexPolygon = 0;
@@ -43,16 +54,6 @@ namespace Action {
       app.vertex.indexPolygon = 0;
       app.vertex.indexVertex = 0;
       return true;
-    }
-    if (app.selectedVertex.shape == Graphics::POINT) {
-//      auto &point = app.interface.center.points[app.selectedVertex.indexPolygon];
-//      polygon.vertices.erase(polygon.vertices.begin() + app.selectedVertex.indexVertex, polygon.vertices.begin() + app.selectedVertex.indexVertex + 1);
-//      polygon.moving.erase(polygon.moving.begin() + app.selectedVertex.indexVertex, polygon.moving.begin() + app.selectedVertex.indexVertex + 1);
-//      polygon.vertices.shrink_to_fit();
-//      polygon.moving.shrink_to_fit();
-//      app.selectedVertex.shape = Graphics::SIZE;
-//      app.selectedVertex.indexVertex = 0;
-//      app.selectedVertex.indexPolygon = 0;
     }
     return false;
   }

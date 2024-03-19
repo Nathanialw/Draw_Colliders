@@ -6,13 +6,31 @@
 #include "../Input/mouse.h"
 #include "../Graphics/text.h"
 
-
 namespace App {
+  void Set_Textures(App &app) {
+    app.panel.mainPanel.center.buttonBar.buttons[0].texture = app.texture.location;
+    app.panel.mainPanel.center.buttonBar.buttons[1].texture = app.texture.point;
+    app.panel.mainPanel.center.buttonBar.buttons[2].texture = app.texture.nodes;
+    app.panel.mainPanel.center.buttonBar.buttons[3].texture = app.texture.vector;
+    app.panel.mainPanel.center.buttonBar.buttons[4].texture = app.texture.pentagon;
+//    app.panel.mainPanel.center.buttonBar.buttons[5].texture = app.texture;
+    app.panel.mainPanel.center.buttonBar.buttons[6].texture = app.texture.deleteShape;
+    app.panel.mainPanel.center.buttonBar.buttons[7].texture = app.texture.addVertex;
+    app.panel.mainPanel.center.buttonBar.buttons[8].texture = app.texture.deleteVertex;
+
+    app.panel.top.buttons[0].texture = app.texture.newDocument;
+    app.panel.top.buttons[1].texture = app.texture.open;
+    app.panel.top.buttons[2].texture = app.texture.disk;
+    app.panel.top.buttons[3].texture = app.texture.addFolder;
+//    app.panel.top.buttons[4].texture = app.texture.newDocument;
+//    app.panel.top.buttons[5].texture = app.texture.newDocument;
+  }
 
   void Init (App &app) {
     app.context = Graphics::CreateWindowAndRenderer();
     app.panel = Graphics::Set_Panels(app.context.window);
-
+    app.texture = Graphics::Load_Icons(app.context.renderer);
+    Set_Textures(app);
     app.context.font = Text::Load_Font(app.context.renderer);
     Mouse::Set_Cursor(app, SDL_SYSTEM_CURSOR_ARROW);
   }

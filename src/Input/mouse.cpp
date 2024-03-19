@@ -62,8 +62,6 @@ namespace Mouse {
   }
 
   bool Down(const SDL_Event &event, App::App &app) {
-    // check which panel the mouse is inside of
-
     auto cursor = Cursor();
     if (event.type == SDL_MOUSEBUTTONDOWN) {
       Double_Click();
@@ -116,6 +114,10 @@ namespace Mouse {
                 app.selectedVertex.shape = app.vertex.shape;
                 app.selectedVertex.indexVertex = app.vertex.indexVertex;
                 app.selectedVertex.indexPolygon = app.vertex.indexPolygon;
+                if (app.vertex.shape == Graphics::POINT) {
+                  app.selectedShape.shape = app.vertex.shape;
+                  app.selectedShape.indexPolygon = app.vertex.indexPolygon;
+                }
                 return Center::Center::Move_Vertex(app);
               }
               // select a shape
@@ -158,7 +160,7 @@ namespace Mouse {
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
               for (int i = 0; i < app.panel.mainPanel.center.buttonBar.buttons.size(); ++i) {
-                if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.buttons[i], &cursor)) {
+                if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.buttons[i].button, &cursor)) {
                   Center::Center::Click_Button(app, i);
                 };
               }
@@ -235,7 +237,7 @@ namespace Mouse {
             else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {}
             else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
               for (const auto &button : app.panel.mainPanel.center.buttonBar.buttons) {
-                if (SDL_HasIntersectionF(&button, &cursor)) {};
+                if (SDL_HasIntersectionF(&button.button, &cursor)) {};
               }
             }
           }
@@ -258,7 +260,7 @@ namespace Mouse {
             else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {}
             else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
               for (const auto &button : app.panel.mainPanel.center.buttonBar.buttons) {
-                if (SDL_HasIntersectionF(&button, &cursor)) {};
+                if (SDL_HasIntersectionF(&button.button, &cursor)) {};
               }
             }
           }
@@ -279,7 +281,7 @@ namespace Mouse {
             else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {}
             else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
               for (const auto &button : app.panel.mainPanel.center.buttonBar.buttons) {
-                if (SDL_HasIntersectionF(&button, &cursor)) {};
+                if (SDL_HasIntersectionF(&button.button, &cursor)) {};
               }
             }
           }

@@ -12,6 +12,7 @@
 #include "../../App/core.h"
 namespace Center::Left {
 
+  bool Hover_Image(App::App &app);
   Data::Center Select_Image(App::App &app);
   bool Set_Image(App::App &app);
   void Render(App::App &app);

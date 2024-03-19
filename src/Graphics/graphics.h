@@ -43,7 +43,7 @@ namespace Graphics {
   const int ButtonBarSize = 9;
   struct Button_Bar {
     SDL_FRect panel;
-    std::array<SDL_FRect, ButtonBarSize> buttons;
+    std::array<Button, ButtonBarSize> buttons;
   };
 
   enum Shape {
@@ -108,7 +108,7 @@ namespace Graphics {
 
   struct Top {
     SDL_FRect panel{};
-    std::array<SDL_FRect, 6> buttons{};
+    std::array<Button, 6> buttons{};
   };
 
   const int numMenuButtons = 6;
@@ -138,6 +138,29 @@ namespace Graphics {
     const char* title{};
   };
 
+  struct Texture {
+    SDL_Texture* checkbox = nullptr;
+    SDL_Texture* deleteShape = nullptr;
+    SDL_Texture* addVertex = nullptr;
+    SDL_Texture* deleteVertex = nullptr;
+    SDL_Texture* disk = nullptr;
+    SDL_Texture* location = nullptr;
+    SDL_Texture* nodes = nullptr;
+    SDL_Texture* pentagon = nullptr;
+    SDL_Texture* point = nullptr;
+    SDL_Texture* unchecked = nullptr;
+    SDL_Texture* up = nullptr;
+    SDL_Texture* vector = nullptr;
+    SDL_Texture* view = nullptr;
+    SDL_Texture* newDocument = nullptr;
+    SDL_Texture* open = nullptr;
+    SDL_Texture* show = nullptr;
+    SDL_Texture* hide = nullptr;
+    SDL_Texture* addFolder = nullptr;
+    SDL_Texture* circle = nullptr;
+    SDL_Texture* vertex = nullptr;
+  };
+
   Panels Set_Panels(SDL_Window* window);
   Context CreateWindowAndRenderer();
   SDL_Texture* Load_Texture(const Context &context, const std::string &filePath);
@@ -145,4 +168,5 @@ namespace Graphics {
   void Set_Render_Draw_Color(SDL_Renderer *renderer, const SDL_Color &color);
   void Set_Render_Draw_Color(SDL_Renderer *renderer, const int &r, const int &g, const int &b, const int &a);
   void Reset_Render_Draw_Color(SDL_Renderer *renderer);
+  Texture Load_Icons(SDL_Renderer *renderer);
 }

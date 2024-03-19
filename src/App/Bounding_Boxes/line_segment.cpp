@@ -7,7 +7,7 @@
 
 namespace Line_Segment {
 
-  Shape::Shape Create(const Graphics::Center_Panel &panel) {
+  Shape::Shape Create() {
     Shape::Shape line{};
     line.vertices.push_back({-50.0f, 0.0f});
     line.vertices.push_back({50.0f, 0.0f});

@@ -7,7 +7,7 @@
 
 
 namespace Point {
-  Shape::Shape Create(const Graphics::Center_Panel &panel) {
+  Shape::Shape Create() {
     Shape::Shape point;
     point.vertices.push_back({0.0f, 0.0f });
     point.moving.push_back(false);

@@ -6,7 +6,7 @@
 
 namespace Polygon {
 
-  Shape::Shape Create(const Graphics::Center_Panel &panel) {
+  Shape::Shape Create() {
     Shape::Shape polygon{};
     SDL_FPoint vertex;
     float radius = 50.0f;

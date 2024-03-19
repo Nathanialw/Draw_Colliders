@@ -82,10 +82,12 @@ namespace App {
     std::string filterTextDefault = "Filter...";
 
     Serialise::Datafile datafile;
+    Graphics::Texture texture;
   };
 
   void Close(App &app);
   void New(App &app);
+  void Set_Textures(App &app);
   void Init (App &app);
   Offsets Calc_Offset(const App &app);
   SDL_FPoint Offset_From_Image_Center(const App &app, const SDL_FPoint &point);

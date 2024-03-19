@@ -69,6 +69,24 @@ namespace Center::Left {
     }
   }
 
+  bool Hover_Image(App::App &app) {
+    float x = app.panel.mainPanel.left.body.x;
+    float y = app.panel.mainPanel.left.body.y;
+    float w = 40.0f;
+    float h = 40.0f;
+    float spacing = 5.0f;
+
+    auto cursor = Mouse::Cursor();
+    for (int i = 0; i < app.interface.left.images.size(); ++i) {
+      SDL_FRect dRect = {x + spacing, y + spacing, app.panel.mainPanel.left.body.w - (spacing * 3.0f), h};
+      if (SDL_HasIntersectionF(&cursor, &dRect)) {
+        return true;
+      }
+      y += h + spacing;
+    }
+    return false;
+  };
+
   Data::Center Select_Image(App::App &app) {
     float x = app.panel.mainPanel.left.body.x;
     float y = app.panel.mainPanel.left.body.y;

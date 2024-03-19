@@ -6,7 +6,7 @@
 #include "shape.h"
 
 namespace Circle {
-  Shape::Shape Create(const Graphics::Center_Panel &panel) {
+  Shape::Shape Create() {
     Shape::Shape circle{};
     circle.vertices.resize(2);
     circle.vertices[0] = {0.0f, 0.0f};

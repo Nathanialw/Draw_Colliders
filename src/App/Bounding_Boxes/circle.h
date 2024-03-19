@@ -20,6 +20,6 @@ namespace Circle {
 //    std::array<bool, 2> moving{ false, false};
 //  };
 
-  Shape::Shape Create(const Graphics::Center_Panel &panel);
+  Shape::Shape Create();
   Shape::Shape Create(const float &x, const float &y, const float &y2);
 }

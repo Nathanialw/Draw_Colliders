@@ -13,6 +13,6 @@
 
 namespace Line_Segment {
 
-  Shape::Shape Create(const Graphics::Center_Panel &panel);
+  Shape::Shape Create();
   Shape::Shape Create(const float &x, const float &y, const float &x2, const float &y2);
 }

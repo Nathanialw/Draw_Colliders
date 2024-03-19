@@ -44,6 +44,7 @@ namespace Graphics {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   }
 
+
   float Cap(const float &panelHeight, float h) {
     if (h > panelHeight)
       return panelHeight;
@@ -165,5 +166,35 @@ namespace Graphics {
       free(outPath);
     }
     return {texture, fileName};
+  }
+
+  Texture Load_Icons(SDL_Renderer *renderer) {
+    Texture texture{};
+    texture.checkbox = IMG_LoadTexture(renderer, "assets/icons/checkbox.png");
+    texture.unchecked = IMG_LoadTexture(renderer, "assets/icons/unchecked.png");
+
+    texture.disk = IMG_LoadTexture(renderer, "assets/icons/disk.png");
+    texture.newDocument = IMG_LoadTexture(renderer, "assets/icons/new-document.png");
+    texture.open = IMG_LoadTexture(renderer, "assets/icons/folder.png");
+
+    texture.show = IMG_LoadTexture(renderer, "assets/icons/view.png");
+    texture.hide = IMG_LoadTexture(renderer, "assets/icons/hide.png");
+
+    texture.location = IMG_LoadTexture(renderer, "assets/icons/location.png");
+    texture.point = IMG_LoadTexture(renderer, "assets/icons/point.png");
+    texture.nodes = IMG_LoadTexture(renderer, "assets/icons/nodes.png");
+    texture.vector = IMG_LoadTexture(renderer, "assets/icons/vector.png");
+    texture.pentagon = IMG_LoadTexture(renderer, "assets/icons/pentagon.png");
+
+    texture.deleteShape = IMG_LoadTexture(renderer, "assets/icons/minus.png");
+    texture.deleteVertex = IMG_LoadTexture(renderer, "assets/icons/minus-location.png");
+    texture.addVertex = IMG_LoadTexture(renderer, "assets/icons/add.png");
+
+    texture.up = IMG_LoadTexture(renderer, "assets/icons/up-loading.png");
+    texture.addFolder = IMG_LoadTexture(renderer, "assets/icons/archive.png");
+
+    texture.vertex = IMG_LoadTexture(renderer, "assets/icons/vertex.png");
+    texture.circle = IMG_LoadTexture(renderer, "assets/icons/circle.png");
+    return texture;
   }
 }

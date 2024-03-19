@@ -16,10 +16,11 @@ namespace Top {
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 
     for (const auto &btn: app.panel.top.buttons) {
-      SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
-      SDL_RenderFillRectF(app.context.renderer, &btn);
+      SDL_SetRenderDrawColor(app.context.renderer, 200, 200, 200, 255);
+      SDL_RenderFillRectF(app.context.renderer, &btn.button);
+      SDL_RenderCopyF(app.context.renderer, btn.texture, nullptr, &btn.button);
       SDL_SetRenderDrawColor(app.context.renderer, 0, 255, 255, 255);
-      SDL_RenderDrawRectF(app.context.renderer, &btn);
+      SDL_RenderDrawRectF(app.context.renderer, &btn.button);
       SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
     }
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.buttonBar);

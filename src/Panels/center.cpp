@@ -17,7 +17,7 @@ namespace Center {
         return SDL_SYSTEM_CURSOR_IBEAM;
       }
       if (SDL_HasIntersectionF(&app.panel.mainPanel.left.body, &cursor)) {
-        if (Left::Select_Image(app).texture.texture) {
+        if (Left::Hover_Image(app)) {
           return SDL_SYSTEM_CURSOR_HAND;
         }
       }

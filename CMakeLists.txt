@@ -10,6 +10,8 @@ add_executable(Box2D_Colliders
         lib/nativefiledialog/nfd_common.c
         lib/nativefiledialog/nfd_zenity.c
         lib/SDL_FontCache/SDL_FontCache.c
+        lib/SDL2_gxf/SDL2_gfxPrimitives.c
+        lib/SDL2_gxf/SDL2_rotozoom.c
 
         src/Utils/utils.cpp
 
