@@ -80,7 +80,7 @@ namespace Mouse {
         Menu::Clear(app);
 
         if (SDL_HasIntersectionF(&app.panel.top.panel, &cursor))
-          return Top::Top_Panel();
+          return Top::Click_Menu_Button(app, Mouse::Cursor_Point());
         if (SDL_HasIntersectionF(&app.panel.bottom, &cursor))
           return Bottom::Bottom_Panel();
 
@@ -127,8 +127,7 @@ namespace Mouse {
                 return false;
               else {
                 // move selected vertices
-                if (doubleClick &&
-                    app.selectedShape.shape == Graphics::POLYGON) {
+                if (doubleClick && app.selectedShape.shape == Graphics::POLYGON) {
                   // create vertex at mouse
                   // need to calculate which edge the mouse is closest to and insert the vertex between those 2 points
                   Action::Add_Vertex(app);

@@ -53,7 +53,7 @@ namespace App {
     Graphics::Panels panel;
     Graphics::Context context;
 
-    App_Interface interface;
+    App_Interface interface{};
     float vertexRadius = 5.0f;
 
     bool running = true;
@@ -67,7 +67,7 @@ namespace App {
     bool menuOpen = false;
     SDL_FRect menu{};
 
-    SDL_Point initialPosition{};
+    SDL_Point initialPosition = {0, 0};
     SDL_FPoint offset = {0.0f, 0.0f};
     bool moveImage = false;
     bool moveVertex = false;

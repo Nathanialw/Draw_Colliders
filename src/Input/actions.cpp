@@ -95,6 +95,9 @@ namespace Action {
         moving.push_back(false);
       else
         moving.insert(moving.begin() + index, false);
+      app.selectedVertex.shape = Graphics::POLYGON;
+      app.selectedVertex.indexPolygon = app.selectedShape.indexPolygon;
+      app.selectedVertex.indexVertex = index;
       return true;
     }
     return false;
@@ -102,8 +105,22 @@ namespace Action {
 
   bool Add_Vertex_Center(App::App &app) {
     if (app.selectedShape.shape == Graphics::POLYGON) {
-      app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].vertices.push_back({0.0f, 0.0f});
-      app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].moving.push_back(false);
+      auto &vertices = app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].vertices;
+      SDL_FPoint pos = {0.0f, 0.0f};
+      int index = Get_Vertex_Position(vertices, pos);
+
+      if (index > vertices.size())
+        vertices.push_back({pos.x,pos.y});
+      else
+        vertices.insert(vertices.begin() + index, {pos.x,pos.y});
+      auto &moving = app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].moving;
+      if (index > moving.size())
+        moving.push_back(false);
+      else
+        moving.insert(moving.begin() + index, false);
+      app.selectedVertex.shape = Graphics::POLYGON;
+      app.selectedVertex.indexPolygon = app.selectedShape.indexPolygon;
+      app.selectedVertex.indexVertex = index;
       return true;
     }
     return false;
@@ -164,19 +181,34 @@ namespace Action {
     return true;
   }
 
+  bool Open_Project(App::App &app) {
+    Save::Load(app);
+    return true;
+  }
+
+  bool Add_Sprites(App::App &app) {
+    return true;
+  }
+
   bool Quit_Application(App::App &app) {
     app.running = !app.running;
     return true;
   }
 
   bool Save(App::App &app) {
-    Save::State(app);
-    Serialise::Datafile::Write(app.datafile, "save.txt");
-    return true;
+    if (Save::State(app)) {
+      Serialise::Datafile::Write(app.datafile, "save.txt");
+      return true;
+    }
+    return false;
   }
 
   bool Load(App::App &app) {
     Save::Load(app);
+    return true;
+  }
+
+  bool Publish(App::App &app) {
     return true;
   }
 

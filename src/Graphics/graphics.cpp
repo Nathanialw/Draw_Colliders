@@ -195,6 +195,9 @@ namespace Graphics {
 
     texture.vertex = IMG_LoadTexture(renderer, "assets/icons/vertex.png");
     texture.circle = IMG_LoadTexture(renderer, "assets/icons/circle.png");
+    texture.addImage = IMG_LoadTexture(renderer, "assets/icons/add_image.png");
+    texture.deleteImage = IMG_LoadTexture(renderer, "assets/icons/remove_image.png");
+    texture.publish = IMG_LoadTexture(renderer, "assets/icons/export.png");
     return texture;
   }
 }

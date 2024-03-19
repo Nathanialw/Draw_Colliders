@@ -9,8 +9,14 @@
 
 namespace Save {
 
-  void State(App::App &app) {
+  bool State(App::App &app) {
     std::array<std::string, 5> shapeStr = {"point", "circle", "lineSegment", "aabb", "polygon"};
+    //saves the working center image
+    if (app.interface.left.images.empty())
+      return false;
+
+    app.interface.left.images[app.interface.center.index] = app.interface.center;
+
     //resets the in memory data to save the file
     Serialise::Datafile datafile;
     app.datafile = datafile;
@@ -74,14 +80,16 @@ namespace Save {
         k++;
       }
     }
+    return true;
   }
-
-
 
   void Load (App::App &app) {
     app.datafile.Read(app.datafile, "save.txt");
 
     std::array<std::string, 5> shapeStr = {"point", "circle", "lineSegment", "aabb", "polygon"};
+    //maybe have a dialog box here to say the load failed
+    if (app.datafile["header"]["image_count"].Get_String() == "")
+      return;
     //minus the header
     auto num = app.datafile["header"]["image_count"].Get_Int();
     //clear values
@@ -109,8 +117,6 @@ namespace Save {
         app.interface.left.images[i].texture.scale = app.datafile["image[" + std::to_string(i) + "]"]["scale"].Get_Real();
         app.interface.left.imageNameStr[i] = name;
         app.interface.left.imagePathStr[i] = path;
-
-
       }
 //        load the image to the center if there is no image
 

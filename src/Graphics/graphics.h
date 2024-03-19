@@ -106,9 +106,10 @@ namespace Graphics {
     Right_Panel right{};
   };
 
+  const int menuSize = 10;
   struct Top {
     SDL_FRect panel{};
-    std::array<Button, 6> buttons{};
+    std::array<Button, menuSize> buttons{};
   };
 
   const int numMenuButtons = 6;
@@ -159,6 +160,9 @@ namespace Graphics {
     SDL_Texture* addFolder = nullptr;
     SDL_Texture* circle = nullptr;
     SDL_Texture* vertex = nullptr;
+    SDL_Texture* publish = nullptr;
+    SDL_Texture* deleteImage = nullptr;
+    SDL_Texture* addImage = nullptr;
   };
 
   Panels Set_Panels(SDL_Window* window);

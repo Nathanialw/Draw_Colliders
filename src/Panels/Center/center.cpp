@@ -222,6 +222,8 @@ namespace Center::Center {
   void Set_Color(App::App &app, const int &i, const Graphics::Shape &shape) {
     if (app.selectedShape.shape == shape && app.selectedShape.indexPolygon == i)
       SDL_SetRenderDrawColor(app.context.renderer, 0, 255, 255, 255);
+    else
+      SDL_SetRenderDrawColor(app.context.renderer, 255, 0, 0, 255);
   }
 
   void Reset_Color(App::App &app, const int &i, const Graphics::Shape &shape) {
@@ -288,10 +290,13 @@ namespace Center::Center {
   void Render_Shapes(App::App &app) {
     auto o = App::Calc_Offset(app);
     SDL_SetRenderDrawColor(app.context.renderer, 255, 0, 0, 255);
+    SDL_Color shapeFill = {200, 200, 200, 100};
 
     for (int k = 0; k < Graphics::Shape::SIZE; ++k) {
       for (int i = 0; i < app.interface.center.shapes[k].size(); ++i) {
         std::vector<SDL_FPoint> points;
+        std::vector<double> xPolygonPoints;
+        std::vector<double> yPolygonPoints;
         Set_Color(app, i, (Graphics::Shape)k);
         for (int j = 0; j < app.interface.center.shapes[k][i].vertices.size(); ++j) {
           SDL_FRect rect = Vertex_To_Rect(app, app.interface.center.shapes[k][i].vertices[j], o, app.interface.center.shapes[k][i].moving[j]);
@@ -299,6 +304,10 @@ namespace Center::Center {
           if (k == Graphics::Shape::AABB)
             Update_Vertex_Render(app, rect, i, j);
           points.push_back({rect.x + o.r, rect.y + o.r});
+          if (k == Graphics::Shape::POLYGON || k == Graphics::Shape::AABB) {
+            xPolygonPoints.push_back(rect.x + o.r);
+            yPolygonPoints.push_back(rect.y + o.r);
+          }
 
           //need to not scale the size of the vertices on zoom so they stay the same size always
           if (app.selectedVertex.shape == k && app.selectedVertex.indexPolygon == i && app.selectedVertex.indexVertex == j)
@@ -322,8 +331,15 @@ namespace Center::Center {
           (app.selectedShape.shape == Graphics::CIRCLE && app.selectedShape.indexPolygon == i) ? color = {0,255,255,255} : color = {255,0,0,255};
 
           float r = points[1].y - points[0].y;
+          aaFilledPieRGBA(app.context.renderer, points[0].x, points[0].y, r, r, 0, 360, 0, shapeFill.r, shapeFill.g, shapeFill.b, shapeFill.a);
           thickCircleRGBA(app.context.renderer, points[0].x, points[0].y, r, color.r, color.g, color.b, color.a, 2);
         }
+        else if (k == Graphics::Shape::POLYGON || k == Graphics::Shape::AABB) {
+          aaFilledPolygonRGBA(app.context.renderer, xPolygonPoints.data(), yPolygonPoints.data(), (int) points.size(), shapeFill.r, shapeFill.g, shapeFill.b, shapeFill.a);
+          xPolygonPoints.clear();
+          yPolygonPoints.clear();
+        }
+        Set_Color(app, i, (Graphics::Shape)k);
         SDL_RenderDrawLinesF(app.context.renderer, points.data(), (int)points.size());
         if (points.size() > 2)
           SDL_RenderDrawLineF(app.context.renderer, points[(int)points.size() - 1].x, points[(int)points.size() - 1].y, points[0].x, points[0].y);

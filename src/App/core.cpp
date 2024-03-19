@@ -21,9 +21,13 @@ namespace App {
     app.panel.top.buttons[0].texture = app.texture.newDocument;
     app.panel.top.buttons[1].texture = app.texture.open;
     app.panel.top.buttons[2].texture = app.texture.disk;
-    app.panel.top.buttons[3].texture = app.texture.addFolder;
-//    app.panel.top.buttons[4].texture = app.texture.newDocument;
-//    app.panel.top.buttons[5].texture = app.texture.newDocument;
+//    app.panel.top.buttons[3].texture = app.texture.addFolder;
+    app.panel.top.buttons[4].texture = app.texture.addImage;
+    app.panel.top.buttons[5].texture = app.texture.deleteImage;
+    app.panel.top.buttons[6].texture = app.texture.addFolder;
+//    app.panel.top.buttons[7].texture = app.texture.publish;
+    app.panel.top.buttons[8].texture = app.texture.publish;
+    app.panel.top.buttons[9].texture = app.texture.publish;
   }
 
   void Init (App &app) {
@@ -49,8 +53,26 @@ namespace App {
   void New(App &app) {
     Data::Left newLeft;
     Data::Center newCenter;
+    Data::Right newRight;
     app.interface.left = newLeft;
     app.interface.center = newCenter;
+    app.interface.right = newRight;
+    //reset shape list
+    Data::Shape_List shapeList;
+    app.interface.shapeList = shapeList;
+    Vertex vertex;
+    app.vertex = vertex;
+    app.selectedVertex = vertex;
+    Shape shape;
+    app.selectedShape = shape;
+    app.imageIndex = 0;
+    app.filterImages = false;
+    app.moveImage = false;
+    app.moveVertex = false;
+    app.initialPosition = {0, 0};
+    app.offset = {0.0f, 0.0f};
+    app.zoomToMouse = true;
+    app.menuOpen = false;
   }
 
   Offsets Calc_Offset(const App &app) {

@@ -12,6 +12,6 @@
 
 namespace Save {
 
-  void State(App::App &app);
+  bool State(App::App &app);
   void Load(App::App &app);
 }

@@ -11,6 +11,6 @@
 #include "../App/core.h"
 
 namespace Top {
-  bool Top_Panel();
+  bool Click_Menu_Button(App::App &app, const SDL_FPoint &point);
   void Render_Button_Bar(App::App &app);
 }
