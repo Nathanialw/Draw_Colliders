@@ -44,7 +44,6 @@ namespace Graphics {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   }
 
-
   float Cap(const float &panelHeight, float h) {
     if (h > panelHeight)
       return panelHeight;
@@ -140,8 +139,8 @@ namespace Graphics {
   }
 
   std::vector<Graphics::Image_Import> Load_Images(const Context &context) {
-    std::vector<Graphics::Image_Import> imageImport;
-    Graphics::Image_Import image;
+    std::vector<Graphics::Image_Import> imageImport{};
+    Graphics::Image_Import image{};
 
     nfdpathset_t pathSet;
     nfdresult_t result = NFD_OpenDialogMultiple("png,jpg;pdf", nullptr, &pathSet);
@@ -159,9 +158,8 @@ namespace Graphics {
         image.texture = IMG_LoadTexture(context.renderer, image.fileName.c_str());
         imageImport.emplace_back(image);
       }
+      NFD_PathSet_Free(&pathSet);
     }
-
-    NFD_PathSet_Free(&pathSet);
     return imageImport;
   }
 
@@ -170,7 +168,8 @@ namespace Graphics {
     texture.checkbox = IMG_LoadTexture(renderer, "assets/icons/checkbox.png");
     texture.unchecked = IMG_LoadTexture(renderer, "assets/icons/unchecked.png");
 
-    texture.disk = IMG_LoadTexture(renderer, "assets/icons/disk.png");
+    texture.save = IMG_LoadTexture(renderer, "assets/icons/disk.png");
+    texture.saveAs = IMG_LoadTexture(renderer, "assets/icons/save-as.png");
     texture.newDocument = IMG_LoadTexture(renderer, "assets/icons/new-document.png");
     texture.open = IMG_LoadTexture(renderer, "assets/icons/folder.png");
 
@@ -195,6 +194,7 @@ namespace Graphics {
     texture.addImage = IMG_LoadTexture(renderer, "assets/icons/add_image.png");
     texture.deleteImage = IMG_LoadTexture(renderer, "assets/icons/remove_image.png");
     texture.publish = IMG_LoadTexture(renderer, "assets/icons/export.png");
+    texture.publishAs = IMG_LoadTexture(renderer, "assets/icons/export.png");
     return texture;
   }
 }

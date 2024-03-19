@@ -103,7 +103,6 @@ namespace Center::Center {
       app.offset.y /= 0.9f;
 //      app.zoomToMouse = true;
     }
-
     return true;
   }
 

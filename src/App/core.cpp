@@ -20,14 +20,15 @@ namespace App {
 
     app.panel.top.buttons[0].texture = app.texture.newDocument;
     app.panel.top.buttons[1].texture = app.texture.open;
-    app.panel.top.buttons[2].texture = app.texture.disk;
-//    app.panel.top.buttons[3].texture = app.texture.addFolder;
-    app.panel.top.buttons[4].texture = app.texture.addImage;
-    app.panel.top.buttons[5].texture = app.texture.deleteImage;
-    app.panel.top.buttons[6].texture = app.texture.addFolder;
-//    app.panel.top.buttons[7].texture = app.texture.publish;
-    app.panel.top.buttons[8].texture = app.texture.publish;
+    app.panel.top.buttons[2].texture = app.texture.save;
+    app.panel.top.buttons[3].texture = app.texture.saveAs;
+//    app.panel.top.buttons[4].texture = app.texture.addFolder;
+    app.panel.top.buttons[5].texture = app.texture.addImage;
+    app.panel.top.buttons[6].texture = app.texture.deleteImage;
+    app.panel.top.buttons[7].texture = app.texture.addFolder;
+//    app.panel.top.buttons[8].texture = app.texture.publish;
     app.panel.top.buttons[9].texture = app.texture.publish;
+    app.panel.top.buttons[10].texture = app.texture.publishAs;
   }
 
   void Init (App &app) {
@@ -73,6 +74,7 @@ namespace App {
     app.offset = {0.0f, 0.0f};
     app.zoomToMouse = true;
     app.menuOpen = false;
+    app.saveName.clear();
   }
 
   Offsets Calc_Offset(const App &app) {

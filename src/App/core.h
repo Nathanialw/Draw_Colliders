@@ -83,6 +83,7 @@ namespace App {
 
     Serialise::Datafile datafile;
     Graphics::Texture texture;
+    std::string saveName;
   };
 
   void Close(App &app);

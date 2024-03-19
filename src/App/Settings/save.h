@@ -12,6 +12,8 @@
 
 namespace Save {
 
-  bool State(App::App &app);
-  void Load(App::App &app);
+  bool Save(App::App &app, const std::string &fileName);
+  void Load(App::App &app, const std::string &fileName);
+  bool Load_As(App::App &app);
+  bool Save_As(App::App &app);
 }

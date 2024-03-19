@@ -194,7 +194,7 @@ namespace Action {
   }
 
   bool Open_Project(App::App &app) {
-    Save::Load(app);
+    Save::Load_As(app);
     return true;
   }
 
@@ -204,15 +204,21 @@ namespace Action {
   }
 
   bool Save(App::App &app) {
-    if (Save::State(app)) {
-      Serialise::Datafile::Write(app.datafile, "save.txt");
+    if (!app.saveName.empty())
+      Save::Save(app, app.saveName);
+    else if (Save::Save_As(app))
       return true;
-    }
+    return false;
+  }
+
+  bool Save_As(App::App &app) {
+    if (Save::Save_As(app))
+      return true;
     return false;
   }
 
   bool Load(App::App &app) {
-    Save::Load(app);
+    Save::Load_As(app);
     return true;
   }
 

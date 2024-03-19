@@ -26,6 +26,7 @@ namespace Action {
   bool Quit_Application(App::App &app);
   bool Publish(App::App &app);
   bool Save(App::App &app);
+  bool Save_As(App::App &app);
   bool Load(App::App &app);
 
 }

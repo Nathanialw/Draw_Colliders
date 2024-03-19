@@ -106,7 +106,7 @@ namespace Graphics {
     Right_Panel right{};
   };
 
-  const int menuSize = 10;
+  const int menuSize = 11;
   struct Top {
     SDL_FRect panel{};
     std::array<Button, menuSize> buttons{};
@@ -144,7 +144,8 @@ namespace Graphics {
     SDL_Texture* deleteShape = nullptr;
     SDL_Texture* addVertex = nullptr;
     SDL_Texture* deleteVertex = nullptr;
-    SDL_Texture* disk = nullptr;
+    SDL_Texture* save = nullptr;
+    SDL_Texture* saveAs = nullptr;
     SDL_Texture* location = nullptr;
     SDL_Texture* nodes = nullptr;
     SDL_Texture* pentagon = nullptr;
@@ -161,6 +162,7 @@ namespace Graphics {
     SDL_Texture* circle = nullptr;
     SDL_Texture* vertex = nullptr;
     SDL_Texture* publish = nullptr;
+    SDL_Texture* publishAs = nullptr;
     SDL_Texture* deleteImage = nullptr;
     SDL_Texture* addImage = nullptr;
   };

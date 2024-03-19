@@ -6,10 +6,11 @@
 #include "save.h"
 #include "../../Graphics/text.h"
 #include "../../Graphics/graphics.h"
+#include "../../../lib/nativefiledialog/nfd.h"
 
 namespace Save {
 
-  bool State(App::App &app) {
+  bool Save(App::App &app, const std::string &fileName) {
     std::array<std::string, 5> shapeStr = {"point", "circle", "lineSegment", "aabb", "polygon"};
     //saves the working center image
     if (app.interface.left.images.empty())
@@ -21,7 +22,7 @@ namespace Save {
     Serialise::Datafile datafile;
     app.datafile = datafile;
 
-    app.datafile["header"]["name"].Set_String("name of save file");
+    app.datafile["header"]["name"].Set_String(fileName);
     //maybe more than 1
     app.datafile["header"]["folder"].Set_String("path to folder with images");
     app.datafile["header"]["image_count"].Set_Int(app.interface.left.imagePathStr.size());
@@ -80,15 +81,36 @@ namespace Save {
         k++;
       }
     }
+    app.datafile.Write(app.datafile, fileName);
     return true;
   }
 
-  void Load (App::App &app) {
-    app.datafile.Read(app.datafile, "save.txt");
+  // Save As
+  bool Save_As(App::App &app) {
+    nfdchar_t *outPath;
+    auto result = NFD_SaveDialog("txt;pdf", nullptr, &outPath);
+
+    if (result == NFD_CANCEL ||  result == NFD_ERROR ) {
+      free(outPath);
+      return false;
+    }
+    else {
+      app.saveName = outPath;
+      if (!app.saveName.contains(".txt"))
+        app.saveName += ".txt";
+      Save(app, app.saveName);
+      free(outPath);
+      return true;
+    }
+  }
+
+  void Load (App::App &app, const std::string &fileName) {
+    if (!app.datafile.Read(app.datafile, fileName))
+      return;
 
     std::array<std::string, 5> shapeStr = {"point", "circle", "lineSegment", "aabb", "polygon"};
     //maybe have a dialog box here to say the load failed
-    if (app.datafile["header"]["image_count"].Get_String() == "")
+    if (app.datafile["header"]["image_count"].Get_String().empty())
       return;
     //minus the header
     auto num = app.datafile["header"]["image_count"].Get_Int();
@@ -185,4 +207,21 @@ namespace Save {
       }
     }
   }
+
+//  Load As
+  bool Load_As(App::App &app) {
+    nfdchar_t *outPath;
+    auto result = NFD_OpenDialog("txt;pdf", nullptr, &outPath);
+    if (result == NFD_CANCEL ||  result == NFD_ERROR ) {
+      free(outPath);
+      return false;
+    }
+    else {
+      app.saveName = outPath;
+      Load(app, app.saveName);
+      free(outPath);
+      return true;
+    }
+  }
+
 }

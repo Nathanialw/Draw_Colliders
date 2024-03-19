@@ -3,13 +3,12 @@
 -exporting XML
 -exporting JSON
 -exporting SQLite
--load as a project file
--save as
 -filter images list
 -right side buttons
 -complete main menu dropdowns
 -scroll bars
 -expanders
+-show/hide shapes
 
 -select box to grab multiple shapes
 -add capsule shape

@@ -21,6 +21,10 @@ namespace Top {
     Action::Save(app);
     return 4;
   }
+  int Save_As(App::App &app) {
+    Action::Save_As(app);
+    return 4;
+  }
   int Add_Image(App::App &app) {
     Action::Add_Image(app);
     return 4;
@@ -49,6 +53,7 @@ namespace Top {
       New,
       Open,
       Save,
+      Save_As,
       Unused,
       Add_Image,
       Delete_Image,

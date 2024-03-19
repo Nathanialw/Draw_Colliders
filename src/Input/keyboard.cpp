@@ -84,7 +84,7 @@ namespace Keyboard {
         }
 
         if (event.key.keysym.sym == SDLK_ESCAPE) {
-          if (Action::Quit_Application(app))
+//          if (Action::Quit_Application(app))
             return true;
         }
         return true;

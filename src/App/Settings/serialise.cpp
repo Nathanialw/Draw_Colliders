@@ -132,7 +132,6 @@ namespace Serialise {
     }
 
   bool Datafile::Read(Datafile &data, const std::string &fileName, const char listSeperator) {
-
     std::ifstream file(fileName);
     if (file.is_open())
     {
@@ -142,6 +141,7 @@ namespace Serialise {
       std::stack<std::reference_wrapper<Datafile>> stackPath;
       stackPath.emplace(data);
 
+      bool verify = true;
       while (!file.eof()) {
 
         std::string line;
@@ -155,17 +155,23 @@ namespace Serialise {
         trim(line);
 
         if (!line.empty()) {
+          if (verify) {
+            verify = false;
+            if (!line.contains("header")) {
+              file.close();
+              return false;
+            }
+          }
+
           if (line[0] == '#') {
             Datafile comment;
             comment.isComment = true;
             stackPath.top().get().vecObjects.push_back({line, comment});
           }
-
           else {
             size_t x = line.find_first_of('=');
             if (x != std::string::npos) {
               propertyName = line.substr(0, x - 1);
-//              propertyName = line.substr(0, x);
               trim(propertyName);
 
               propertyValue = line.substr(x + 2, line.size());
@@ -210,7 +216,6 @@ namespace Serialise {
           }
         }
       }
-
       file.close();
       return true;
     }
