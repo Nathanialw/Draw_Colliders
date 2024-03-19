@@ -54,7 +54,7 @@ namespace Center::Left {
     float h = 40.0f;
     float spacing = 5.0f;
 
-    if (app.filterImages && !app.interface.left.filteredIndexes.empty()) {
+    if (!app.interface.left.filteredIndexes.empty()) {
       for (int i = 0; i < app.interface.left.filteredIndexes.size(); ++i) {
         const int &index = app.interface.left.filteredIndexes[i];
         SDL_FRect dRect = {x + spacing, y + spacing, w - (spacing * 2.0f), h};
@@ -137,7 +137,7 @@ namespace Center::Left {
     float spacing = 5.0f;
 
     auto cursor = Mouse::Cursor();
-    if (app.filterImages && !app.interface.left.filteredIndexes.empty()) {
+    if (!app.interface.left.filteredIndexes.empty()) {
       for (int i = 0; i < app.interface.left.filteredIndexes.size(); ++i) {
         const int &index = app.interface.left.filteredIndexes[i];
 
