@@ -78,6 +78,11 @@ namespace Keyboard {
             return true;
         }
 
+        if (event.key.keysym.sym == SDLK_p) {
+          if (Action::Publish(app))
+            return true;
+        }
+
         if (event.key.keysym.sym == SDLK_a) {
           if (Action::Add_Vertex(app))
             return true;

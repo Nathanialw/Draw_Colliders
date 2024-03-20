@@ -1,11 +1,19 @@
 //
 // Created by nathanial on 3/9/24.
 //
+#ifdef __linux__
+#include <SDL2/SDL.h>
+#elif defined(_WIN32)
+#include <SDL.h>
+#endif
+
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include "iostream"
 #include "graphics.h"
 #include "../../lib/nativefiledialog/nfd.h"
+#include "../../lib/SDL2_gxf/SDL2_gfxPrimitives.h"
+
 
 namespace Graphics {
   using namespace Graphics;
@@ -22,8 +30,10 @@ namespace Graphics {
     context.flags = SDL_WINDOW_RESIZABLE;
     context.title = "Collider";
     context.window = SDL_CreateWindow(context.title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, context.width, context.height, context.flags);
-//    context.renderer = SDL_CreateRenderer(context.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
-    context.renderer = SDL_CreateRenderer(context.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+    context.renderer = SDL_CreateRenderer(context.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
+    SDL_SetRenderDrawBlendMode(context.renderer, SDL_BLENDMODE_BLEND);
+
+//    context.renderer = SDL_CreateRenderer(context.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     return context;
   }
 
@@ -164,7 +174,7 @@ namespace Graphics {
   }
 
   Texture Load_Icons(SDL_Renderer *renderer) {
-    Texture texture{};
+    Texture texture;
     texture.checkbox = IMG_LoadTexture(renderer, "assets/icons/checkbox.png");
     texture.unchecked = IMG_LoadTexture(renderer, "assets/icons/unchecked.png");
 
@@ -195,6 +205,57 @@ namespace Graphics {
     texture.deleteImage = IMG_LoadTexture(renderer, "assets/icons/remove_image.png");
     texture.publish = IMG_LoadTexture(renderer, "assets/icons/export.png");
     texture.publishAs = IMG_LoadTexture(renderer, "assets/icons/export.png");
+
+    texture.alphaTexture = IMG_LoadTexture(renderer, "assets/images/fogOfWar.png");
+    SDL_SetTextureBlendMode(texture.alphaTexture, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureAlphaMod(texture.alphaTexture, 0);
+    return texture;
+  }
+
+  SDL_Texture* Render_Circle(SDL_Renderer *renderer, const float &x, const float &y, const float &r, const SDL_Color &shapeFill, const SDL_Color &edgeColor) {
+    SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, int(r * 2), int(r * 2));
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderTarget(renderer, texture);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    SDL_RenderClear(renderer);
+
+    //check where the screen is relative to center point
+    //only render a pie piece instead of whole thing
+    //this way we can rerender on zoom
+
+    SDL_FRect rect = {0.0f, 0.0f, r * 2.0f, r * 2.0f};
+    SDL_SetRenderDrawColor(renderer, 120, 0, 0, 120);
+    SDL_RenderFillRectF(renderer, &rect);
+    aaFilledPieRGBA(renderer, r, r, r, r, 0.0f, 360.0f, 0, shapeFill.r, shapeFill.g, shapeFill.b, shapeFill.a);
+    SDL_SetRenderTarget(renderer, nullptr);
+    return texture;
+  }
+
+  SDL_Texture* Render_Polygon_AABB(SDL_Renderer *renderer, std::vector<double> &xPolygonPoints, std::vector<double> &yPolygonPoints, const int &w, const int &h, const SDL_Color &shapeFill) {
+    SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, h);
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderTarget(renderer, texture);
+    double lowestX = MAXFLOAT;
+    for (const auto &num: xPolygonPoints) {
+      if (num < lowestX)
+        lowestX = num;
+    }
+    for (auto &num: xPolygonPoints) {
+      num -= lowestX;
+    }
+    double lowestY = MAXFLOAT;
+    for (const auto &num: yPolygonPoints) {
+      if (num < lowestY)
+        lowestY = num;
+    }
+    for (auto &num: yPolygonPoints) {
+      num -= lowestY;
+    }
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+
+    SDL_RenderClear(renderer);
+    aaFilledPolygonRGBA(renderer, xPolygonPoints.data(), yPolygonPoints.data(), (int) yPolygonPoints.size(), shapeFill.r, shapeFill.g, shapeFill.b, shapeFill.a);
+    SDL_SetRenderTarget(renderer, nullptr);
     return texture;
   }
 }

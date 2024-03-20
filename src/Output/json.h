@@ -11,5 +11,5 @@
 
 namespace JSON {
 
-  void Publish();
+  void Publish(App::App &app);
 }

@@ -27,7 +27,7 @@ namespace Center::Left {
 
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.left.search);
-    if (app.filterImages && app.interface.left.filteredIndexes.empty())
+    if (app.filterImages && app.interface.left.filteredIndexes.empty() && !app.filterText.empty())
       SDL_SetRenderDrawColor(app.context.renderer, 255, 125, 125, 255);
     else
       SDL_SetRenderDrawColor(app.context.renderer, 125, 125, 125, 255);
@@ -194,9 +194,11 @@ namespace Center::Left {
 
   bool Filter_Images(App::App &app) {
     //set flag to redirect keyboard input to text input
-    app.interface.left.filteredIndexes.clear();
+    if (app.interface.left.filteredIndexes.empty()) {
+      app.interface.left.filteredIndexes.clear();
+      app.filterText = "";
+    }
     app.filterImages = true;
-    app.filterText = "";
     return true;
   }
 

@@ -55,6 +55,7 @@ namespace App {
     Data::Left newLeft;
     Data::Center newCenter;
     Data::Right newRight;
+
     app.interface.left = newLeft;
     app.interface.center = newCenter;
     app.interface.right = newRight;

@@ -1,7 +1,6 @@
 
 
 -exporting XML
--exporting JSON
 -exporting SQLite
 -right side buttons
 -complete main menu dropdowns
@@ -9,7 +8,21 @@
 -expanders
 -show/hide shapes
 
+
 -select box to grab multiple shapes
 -add capsule shape
 -options/preferences
 -move shapes/vertices with keyboard buttons
+-grid
+
+
+
+
+
+
+
+//buggy, can render to texture but SDL_Destroy() will
+    not destroy that texture so it just gobbles up VRAM
+-render aaFilledPolygonRBGA to texture so I only
+    need to update it when it changes size
+-render aaFilledPieRBGA to texture

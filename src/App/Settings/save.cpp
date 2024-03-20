@@ -120,6 +120,7 @@ namespace Save {
     Data::Left newLeft;
     app.interface.left = newLeft;
     bool setCenter = true;
+    app.texture.shapes.resize(num);
 
     for (int i = 0; i < num; ++i) {
       if (app.interface.left.imageNameStr.size() <= i)
@@ -154,8 +155,10 @@ namespace Save {
       }
 
       shape_count = image[shapeStr[1]]["shape_count"].Get_Int();
-      if (shape_count != 0 && shapes.shapes[Graphics::CIRCLE].size() <= shape_count)
+      if (shape_count != 0 && shapes.shapes[Graphics::CIRCLE].size() <= shape_count) {
         shapes.shapes[Graphics::CIRCLE].resize(shape_count);
+        app.texture.shapes[i][Graphics::CIRCLE].resize(shape_count);
+      }
       for (int l = 0; l < shape_count; ++l) {
         shapes.shapes[Graphics::CIRCLE][l] = Circle::Create(image[shapeStr[1]][std::to_string(l)]["x"].Get_Real(), image[shapeStr[1]][std::to_string(l)]["y"].Get_Real(), image[shapeStr[1]][std::to_string(l)]["y"].Get_Real() + image[shapeStr[1]][std::to_string(l)]["r"].Get_Real());
       }
@@ -168,8 +171,10 @@ namespace Save {
       }
 
       shape_count = image[shapeStr[3]]["shape_count"].Get_Int();
-      if (shape_count != 0 && shapes.shapes[Graphics::AABB].size() <= shape_count)
+      if (shape_count != 0 && shapes.shapes[Graphics::AABB].size() <= shape_count) {
         shapes.shapes[Graphics::AABB].resize(shape_count);
+        app.texture.shapes[i][Graphics::AABB].resize(shape_count);
+      }
       for (int l = 0; l < shape_count; ++l) {
         shapes.shapes[Graphics::AABB][l].vertices.resize(4);
         shapes.shapes[Graphics::AABB][l].moving.resize(4);
@@ -180,8 +185,10 @@ namespace Save {
       }
 
       shape_count = image[shapeStr[4]]["shape_count"].Get_Int();
-      if (shape_count != 0 && shapes.shapes[Graphics::POLYGON].size() <= shape_count)
+      if (shape_count != 0 && shapes.shapes[Graphics::POLYGON].size() <= shape_count) {
         shapes.shapes[Graphics::POLYGON].resize(shape_count);
+        app.texture.shapes[i][Graphics::POLYGON].resize(shape_count);
+      }
       for (int l = 0; l < shape_count; ++l) {
         int vertex_count = image[shapeStr[4]][std::to_string(l)]["vertex_count"].Get_Int();
         if (vertex_count != 0 && shapes.shapes[Graphics::POLYGON][l].vertices.size() <= vertex_count) {

@@ -38,9 +38,14 @@ namespace Data {
   };
 
   struct Left {
-    int selected = 0;
     std::vector<Center> images;
     std::vector<std::string> imageNameStr;
+    bool isSensor = false;
+    int bounce = 0;
+    int density = 0;
+    int friction = 0;
+
+    int selected = 0;
     std::vector<int> filteredIndexes;
     std::vector<std::string> imagePathStr;
     std::vector<Graphics::Image> imageNames;

@@ -12,11 +12,9 @@
 
 namespace Shape {
 
-  class Shape {
-  public:
+  struct  Shape {
     std::vector<SDL_FPoint> vertices{};
     std::vector<bool> moving{};
-
 //    virtual bool Collision(Shape *shape) = 0;
   };
 

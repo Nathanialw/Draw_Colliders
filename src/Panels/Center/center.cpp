@@ -91,19 +91,27 @@ namespace Center::Center {
 
   bool Set_Scale(App::App &app, Sint32 direction) {
     if (direction < 0) {
-      app.interface.center.texture.scale *= 0.9;
-      // by the offset from the origin and current mouse
-      app.offset.x *= 0.9f;
-      app.offset.y *= 0.9f;
-//      app.zoomToMouse = true;
+      if (app.interface.center.texture.scale >= 0.1f) {
+        app.interface.center.texture.scale *= 0.9f;
+        // by the offset from the origin and current mouse
+        app.offset.x *= 0.9;
+        app.offset.y *= 0.9;
+//        app.zoom = true;
+        return true;
+      }
     }
-    if (direction > 0) {
-      app.interface.center.texture.scale /= 0.9;
-      app.offset.x /= 0.9f;
-      app.offset.y /= 0.9f;
-//      app.zoomToMouse = true;
+    else if (direction > 0) {
+      if (app.interface.center.texture.scale <= 10.f) {
+        app.interface.center.texture.
+        scale /= 0.9f;
+        app.offset.x /= 0.9;
+        app.offset.y /= 0.9;
+//        app.zoom = true;
+        return true;
+      }
     }
-    return true;
+//    app.zoom = false;
+    return false;
   }
 
   bool Move(App::App &app) {
@@ -230,31 +238,6 @@ namespace Center::Center {
       SDL_SetRenderDrawColor(app.context.renderer, 255, 0, 0, 255);
   }
 
-  void Render_Lines(App::App &app) {
-    auto o = App::Calc_Offset(app);
-
-    SDL_SetRenderDrawColor(app.context.renderer, 255, 0, 0, 255);
-    for (int i = 0; i < app.interface.center.shapes[Graphics::LINE].size(); ++i) {
-      Set_Color(app, i, Graphics::LINE);
-      auto &line = app.interface.center.shapes[Graphics::LINE][i];
-      std::vector<SDL_FPoint> points;
-      for (int j = 0; j < line.vertices.size(); ++j) {
-        SDL_FRect rect = Vertex_To_Rect(app, line.vertices[j], o, line.moving[j]);
-        points.push_back({rect.x + o.r, rect.y + o.r});
-        /*          a test for displaying vertex coordinates          */
-        //get the updated vertex value for this while its moving
-        int x = (int)line.vertices[j].x;
-        int y = (int)line.vertices[j].y;
-
-        /*                                                            */
-        SDL_RenderFillRectF(app.context.renderer, &rect);
-      }
-      SDL_RenderDrawLinesF(app.context.renderer, points.data(), (int)points.size());
-      Reset_Color(app, i, Graphics::LINE);
-    }
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
-  }
-
   void Update_Vertex_Render(App::App &app, SDL_FRect &rect, const int &i, const int &j) {
     if (app.moveVertex && app.vertex.shape == Graphics::AABB) {
       if (app.vertex.indexPolygon == i) {
@@ -294,8 +277,7 @@ namespace Center::Center {
     for (int k = 0; k < Graphics::Shape::SIZE; ++k) {
       for (int i = 0; i < app.interface.center.shapes[k].size(); ++i) {
         std::vector<SDL_FPoint> points;
-        std::vector<double> xPolygonPoints;
-        std::vector<double> yPolygonPoints;
+
         Set_Color(app, i, (Graphics::Shape)k);
         for (int j = 0; j < app.interface.center.shapes[k][i].vertices.size(); ++j) {
           SDL_FRect rect = Vertex_To_Rect(app, app.interface.center.shapes[k][i].vertices[j], o, app.interface.center.shapes[k][i].moving[j]);
@@ -303,10 +285,7 @@ namespace Center::Center {
           if (k == Graphics::Shape::AABB)
             Update_Vertex_Render(app, rect, i, j);
           points.push_back({rect.x + o.r, rect.y + o.r});
-          if (k == Graphics::Shape::POLYGON || k == Graphics::Shape::AABB) {
-            xPolygonPoints.push_back(rect.x + o.r);
-            yPolygonPoints.push_back(rect.y + o.r);
-          }
+
 
           //need to not scale the size of the vertices on zoom so they stay the same size always
           if (app.selectedVertex.shape == k && app.selectedVertex.indexPolygon == i && app.selectedVertex.indexVertex == j)
@@ -325,18 +304,69 @@ namespace Center::Center {
           std::string coords = std::to_string(x) + ", " + std::to_string(y);
           Text::Render(app.context.renderer, app.context.font, coords.c_str(), rect.x + (o.r * 2), rect.y - o.r);
         }
+
         if (k == Graphics::Shape::CIRCLE) {
           SDL_Color color;
           (app.selectedShape.shape == Graphics::CIRCLE && app.selectedShape.indexPolygon == i) ? color = {0,255,255,255} : color = {255,0,0,255};
-
           float r = points[1].y - points[0].y;
-          aaFilledPieRGBA(app.context.renderer, points[0].x, points[0].y, r, r, 0, 360, 0, shapeFill.r, shapeFill.g, shapeFill.b, shapeFill.a);
+
+//          int g = 0;
+//          for (const auto &vertex: app.interface.center.shapes[k][i].moving) {
+//            if (vertex) {
+//              g++;
+//            }
+//          }
+//          if ((g !=0 && g != app.interface.center.shapes[k][i].moving.size() || !app.texture.shapes[app.interface.center.index][k][i])) {
+//            SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][k][i]);
+//            app.texture.shapes[app.interface.center.index][k][i] = nullptr;
+//            app.texture.shapes[app.interface.center.index][k][i] = Graphics::Render_Circle(app.context.renderer, points[0].x, points[0].y, r, shapeFill, color);
+//          }
+//
+//          SDL_FRect rect = {
+//              points[0].x - r,
+//              points[0].y - r,
+//              r * 2.0f,
+//              r * 2.0f
+//          };
+//          SDL_RenderCopyF(app.context.renderer, app.texture.shapes[app.interface.center.index][k][i], nullptr, &rect);
+          aaFilledPieRGBA(app.context.renderer, points[0].x, points[0].y, r, r, 0.0f, 360.0f, 0, shapeFill.r, shapeFill.g, shapeFill.b, shapeFill.a);
           thickCircleRGBA(app.context.renderer, points[0].x, points[0].y, r, color.r, color.g, color.b, color.a, 2);
         }
+
         else if (k == Graphics::Shape::POLYGON || k == Graphics::Shape::AABB) {
-          aaFilledPolygonRGBA(app.context.renderer, xPolygonPoints.data(), yPolygonPoints.data(), (int) points.size(), shapeFill.r, shapeFill.g, shapeFill.b, shapeFill.a);
-          xPolygonPoints.clear();
-          yPolygonPoints.clear();
+          std::vector<double> xPolygonPoints;
+          std::vector<double> yPolygonPoints;
+
+//          SDL_FRect rect = {MAXFLOAT, MAXFLOAT, -MAXFLOAT, -MAXFLOAT};
+          for (const auto &vertex: points) {
+            xPolygonPoints.push_back(vertex.x);
+            yPolygonPoints.push_back(vertex.y);
+//            if (vertex.x < rect.x)
+//              rect.x = vertex.x;
+//            if (vertex.y < rect.y)
+//              rect.y = vertex.y;
+          }
+//          for (const auto &vertex: points) {
+//            if (fabs(vertex.x - rect.x) > rect.w)
+//              rect.w = fabs(vertex.x - rect.x);
+//            if (fabs(vertex.y - rect.y) > rect.h)
+//              rect.h = fabs(vertex.y - rect.y);
+//          }
+//          int g = 0;
+//          for (const auto &vertex: app.interface.center.shapes[k][i].moving) {
+//            if (vertex) {
+//              g++;
+//            }
+//          }
+//
+//          if ((g !=0 && g != app.interface.center.shapes[k][i].moving.size()) || !app.texture.shapes[app.interface.center.index][k][i]) {
+//            SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][k][i]);
+//            app.texture.shapes[app.interface.center.index][k][i] = nullptr;
+//            app.texture.shapes[app.interface.center.index][k][i] = Graphics::Render_Polygon_AABB(app.context.renderer, xPolygonPoints, yPolygonPoints, rect.w, rect.h, shapeFill);
+//          }
+//
+//          SDL_RenderCopyF(app.context.renderer, app.texture.shapes[app.interface.center.index][k][i], nullptr, &rect);
+          aaFilledPolygonRGBA(app.context.renderer, xPolygonPoints.data(), yPolygonPoints.data(), (int) yPolygonPoints.size(), shapeFill.r, shapeFill.g, shapeFill.b, shapeFill.a);
         }
         Set_Color(app, i, (Graphics::Shape)k);
         SDL_RenderDrawLinesF(app.context.renderer, points.data(), (int)points.size());
@@ -345,6 +375,7 @@ namespace Center::Center {
         Reset_Color(app, i, (Graphics::Shape)k);
       }
     }
+//    app.zoom = false;
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
   }
 

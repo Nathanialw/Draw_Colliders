@@ -165,6 +165,15 @@ namespace Graphics {
     SDL_Texture* publishAs = nullptr;
     SDL_Texture* deleteImage = nullptr;
     SDL_Texture* addImage = nullptr;
+    SDL_Texture* alphaTexture = nullptr;
+
+    //image index // shape type // shape index
+    std::vector<std::array<std::vector<SDL_Texture*>, Graphics::SIZE>> shapes{};
+    // imported images
+    std::vector<SDL_Texture*> images;
+
+    //maybe for the preview images on the lft
+    std::vector<SDL_Texture*> smallImages;
   };
 
   Panels Set_Panels(SDL_Window* window);
@@ -176,4 +185,7 @@ namespace Graphics {
   void Set_Render_Draw_Color(SDL_Renderer *renderer, const int &r, const int &g, const int &b, const int &a);
   void Reset_Render_Draw_Color(SDL_Renderer *renderer);
   Texture Load_Icons(SDL_Renderer *renderer);
+
+  SDL_Texture* Render_Circle(SDL_Renderer *renderer, const float &x, const float &y, const float &r, const SDL_Color &shapeFill, const SDL_Color &edgeColor);
+  SDL_Texture* Render_Polygon_AABB(SDL_Renderer *renderer, std::vector<double> &xPolygonPoints, std::vector<double> &yPolygonPoints, const int &w, const int &h, const SDL_Color &shapeFill);
 }

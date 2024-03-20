@@ -5,6 +5,9 @@
 #include "actions.h"
 #include "../App/Settings/save.h"
 #include "../Graphics/text.h"
+#include "../Output/json.h"
+#include "../Output/xml.h"
+#include "../Output/sqlite.h"
 
 namespace Action {
   bool Delete_Shape(App::App &app, const Graphics::Shape &shap, const int &shapeIndex) {
@@ -45,6 +48,7 @@ namespace Action {
         polygon.vertices.shrink_to_fit();
         polygon.moving.shrink_to_fit();
       }
+      SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][Graphics::POLYGON][app.selectedVertex.indexPolygon]);
       app.selectedVertex.shape = Graphics::SIZE;
       app.selectedVertex.indexVertex = 0;
       app.selectedVertex.indexPolygon = 0;
@@ -93,6 +97,7 @@ namespace Action {
         moving.push_back(false);
       else
         moving.insert(moving.begin() + index, false);
+      SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][Graphics::POLYGON][app.selectedShape.indexPolygon]);
       app.selectedVertex.shape = Graphics::POLYGON;
       app.selectedVertex.indexPolygon = app.selectedShape.indexPolygon;
       app.selectedVertex.indexVertex = index;
@@ -116,6 +121,8 @@ namespace Action {
         moving.push_back(false);
       else
         moving.insert(moving.begin() + index, false);
+
+      SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][Graphics::POLYGON][app.selectedShape.indexPolygon]);
       app.selectedVertex.shape = Graphics::POLYGON;
       app.selectedVertex.indexPolygon = app.selectedShape.indexPolygon;
       app.selectedVertex.indexVertex = index;
@@ -161,14 +168,22 @@ namespace Action {
   bool Remove_Image(App::App &app) {
     if (app.interface.left.images.size() > app.imageIndex) {
 
+      for (auto &shapes : app.texture.shapes[app.imageIndex]) {
+        for (auto &shape :shapes) {
+          SDL_DestroyTexture(shape);
+        }
+      }
+      app.texture.shapes.erase(app.texture.shapes.begin() + app.imageIndex);
+
       SDL_DestroyTexture(app.interface.left.images[app.imageIndex].texture.texture);
       app.interface.left.images.erase(app.interface.left.images.begin() + app.imageIndex);
 //      app.interface.left.imageNames.erase(app.interface.left.imageNames.begin() + app.imageIndex);
       app.interface.left.imagePathStr.erase(app.interface.left.imagePathStr.begin() + app.imageIndex);
       app.interface.left.imageNameStr.erase(app.interface.left.imageNameStr.begin() + app.imageIndex);
 
-      if (app.interface.center.index == app.imageIndex)
+      if (app.interface.center.index == app.imageIndex) {
         app.interface.center = {};
+      }
 
       for (int i = app.imageIndex; i < app.interface.left.images.size(); ++i) {
         app.interface.left.images[i].index--;
@@ -223,6 +238,7 @@ namespace Action {
   }
 
   bool Publish(App::App &app) {
+    JSON::Publish(app);
     return true;
   }
 

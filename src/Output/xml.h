@@ -11,7 +11,6 @@
 
 namespace XML {
 
-
   void Publish();
 
 }
