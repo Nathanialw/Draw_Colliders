@@ -28,7 +28,6 @@ namespace Data {
     }
   };
 
-
   struct Center {
     Graphics::Image texture;
     std::array<std::vector<Shape::Shape>, Graphics::SIZE> shapes;
@@ -40,10 +39,6 @@ namespace Data {
   struct Left {
     std::vector<Center> images;
     std::vector<std::string> imageNameStr;
-    bool isSensor = false;
-    int bounce = 0;
-    int density = 0;
-    int friction = 0;
 
     int selected = 0;
     std::vector<int> filteredIndexes;

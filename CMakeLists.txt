@@ -11,6 +11,7 @@ add_executable(Box2D_Colliders
         lib/SDL_FontCache/SDL_FontCache.c
         lib/SDL2_gxf/SDL2_gfxPrimitives.c
         lib/SDL2_gxf/SDL2_rotozoom.c
+        lib/tinyxml2/tinyxml2.cpp
 
         src/Utils/utils.cpp
 

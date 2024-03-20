@@ -7,10 +7,10 @@
 #define BOX2D_COLLIDERS_XML_H
 
 #endif //BOX2D_COLLIDERS_XML_H
-
+#include "../App/core.h"
 
 namespace XML {
 
-  void Publish();
+  void Publish(App::App &app);
 
 }

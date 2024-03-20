@@ -38,11 +38,11 @@ namespace Top {
     return 3;
   }
   int Publish(App::App &app) {
-    Action::Publish(app);
+    Action::PublishJSON(app);
     return 5;
   }
   int Publish_As(App::App &app) {
-    Action::Publish(app);
+    Action::PublishXML(app);
     return 5;
   }
   int Unused(App::App &app) {

@@ -55,6 +55,7 @@ namespace Graphics {
     SIZE,
   };
 
+
   struct Shapes {
     SDL_FRect panel{};
     std::array<std::vector<SDL_FRect>, Shape::SIZE> shapes;

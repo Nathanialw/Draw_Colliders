@@ -24,7 +24,8 @@ namespace Action {
   bool Close_Project(App::App &app);
   bool Quit_Project(App::App &app);
   bool Quit_Application(App::App &app);
-  bool Publish(App::App &app);
+  bool PublishXML(App::App &app);
+  bool PublishJSON(App::App &app);
   bool Save(App::App &app);
   bool Save_As(App::App &app);
   bool Load(App::App &app);

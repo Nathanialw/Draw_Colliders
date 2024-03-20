@@ -48,7 +48,7 @@ namespace Action {
         polygon.vertices.shrink_to_fit();
         polygon.moving.shrink_to_fit();
       }
-      SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][Graphics::POLYGON][app.selectedVertex.indexPolygon]);
+//      SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][Graphics::POLYGON][app.selectedVertex.indexPolygon]);
       app.selectedVertex.shape = Graphics::SIZE;
       app.selectedVertex.indexVertex = 0;
       app.selectedVertex.indexPolygon = 0;
@@ -97,7 +97,7 @@ namespace Action {
         moving.push_back(false);
       else
         moving.insert(moving.begin() + index, false);
-      SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][Graphics::POLYGON][app.selectedShape.indexPolygon]);
+//      SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][Graphics::POLYGON][app.selectedShape.indexPolygon]);
       app.selectedVertex.shape = Graphics::POLYGON;
       app.selectedVertex.indexPolygon = app.selectedShape.indexPolygon;
       app.selectedVertex.indexVertex = index;
@@ -122,7 +122,7 @@ namespace Action {
       else
         moving.insert(moving.begin() + index, false);
 
-      SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][Graphics::POLYGON][app.selectedShape.indexPolygon]);
+//      SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][Graphics::POLYGON][app.selectedShape.indexPolygon]);
       app.selectedVertex.shape = Graphics::POLYGON;
       app.selectedVertex.indexPolygon = app.selectedShape.indexPolygon;
       app.selectedVertex.indexVertex = index;
@@ -237,8 +237,13 @@ namespace Action {
     return true;
   }
 
-  bool Publish(App::App &app) {
+  bool PublishJSON(App::App &app) {
     JSON::Publish(app);
+    return true;
+  }
+
+  bool PublishXML(App::App &app) {
+    XML::Publish(app);
     return true;
   }
 

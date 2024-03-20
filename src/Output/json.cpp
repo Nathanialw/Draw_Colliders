@@ -16,44 +16,40 @@ namespace JSON {
 
     json j;
 
+    // count elements
+    auto numBodies = j.size();
+    j["size"] = numBodies;
+
     for (int i = 0; i < app.interface.left.images.size(); ++i) {
-
       auto name = app.interface.left.imageNameStr[i];
-      auto density = app.interface.left.density;
-      auto bounce = app.interface.left.bounce;
-      auto isSensor = app.interface.left.isSensor;
-      auto friction = app.interface.left.friction;
-
       int shapeNum = 0;
       for (const auto &shapes :app.interface.left.images[i].shapes) {
           for (const auto &shape : shapes) {
 
-          j[name][shapeNum]["density"] = density;
-          j[name][shapeNum]["friction"] = friction;
-          j[name][shapeNum]["bounce"] = bounce;
-          j[name][shapeNum]["isSensor"] = isSensor;
+          j[name][shapeNum]["density"] = shape.density;
+          j[name][shapeNum]["restitution"] = shape.bounce;
+          j[name][shapeNum]["group"] = shape.friction;
+          j[name][shapeNum]["isDynamic"] = shape.isSensor;
+          j[name][shapeNum]["isBullet"] = shape.isBullet;
+          j[name][shapeNum]["friction"] = shape.restitution;
+          j[name][shapeNum]["bounce"] = shape.group;
+          j[name][shapeNum]["isSensor"] = shape.isDynamic;
           j[name][shapeNum]["filter"] = {{"categoryBits", 1},
                                {"maskBits",     65535}};
 
-          for (int l = 0; l < shape.vertices.size(); ++l) {
-            j[name][shapeNum]["shape"].push_back({{"x", shape.vertices[l].x}, {"y", shape.vertices[l].y}});
+          for (const auto &vertex : shape.vertices) {
+            j[name][shapeNum]["shape"].push_back({{"x", vertex.x}, {"y", vertex.y}});
           }
           shapeNum++;
         }
       }
     }
 
-    // count elements
-    auto s = j.size();
-    j["size"] = s;
-
+    //open dialogue
     const std::string fileName = "json.json";
-    // pretty print with indent of 4 spaces
+
     std::ofstream file(fileName);
     file << std::setw(4) << j;
-    std::cout << std::setw(4) << j;
-
-
+//    std::cout << std::setw(4) << j;
   }
-
 }
