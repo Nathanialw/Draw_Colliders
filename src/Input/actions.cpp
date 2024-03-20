@@ -238,12 +238,12 @@ namespace Action {
   }
 
   bool PublishJSON(App::App &app) {
-    JSON::Publish(app);
+    SQLite::Publish(app);
     return true;
   }
 
   bool PublishXML(App::App &app) {
-    XML::Publish(app);
+    SQLite::Publish(app);
     return true;
   }
 

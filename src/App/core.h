@@ -2,14 +2,15 @@
 //
 // Created by nathanial on 3/9/24.
 //
-
-#include "SDL2/SDL_mouse.h"
-#include "../Graphics/graphics.h"
 #include "vector"
 #include "array"
+
+#include "SDL2/SDL_mouse.h"
+
 #include "data.h"
 #include "Settings/serialise.h"
 #include "../Utils/utils.h"
+#include "../Graphics/graphics.h"
 
 namespace App {
 

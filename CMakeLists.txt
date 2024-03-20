@@ -12,6 +12,7 @@ add_executable(Box2D_Colliders
         lib/SDL2_gxf/SDL2_gfxPrimitives.c
         lib/SDL2_gxf/SDL2_rotozoom.c
         lib/tinyxml2/tinyxml2.cpp
+        lib/sqlite/sqlite3.c
 
         src/Utils/utils.cpp
 

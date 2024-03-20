@@ -23,6 +23,9 @@ namespace JSON {
     for (int i = 0; i < app.interface.left.images.size(); ++i) {
       auto name = app.interface.left.imageNameStr[i];
       int shapeNum = 0;
+      j[name][shapeNum]["isBullet"] = app.interface.left.images[i].isBullet;
+      j[name][shapeNum]["isSensor"] = app.interface.left.images[i].isDynamic;
+
       for (const auto &shapes :app.interface.left.images[i].shapes) {
           for (const auto &shape : shapes) {
 
@@ -30,10 +33,8 @@ namespace JSON {
           j[name][shapeNum]["restitution"] = shape.bounce;
           j[name][shapeNum]["group"] = shape.friction;
           j[name][shapeNum]["isDynamic"] = shape.isSensor;
-          j[name][shapeNum]["isBullet"] = shape.isBullet;
           j[name][shapeNum]["friction"] = shape.restitution;
           j[name][shapeNum]["bounce"] = shape.group;
-          j[name][shapeNum]["isSensor"] = shape.isDynamic;
           j[name][shapeNum]["filter"] = {{"categoryBits", 1},
                                {"maskBits",     65535}};
 

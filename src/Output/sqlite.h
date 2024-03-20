@@ -8,9 +8,9 @@
 #define BOX2D_COLLIDERS_SQLITE_H
 
 #endif //BOX2D_COLLIDERS_SQLITE_H
-
+#include "../App/core.h"
 
 namespace SQLite {
 
-  void Publish();
+  void Publish(App::App &app);
 }

@@ -31,6 +31,8 @@ namespace Data {
   struct Center {
     Graphics::Image texture;
     std::array<std::vector<Shape::Shape>, Graphics::SIZE> shapes;
+    bool isDynamic = false;
+    bool isBullet = false;
 
     int index = 0;
     //list to show/hide polygons

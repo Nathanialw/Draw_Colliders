@@ -17,8 +17,6 @@ namespace Shape {
     std::vector<bool> moving{};
 
     bool isSensor = false;
-    bool isDynamic = false;
-    bool isBullet = false;
     int bounce = 0;
     int density = 0;
     int friction = 0;

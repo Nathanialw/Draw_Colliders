@@ -1,14 +1,15 @@
 
 
--exporting XML
+NEEDS
 -exporting SQLite
 -right side buttons
 -complete main menu dropdowns
 -scroll bars
 -expanders
 -show/hide shapes
+-enforce unique image names
 
-
+WANTS
 -select box to grab multiple shapes
 -add capsule shape
 -options/preferences
@@ -21,8 +22,7 @@
 
 
 
-//buggy, can render to texture but SDL_Destroy() will
-    not destroy that texture so it just gobbles up VRAM
+//buggy, can render to texture but SDL_Destroy() will not destroy that texture so it just gobbles up VRAM
 -render aaFilledPolygonRBGA to texture so I only
     need to update it when it changes size
 -render aaFilledPieRBGA to texture
