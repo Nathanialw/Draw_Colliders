@@ -218,7 +218,8 @@ namespace Graphics {
   void Set_Render_Draw_Color(SDL_Renderer *renderer, const int &r, const int &g, const int &b, const int &a);
   void Reset_Render_Draw_Color(SDL_Renderer *renderer);
   Texture Load_Icons(SDL_Renderer *renderer);
-
+  void Show_Overlay(const Context &context);
+  void Wait(bool &loaded);
   SDL_Texture* Render_Circle(SDL_Renderer *renderer, const float &x, const float &y, const float &r, const SDL_Color &shapeFill, const SDL_Color &edgeColor);
   SDL_Texture* Render_Polygon_AABB(SDL_Renderer *renderer, std::vector<double> &xPolygonPoints, std::vector<double> &yPolygonPoints, const int &w, const int &h, const SDL_Color &shapeFill);
 }

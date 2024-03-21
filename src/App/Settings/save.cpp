@@ -7,6 +7,7 @@
 #include "../../Graphics/text.h"
 #include "../../Graphics/graphics.h"
 #include "../../../lib/nativefiledialog/nfd.h"
+#include <thread>
 
 namespace Save {
 
@@ -87,13 +88,13 @@ namespace Save {
   }
 
   // Save As
-  bool Save_As(App::App &app) {
+  void Save_File_Async(App::App &app, bool &loaded) {
     nfdchar_t *outPath;
     auto result = NFD_SaveDialog("txt", nullptr, &outPath);
 
+    loaded = true;
     if (result == NFD_CANCEL ||  result == NFD_ERROR ) {
       free(outPath);
-      return false;
     }
     else {
       app.saveName = outPath;
@@ -101,8 +102,24 @@ namespace Save {
         app.saveName += ".txt";
       Save(app, app.saveName);
       free(outPath);
-      return true;
     }
+  }
+
+//  Load As
+  bool Save_As(App::App &app) {
+
+    bool loaded = false;
+    auto thread_func = [&app, &loaded]() {
+      Save_File_Async(app, loaded);
+    };
+
+    Show_Overlay(app.context);
+    std::thread LOAD_THREAD(thread_func);
+
+    SDL_Event event;
+    Graphics::Wait(loaded);
+    LOAD_THREAD.join();
+    return true;
   }
 
   void Load (App::App &app, const std::string &fileName) {
@@ -217,20 +234,36 @@ namespace Save {
     }
   }
 
-//  Load As
-  bool Load_As(App::App &app) {
+   void Open_File_Async(App::App &app, bool &loaded) {
     nfdchar_t *outPath;
-    auto result = NFD_OpenDialog("txt", nullptr, &outPath);
+    nfdresult_t result;
+    result = NFD_OpenDialog("txt", nullptr, &outPath);
+
+    loaded = true;
     if (result == NFD_CANCEL ||  result == NFD_ERROR ) {
       free(outPath);
-      return false;
     }
     else {
       app.saveName = outPath;
       Load(app, app.saveName);
       free(outPath);
-      return true;
     }
+  }
+
+//  Load As
+  bool Load_As(App::App &app) {
+
+    bool loaded = false;
+    auto thread_func = [&app, &loaded]() {
+      Open_File_Async(app, loaded);
+    };
+
+    Show_Overlay(app.context);
+    std::thread LOAD_THREAD(thread_func);
+    Graphics::Wait(loaded);
+    LOAD_THREAD.join();
+
+    return true;
   }
 
 }

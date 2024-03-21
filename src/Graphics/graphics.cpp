@@ -6,6 +6,7 @@
 #elif defined(_WIN32)
 #include <SDL.h>
 #endif
+#include <thread>
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
@@ -120,34 +121,67 @@ namespace Graphics {
     return panels;
   }
 
+  void Show_Overlay(const Context &context) {
+    SDL_SetRenderDrawColor(context.renderer, 0,0,0, 75);
+    auto w = GetWindowSize(context.window);
+    SDL_FRect rect = {0.0f, 0.0f, (float)w.w, (float)w.h };
+    SDL_RenderFillRectF(context.renderer, &rect);
+    SDL_RenderPresent(context.renderer);
+    SDL_SetRenderDrawColor(context.renderer, 0,0,0, 255);
+  }
+
+  void Wait(bool &loaded) {
+    SDL_Event event;
+    while (!loaded) {
+      SDL_Delay(25);
+      while (SDL_PollEvent(&event)) {
+        SDL_Delay(25);
+        if (event.type == SDL_QUIT) {
+          return;
+        }
+      }
+    }
+  }
+
   SDL_Texture* Load_Texture(const Context &context, const std::string &filePath) {
     return IMG_LoadTexture(context.renderer, filePath.c_str());
   }
 
-  Image_Import Load_Image(const Context &context) {
+  void Import_Image(bool &loaded, std::string &fileName) {
     nfdchar_t *outPath;
     nfdresult_t result = NFD_OpenDialog("png,jpg", nullptr, &outPath);
 
-    const char * filePath;
+    loaded = true;
     if ( result == NFD_CANCEL ||  result == NFD_ERROR ) {
       free(outPath);
-      return {nullptr, ""};
     }
-    else if ( result == NFD_OKAY ) {
-      filePath = outPath;
-    }
-    SDL_Texture* texture = IMG_LoadTexture(context.renderer, filePath);
 
-    std::string fileName;
-    if ( result == NFD_OKAY ) {
+    else if ( result == NFD_OKAY ) {
       fileName = outPath;
       free(outPath);
     }
+  }
+
+  Image_Import Load_Image(const Context &context) {
+    bool loaded = false;
+    std::string fileName;
+
+    auto thread_func = [&loaded, &fileName] () mutable {
+      Import_Image(loaded, fileName);
+    };
+
+    Show_Overlay(context);
+
+    std::thread LOAD_THREAD(thread_func);
+    SDL_Event event;
+    Wait(loaded);
+    LOAD_THREAD.join();
+
+    SDL_Texture *texture = IMG_LoadTexture(context.renderer, fileName.c_str());
     return {texture, fileName};
   }
 
-  std::vector<Graphics::Image_Import> Load_Images(const Context &context) {
-    std::vector<Graphics::Image_Import> imageImport{};
+  void Import_Images(bool &loaded, std::vector<Graphics::Image_Import> &imageImport) {
     Graphics::Image_Import image{};
 
     nfdpathset_t pathSet;
@@ -155,7 +189,6 @@ namespace Graphics {
 
     if ( result == NFD_CANCEL ||  result == NFD_ERROR ) {
       NFD_PathSet_Free(&pathSet);
-      return imageImport;
     }
     else if ( result == NFD_OKAY ) {
       size_t i;
@@ -163,10 +196,29 @@ namespace Graphics {
       for ( i = 0; i < NFD_PathSet_GetCount(&pathSet); ++i ) {
         outPath = NFD_PathSet_GetPath(&pathSet, i);
         image.fileName = outPath;
-        image.texture = IMG_LoadTexture(context.renderer, image.fileName.c_str());
         imageImport.emplace_back(image);
       }
       NFD_PathSet_Free(&pathSet);
+    }
+    loaded = true;
+  }
+
+  std::vector<Graphics::Image_Import> Load_Images(const Context &context) {
+    std::vector<Graphics::Image_Import> imageImport{};
+
+    bool loaded = false;
+    Show_Overlay(context);
+
+    auto thread_func = [&loaded, &imageImport] () mutable {
+      Import_Images(loaded, imageImport);
+    };
+
+    std::thread LOAD_THREAD(thread_func);
+    Wait(loaded);
+    LOAD_THREAD.join();
+
+    for (auto &image : imageImport) {
+      image.texture = IMG_LoadTexture(context.renderer, image.fileName.c_str());
     }
     return imageImport;
   }
