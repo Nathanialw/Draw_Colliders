@@ -22,6 +22,10 @@ void Log(const float &string);
 void Log(const std::string &string);
 void Log(const char* &string);
 
+auto Get_Max(const auto &a, const auto &b);
+int Get_Max(const int &a, const int &b);
+int Get_Min(const int &a, const int &b);
+
 SDL_FRect Rect_To_FRect(const SDL_Rect &rect);
 
 

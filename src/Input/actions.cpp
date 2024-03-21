@@ -149,6 +149,9 @@ namespace Action {
     auto imageImport = Graphics::Load_Image(app.context);
     if (imageImport.texture) {
       Import_Image(app.interface.center, app.interface.left, imageImport);
+      App::Set_Bar_Size(app.uiPanels.numElement, app.interface.left.images.size(), app.panel.mainPanel.left.scroll.panel.h, app.uiPanels.scrollBarLeftHeight);
+      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+      App::Set_Textures(app);
       return true;
     }
     return false;
@@ -160,6 +163,10 @@ namespace Action {
       for (const auto &imageImport : imagesImport) {
         Import_Image(app.interface.center, app.interface.left, imageImport);
       }
+
+      App::Set_Bar_Size(app.uiPanels.numElement, app.interface.left.images.size(), app.panel.mainPanel.left.scroll.panel.h, app.uiPanels.scrollBarLeftHeight);
+      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+      App::Set_Textures(app);
       return true;
     }
     return false;
@@ -168,12 +175,12 @@ namespace Action {
   bool Remove_Image(App::App &app) {
     if (app.interface.left.images.size() > app.imageIndex) {
 
-      for (auto &shapes : app.texture.shapes[app.imageIndex]) {
-        for (auto &shape :shapes) {
-          SDL_DestroyTexture(shape);
-        }
-      }
-      app.texture.shapes.erase(app.texture.shapes.begin() + app.imageIndex);
+//      for (auto &shapes : app.texture.shapes[app.imageIndex]) {
+//        for (auto &shape :shapes) {
+//          SDL_DestroyTexture(shape);
+//        }
+//      }
+//      app.texture.shapes.erase(app.texture.shapes.begin() + app.imageIndex);
 
       SDL_DestroyTexture(app.interface.left.images[app.imageIndex].texture.texture);
       app.interface.left.images.erase(app.interface.left.images.begin() + app.imageIndex);
@@ -193,6 +200,9 @@ namespace Action {
       if (!app.interface.left.images.empty())
         app.interface.center = app.interface.left.images[0];
 
+      App::Set_Bar_Size(app.uiPanels.numElement, app.interface.left.images.size(), app.panel.mainPanel.left.scroll.panel.h, app.uiPanels.scrollBarLeftHeight);
+      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+      App::Set_Textures(app);
       return true;
     }
     return false;

@@ -90,7 +90,7 @@ namespace Mouse {
           if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor)) {
             if (SDL_HasIntersectionF(&app.panel.mainPanel.right.scroll.bar, &cursor)) {
               app.selected = App::SCROLLBAR_RIGHT;
-              app.cachedScrollBarPosition = Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.panel.y;
+              app.cachedScrollBarPosition = (Mouse::Cursor_Point().y - app.panel.mainPanel.right.scroll.bar.y);
               return true;
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.right.body, &cursor)) {
@@ -111,7 +111,7 @@ namespace Mouse {
             // use scroll
             if (SDL_HasIntersectionF(&app.panel.mainPanel.left.scroll.bar, &cursor)) {
               app.selected = App::SCROLLBAR_LEFT;
-              app.cachedScrollBarPosition = Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.panel.y;
+              app.cachedScrollBarPosition = (Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.bar.y);
               return Center::Left::Scroll(app);
             }
           };
@@ -191,14 +191,16 @@ namespace Mouse {
               }
               if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.scroll.bar, &cursor)) {
                 app.selected = App::SCROLLBAR_FIXTURES;
-                app.cachedScrollBarPosition = Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.panel.y;
+                app.cachedScrollBarPosition = Mouse::Cursor_Point().y - app.panel.mainPanel.center.shapes.scroll.bar.y;
                 return true;
               }
             }
           }
         }
         return true;
-      } else if (event.button.button == SDL_BUTTON_RIGHT) {
+      }
+
+      else if (event.button.button == SDL_BUTTON_RIGHT) {
         if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor)) {
           return true;
         }
@@ -215,7 +217,9 @@ namespace Mouse {
             return true;
         }
         return true;
-      } else if (event.button.button == SDL_BUTTON_MIDDLE) {
+      }
+
+      else if (event.button.button == SDL_BUTTON_MIDDLE) {
         if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor)) {
           return true;
         }

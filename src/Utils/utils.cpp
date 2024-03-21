@@ -30,6 +30,14 @@ void Log(const char* &string) {
   std::cout << string << std::endl;
 }
 
+int Get_Max(const int &a, const int &b) {
+  return ( a > b ) ? a : b;
+}
+
+int Get_Min(const int &a, const int &b) {
+  return ( a < b ) ? a : b;
+}
+
 float distance(const SDL_FPoint &a, const SDL_FPoint &b) {
   return std::sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y));
 }

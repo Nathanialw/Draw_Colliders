@@ -7,6 +7,45 @@
 #include "../Graphics/text.h"
 
 namespace App {
+
+  void Set_Bar_Size(const float &numElement, const float &num, const float &panelH, float &barH) {
+    bool show;
+
+    if ((numElement - num) < 0) {
+      float percentSize = numElement / num;
+      barH = percentSize * panelH;
+      show = true;
+    }
+    else {
+      show = false;
+      //expand the body by the width of the bard
+      //hide the bar
+
+      //or
+
+      //grey it out and make it non-interactable and only render the panel not the scrollbar
+    }
+  }
+
+
+
+  Index Get_Min_Index(const float &scrollPanelX, const float &scrollH, const float &scrollBarY, const float &barH, const int &containerSize, const int &numElements) {
+    float offset = (scrollPanelX + scrollBarY) - scrollPanelX;
+    float remaining = (scrollH - barH);
+    float pixelCount = remaining / ((float)(containerSize) - (float)numElements + 1.0f);
+
+    int minIndex = (offset / pixelCount);
+    if (minIndex < 0)
+      minIndex = 0;
+
+    int max = Get_Min(numElements, containerSize);
+    auto maxIndex = (minIndex + max);
+    if (maxIndex > containerSize)
+      maxIndex = containerSize;
+
+    return {minIndex, maxIndex};
+  }
+
   void Set_Textures(App &app) {
     app.panel.mainPanel.center.buttonBar.buttons[0].texture = app.texture.location;
     app.panel.mainPanel.center.buttonBar.buttons[1].texture = app.texture.point;

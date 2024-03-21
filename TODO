@@ -6,6 +6,9 @@ NEEDS
 -scroll bars
 -show/hide shapes
 -enforce unique image names
+-colour scheme
+-always have selected shape render on top
+-dialogue boxes
 
 WANTS
 -select box to grab multiple shapes
@@ -19,7 +22,8 @@ WANTS
 -hover tooltips
 -right click options
 -import a folder of images
-
+-rename fixtures
+-show vertices in dropdown menu in fixture list
 
 
 
@@ -30,3 +34,9 @@ WANTS
 
 UI
 -grey out add/remove vertex when a polygon is not selected
+
+
+bugs
+-expander bars aren't quite placed properly
+-circles stop rendering if you zoom into them too closely
+-vertices sprite renders too small

@@ -410,9 +410,36 @@ namespace Center::Center {
     float w = 40.0f;
     float h = 25.0f;
     float spacing = 2.0f;
+    int numElements= 0;
+
+    for (int j = 0; j < Graphics::Shape::SIZE; ++j)
+      numElements += app.interface.shapeList.shapeList[j].size();
+
+    int maxElementsToDisplay = (int)(app.panel.mainPanel.center.shapes.body.h / (h + spacing)) + 1;
+    App::Set_Bar_Size(maxElementsToDisplay, numElements, app.panel.mainPanel.center.shapes.scroll.panel.h, app.uiPanels.scrollBarFixturesHeight);
+
+    auto index = App::Get_Min_Index(app.panel.mainPanel.center.shapes.scroll.bar.x,
+                                    app.panel.mainPanel.center.shapes.scroll.panel.h,
+                                    app.uiPanels.scrollBarFixturesY,
+                                    app.uiPanels.scrollBarFixturesHeight,
+                                    numElements,
+                                    maxElementsToDisplay);
 
     for (int j = 0; j < Graphics::Shape::SIZE; ++j) {
-      for (int i = 0; i < app.interface.shapeList.shapeList[j].size(); ++i) {
+      int min = 0;
+      int max = 0;
+      if (index.min > app.interface.shapeList.shapeList[j].size()) {
+        index.min -= app.interface.shapeList.shapeList[j].size();
+        continue;
+      }
+      else {
+        min = index.min;
+        index.min = 0;
+        //the rendering might be overflowing the window and I may need to cap this
+//        max = index.max;
+//        index.max;
+      }
+      for (int i = min; i < app.interface.shapeList.shapeList[j].size(); ++i) {
         SDL_FRect dRect = {x, y + spacing, w - (spacing * 2.0f), h};
         if (j == app.selectedShape.shape && (i - 1) == app.selectedShape.indexPolygon) {
           SDL_FRect rect = {
@@ -446,9 +473,34 @@ namespace Center::Center {
     float w = 40.0f;
     float h = 25.0f;
     float spacing = 2.0f;
+    int numElements= 0;
+
+    for (int j = 0; j < Graphics::Shape::SIZE; ++j)
+      numElements += app.interface.shapeList.shapeList[j].size();
+
+    int maxElementsToDisplay = (int)(app.panel.mainPanel.center.shapes.body.h / (h + spacing)) + 1;
+
+    auto index = App::Get_Min_Index(app.panel.mainPanel.center.shapes.scroll.bar.x,
+                                    app.panel.mainPanel.center.shapes.scroll.panel.h,
+                                    app.uiPanels.scrollBarFixturesY,
+                                    app.uiPanels.scrollBarFixturesHeight,
+                                    numElements,
+                                    maxElementsToDisplay);
 
     for (int j = 0; j < Graphics::Shape::SIZE; ++j) {
-      for (int i = 0; i < app.interface.shapeList.shapeList[j].size(); ++i) {
+      int min = 0;
+      int max = 0;
+      if (index.min > app.interface.shapeList.shapeList[j].size()) {
+        index.min -= app.interface.shapeList.shapeList[j].size();
+        continue;
+      }
+      else {
+        min = index.min;
+        index.min = 0;
+//        max = index.max;
+//        index.max;
+      }
+      for (int i = min; i < app.interface.shapeList.shapeList[j].size(); ++i) {
         SDL_FRect dRect = {x, y, w - (spacing * 2.0f), h + spacing};
         SDL_FRect rect = {
             dRect.x + spacing,
@@ -466,13 +518,11 @@ namespace Center::Center {
     return {Graphics::Shape::SIZE, 0};
   }
 
-
   bool Update_ScrollBar(App::App &app) {
     //only need to update if the left mouse is held down
 
-    //grab and move scroll bar offset from the mouse.y
     if (app.selected == App::SCROLLBAR_LEFT) {
-      app.uiPanels.scrollBarLeftY = Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.panel.y - app.cachedScrollBarPosition;
+      app.uiPanels.scrollBarLeftY = (Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.panel.y) - app.cachedScrollBarPosition;
       if (app.uiPanels.scrollBarLeftY < 0.0f) app.uiPanels.scrollBarLeftY = 0.0f;
       else if (app.uiPanels.scrollBarLeftY > app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h)
         app.uiPanels.scrollBarLeftY = app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h;
@@ -492,12 +542,12 @@ namespace Center::Center {
         app.uiPanels.scrollBarFixturesY = app.panel.mainPanel.center.shapes.scroll.panel.h - app.panel.mainPanel.center.shapes.scroll.bar.h;
       return true;
     }
-    //place the lise (for render and selection) at an offset proportional to the position of the scroll bar
+
+    //place the list (for render and selection) at an offset proportional to the position of the scroll bar
 
     //set on button release
     return false;
   }
-
 
   bool Update_Expander(App::App &app) {
     if (app.selected == App::EXPANDER_LEFT) {

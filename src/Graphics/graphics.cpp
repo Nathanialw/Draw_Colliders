@@ -85,14 +85,16 @@ namespace Graphics {
     panels.mainPanel.left.panel = {0.0f, panels.center.y, ui_panels.leftPanelWidth, panels.center.h};
     panels.mainPanel.left.search = {panels.mainPanel.left.panel.x, panels.mainPanel.left.panel.y, ui_panels.leftPanelWidth, ui_panels.filterHeight};
     panels.mainPanel.left.body = {panels.mainPanel.left.panel.x, panels.mainPanel.left.panel.y + ui_panels.filterHeight, ui_panels.leftPanelWidth - ui_panels.scrollWidth, panels.center.h - ui_panels.filterHeight};
+    //number of elements (it might cut off with integer)
+    ui_panels.numElement = (int)(panels.mainPanel.left.body.h / (ui_panels.h + ui_panels.spacing)) + 1;
     panels.mainPanel.left.scroll.panel = {panels.mainPanel.left.panel.x + panels.mainPanel.left.panel.w - ui_panels.scrollWidth, panels.mainPanel.left.panel.y + ui_panels.filterHeight, ui_panels.scrollWidth, panels.mainPanel.left.panel.h - ui_panels.filterHeight};
-    panels.mainPanel.left.scroll.bar = {panels.mainPanel.left.panel.x + panels.mainPanel.left.panel.w - ui_panels.scrollWidth, panels.mainPanel.left.panel.y + ui_panels.filterHeight + ui_panels.scrollBarLeftY, ui_panels.scrollWidth, ui_panels.scrollBarHeight};
+    panels.mainPanel.left.scroll.bar = {panels.mainPanel.left.panel.x + panels.mainPanel.left.panel.w - ui_panels.scrollWidth, panels.mainPanel.left.panel.y + ui_panels.filterHeight + ui_panels.scrollBarLeftY, ui_panels.scrollWidth, ui_panels.scrollBarLeftHeight};
 
     //right
     panels.mainPanel.right.panel = {panels.center.w - ui_panels.rightPanelWidth, panels.center.y, ui_panels.rightPanelWidth, panels.center.h};
     panels.mainPanel.right.body = {panels.mainPanel.right.panel.x, panels.mainPanel.right.panel.y, ui_panels.rightPanelWidth - ui_panels.scrollWidth, panels.center.h};
     panels.mainPanel.right.scroll.panel = {panels.mainPanel.right.panel.x + panels.mainPanel.right.panel.w - ui_panels.scrollWidth, panels.mainPanel.right.panel.y, ui_panels.scrollWidth, panels.mainPanel.right.panel.h};
-    panels.mainPanel.right.scroll.bar = {panels.mainPanel.right.panel.x + panels.mainPanel.right.panel.w - ui_panels.scrollWidth, panels.mainPanel.right.panel.y + ui_panels.scrollBarRightY, ui_panels.scrollWidth, ui_panels.scrollBarHeight};
+    panels.mainPanel.right.scroll.bar = {panels.mainPanel.right.panel.x + panels.mainPanel.right.panel.w - ui_panels.scrollWidth, panels.mainPanel.right.panel.y + ui_panels.scrollBarRightY, ui_panels.scrollWidth, ui_panels.scrollBarRightHeight};
 
     //center
     panels.mainPanel.center.panel = {panels.mainPanel.left.panel.w, panels.center.y, panels.center.w - (panels.mainPanel.left.panel.w + panels.mainPanel.right.panel.w), panels.center.h};
@@ -112,7 +114,7 @@ namespace Graphics {
     panels.mainPanel.center.shapes.expanderLeft = {panels.mainPanel.center.shapes.panel.x, panels.mainPanel.center.panel.y + ui_panels.buttonBarHeight, ui_panels.expanderWidth, panels.mainPanel.center.panel.h - ui_panels.buttonBarHeight};
     panels.mainPanel.center.shapes.body = { + panels.mainPanel.center.shapes.panel.x + panels.mainPanel.center.shapes.expanderLeft.w, panels.mainPanel.center.panel.y + ui_panels.buttonBarHeight, panels.mainPanel.center.shapes.panel.w - panels.mainPanel.center.shapes.expanderLeft.w - ui_panels.scrollWidth, panels.mainPanel.center.panel.h - ui_panels.buttonBarHeight};
     panels.mainPanel.center.shapes.scroll.panel = { panels.mainPanel.center.shapes.body.x + panels.mainPanel.center.shapes.body.w, panels.mainPanel.center.panel.y + ui_panels.buttonBarHeight, ui_panels.scrollWidth, panels.mainPanel.center.panel.h - ui_panels.buttonBarHeight};
-    panels.mainPanel.center.shapes.scroll.bar = {panels.mainPanel.center.shapes.body.x + panels.mainPanel.center.shapes.body.w, panels.mainPanel.center.shapes.scroll.panel.y + ui_panels.scrollBarFixturesY, ui_panels.scrollWidth, ui_panels.scrollBarHeight};
+    panels.mainPanel.center.shapes.scroll.bar = {panels.mainPanel.center.shapes.body.x + panels.mainPanel.center.shapes.body.w, panels.mainPanel.center.shapes.scroll.panel.y + ui_panels.scrollBarFixturesY, ui_panels.scrollWidth, ui_panels.scrollBarFixturesHeight};
 
     panels.mainPanel.center.image = {panels.mainPanel.center.panel.x + ui_panels.expanderWidth + ui_panels.space, panels.mainPanel.center.panel.y + ui_panels.space + ui_panels.buttonBarHeight, panels.mainPanel.center.panel.w - panels.mainPanel.center.shapes.panel.w - ((ui_panels.expanderWidth * 2.0f)), panels.mainPanel.center.panel.h - (ui_panels.space * 2.0f) - ui_panels.buttonBarHeight};
     return panels;

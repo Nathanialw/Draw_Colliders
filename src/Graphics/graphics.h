@@ -182,6 +182,10 @@ namespace Graphics {
     float window_h = 0.0f;
     float window_w = 0.0f;
 
+    float scrollBarLeftHeight = 60.0f;
+    float scrollBarRightHeight = 60.0f;
+    float scrollBarFixturesHeight = 60.0f;
+
     float scrollBarLeftY = 0.0f;
     float scrollBarRightY = 0.0f;
     float scrollBarFixturesY = 0.0f;
@@ -190,10 +194,16 @@ namespace Graphics {
     float rightPanelWidth = 250.0f;
     float shapeListWidth = 125.0f;
 
+    //left
+    float w = 40.0f;
+    float h = 40.0f;
+    float spacing = 5.0f;
+    int numElement = 0;
+
     float bottomHeight = 25.0f;
     float filterHeight = 30.0f;
     float scrollWidth = 20.0f;
-    float scrollBarHeight = 60.0f;
+//    float scrollBarHeight = 60.0f;
     float expanderWidth = 10.0f;
     float space = 2.0f;
     float buttonBarHeight = 50.0f;
