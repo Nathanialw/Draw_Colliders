@@ -12,12 +12,6 @@ using namespace tinyxml2;
 
 namespace XML {
 
-#ifndef XMLCheckResult
-#define XMLCheckResult(a_eResult) if (a_eResult != XML_SUCCESS) { printf("Error: %i\n", a_eResult); return a_eResult; }
-#endif
-
-
-
   void Publish(App::App &app) {
     std::array<std::string, Graphics::SIZE> shapeStr = {"POINT", "CIRCLE", "LINE", "AABB", "POLYGON"};
 
@@ -47,7 +41,6 @@ namespace XML {
       body->SetAttribute("isDynamic", app.interface.left.images[i].isDynamic);
       body->SetAttribute("isBullet", app.interface.left.images[i].isBullet);
 
-//      for (const auto &shapes :app.interface.left.images[i].shapes) {
       for (int j = 0; j < Graphics::SIZE; ++j) {
         for (const auto &shape : app.interface.left.images[i].shapes[j]) {
           XMLElement* fixture = body->InsertNewChildElement("fixture");

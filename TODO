@@ -14,8 +14,11 @@ WANTS
 -options/preferences
 -move shapes/vertices with keyboard buttons
 -grid
-
-
+-undo
+-prevent overlap of vertex position text
+-zoom to cursor instead
+-hover tooltips
+-right click options
 
 
 
@@ -25,3 +28,6 @@ WANTS
 -render aaFilledPolygonRBGA to texture so I only
     need to update it when it changes size
 -render aaFilledPieRBGA to texture
+
+UI
+-grey out add/remove vertex when a polygon is not selected

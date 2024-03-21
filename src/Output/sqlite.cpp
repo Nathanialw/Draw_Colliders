@@ -87,16 +87,19 @@ namespace SQLite {
       std::cout << err << std::endl;
 
     sql = "CREATE TABLE FIXTURE("\
-          "ID               INTEGER     PRIMARY KEY       AUTOINCREMENT                   NOT NULL,"\
-          "bodyName         TEXT                                                          NOT NULL,"\
-          "fixtureShape     TEXT                                                          ,"\
-          "fixtureIndex     INT                                                           ,"\
-          "numVertices      INT                                                           ,"\
-          "isSensor         BOOL                                                          ,"\
-          "density          INT                                                           ,"\
-          "restitution      INT                                                           ,"\
-          "friction         INT                                                           ,"\
-          "bounce           INT                                                           ,"\
+          "ID                     INTEGER     PRIMARY KEY       AUTOINCREMENT                   NOT NULL,"\
+          "bodyName               TEXT                                                          NOT NULL,"\
+          "fixtureShape           TEXT                                                          ,"\
+          "fixtureIndex           INT                                                           ,"\
+          "numVertices            INT                                                           ,"\
+          "isSensor               BOOL                                                          ,"\
+          "density                INT                                                           ,"\
+          "restitution            INT                                                           ,"\
+          "friction               INT                                                           ,"\
+          "bounce                 INT                                                           ,"\
+          "filter_categoryBits    INT                                                           ,"\
+          "filter_groupIndex      INT                                                           ,"\
+          "filter_masksBits       INT                                                           ,"\
           "FOREIGN KEY (bodyName) REFERENCES BODYDEF (name)"
           ");";
 
@@ -162,8 +165,6 @@ namespace SQLite {
 //          fixture->SetAttribute("filter_groupIndex", shape.group);
 //          fixture->SetAttribute("filter_masksBits", 65535);
 
-//          fixture->SetAttribute("numPolygons", shape);
-//          polygon->SetAttribute("numVertices", shape.vertices.size());
 
           for (int k = 0; k < fixture.vertices.size(); ++k) {
             const auto &vertex = fixture.vertices[k];

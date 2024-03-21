@@ -79,12 +79,12 @@ namespace Keyboard {
         }
 
         if (event.key.keysym.sym == SDLK_p) {
-          if (Action::PublishXML(app))
+          if (Action::Publish(app))
             return true;
         }
 
         if (event.key.keysym.sym == SDLK_0) {
-          if (Action::PublishJSON(app))
+          if (Action::Publish_As(app))
             return true;
         }
 

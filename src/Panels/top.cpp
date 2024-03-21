@@ -38,11 +38,11 @@ namespace Top {
     return 3;
   }
   int Publish(App::App &app) {
-    Action::PublishJSON(app);
+    Action::Publish(app);
     return 5;
   }
   int Publish_As(App::App &app) {
-    Action::PublishXML(app);
+    Action::Publish_As(app);
     return 5;
   }
   int Unused(App::App &app) {
@@ -81,12 +81,14 @@ namespace Top {
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 
     for (const auto &btn: app.panel.top.buttons) {
-      SDL_SetRenderDrawColor(app.context.renderer, 200, 200, 200, 255);
-      SDL_RenderFillRectF(app.context.renderer, &btn.button);
-      SDL_RenderCopyF(app.context.renderer, btn.texture, nullptr, &btn.button);
-      SDL_SetRenderDrawColor(app.context.renderer, 0, 255, 255, 255);
-      SDL_RenderDrawRectF(app.context.renderer, &btn.button);
-      SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+      if (btn.texture) {
+        SDL_SetRenderDrawColor(app.context.renderer, 200, 200, 200, 255);
+        SDL_RenderFillRectF(app.context.renderer, &btn.button);
+        SDL_RenderCopyF(app.context.renderer, btn.texture, nullptr, &btn.button);
+        SDL_SetRenderDrawColor(app.context.renderer, 0, 255, 255, 255);
+        SDL_RenderDrawRectF(app.context.renderer, &btn.button);
+        SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+      }
     }
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.buttonBar);
   };

@@ -34,7 +34,13 @@ namespace Center::Left {
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.left.search);
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 
-    Text::Render(app.context.renderer, app.context.font, app.filterText.c_str(), app.panel.mainPanel.left.search.x, app.panel.mainPanel.left.search.y);
+    auto caretRect = Text::Render(app.context.renderer, app.context.font, app.filterText.c_str(), app.panel.mainPanel.left.search.x, app.panel.mainPanel.left.search.y);
+
+    if (app.filterImages) {
+      SDL_SetRenderDrawColor(app.context.renderer, 255, 255, 255, 255);
+      SDL_RenderDrawLineF(app.context.renderer, (float) caretRect.x + (float) caretRect.w, (float) caretRect.y, (float) caretRect.x + (float) caretRect.w, (float) caretRect.y + (float) caretRect.h);
+      SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    }
 
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.left.scroll.panel);
@@ -81,6 +87,7 @@ namespace Center::Left {
         Text::Render(app.context.renderer, app.context.font, app.interface.left.imageNameStr[index].c_str(), rect);
         y += h + spacing;
       }
+
     }
     else {
       for (int i = 0; i < app.interface.left.images.size(); ++i) {
