@@ -28,5 +28,8 @@ namespace Center::Center {
   bool Set_Vertex(App::App &app);
   bool Update_Image(App::App &app);
   App::Shape Select_From_Shape_List_Names(App::App &app);
+
+  void Set_Expander(App::App &app);
+
   void Render(App::App &app);
 }

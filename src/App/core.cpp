@@ -33,7 +33,7 @@ namespace App {
 
   void Init (App &app) {
     app.context = Graphics::CreateWindowAndRenderer();
-    app.panel = Graphics::Set_Panels(app.context.window);
+    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
     app.texture = Graphics::Load_Icons(app.context.renderer);
     Set_Textures(app);
     app.context.font = Text::Load_Font(app.context.renderer);

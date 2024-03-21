@@ -39,7 +39,7 @@ namespace Window {
     }
 
     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-      app.panel = Graphics::Set_Panels(app.context.window);
+      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
       App::Set_Textures(app);
       return true;
     }

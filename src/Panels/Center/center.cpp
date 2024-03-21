@@ -405,8 +405,8 @@ namespace Center::Center {
   }
 
   void Render_Shape_List_Names(App::App &app) {
-    float x = app.panel.mainPanel.center.shapes.panel.x;
-    float y = app.panel.mainPanel.center.shapes.panel.y;
+    float x = app.panel.mainPanel.center.shapes.body.x;
+    float y = app.panel.mainPanel.center.shapes.body.y;
     float w = 40.0f;
     float h = 25.0f;
     float spacing = 2.0f;
@@ -418,7 +418,7 @@ namespace Center::Center {
           SDL_FRect rect = {
               dRect.x + spacing,
               dRect.y,
-              app.panel.mainPanel.center.shapes.panel.w - (spacing * 2.0f),
+              app.panel.mainPanel.center.shapes.body.w - (spacing * 2.0f),
               dRect.h,
           };
           SDL_SetRenderDrawColor(app.context.renderer, 100, 100, 200, 255);
@@ -431,7 +431,7 @@ namespace Center::Center {
         SDL_Rect rect = {
             (int)dRect.x + (int)spacing,
             (int)dRect.y,
-            (int)app.panel.mainPanel.center.shapes.panel.w - (int)(spacing * 3.0f),
+            (int)app.panel.mainPanel.center.shapes.body.w - (int)(spacing * 3.0f),
             (int)dRect.h,
         };
         Text::Render(app.context.renderer, app.context.font, app.interface.shapeList.shapeList[j][i].c_str(), rect);
@@ -441,8 +441,8 @@ namespace Center::Center {
   }
 
   App::Shape Select_From_Shape_List_Names(App::App &app) {
-    float x = app.panel.mainPanel.center.shapes.panel.x;
-    float y = app.panel.mainPanel.center.shapes.panel.y;
+    float x = app.panel.mainPanel.center.shapes.body.x;
+    float y = app.panel.mainPanel.center.shapes.body.y;
     float w = 40.0f;
     float h = 25.0f;
     float spacing = 2.0f;
@@ -453,7 +453,7 @@ namespace Center::Center {
         SDL_FRect rect = {
             dRect.x + spacing,
             dRect.y,
-            app.panel.mainPanel.center.shapes.panel.w - (spacing * 2.0f),
+            app.panel.mainPanel.center.shapes.body.w - (spacing * 2.0f),
             dRect.h,
         };
         auto cursor = Mouse::Cursor_Point();
@@ -466,6 +466,48 @@ namespace Center::Center {
     return {Graphics::Shape::SIZE, 0};
   }
 
+  void Expander_Left(App::App &app) {
+    //only need to update if the left mouse is held down
+
+    if (app.selected == App::EXPANDER_LEFT) {
+      app.uiPanels.leftPanelWidth = Mouse::Cursor_Point().x;
+      if (app.uiPanels.leftPanelWidth < 100.0f) app.uiPanels.leftPanelWidth = 100.0f;
+      else if (app.uiPanels.leftPanelWidth > app.uiPanels.window_w / 2.0f) app.uiPanels.leftPanelWidth = app.uiPanels.window_w / 2.0f;
+      if (app.panel.mainPanel.center.panel.w < 450.0f) app.uiPanels.rightPanelWidth -= (450.0f - app.panel.mainPanel.center.panel.w);
+
+      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+      App::Set_Textures(app);
+    }
+
+    else if (app.selected == App::EXPANDER_RIGHT) {
+      app.uiPanels.rightPanelWidth = app.uiPanels.window_w - Mouse::Cursor_Point().x;
+      if (app.uiPanels.rightPanelWidth < 250.0f) app.uiPanels.rightPanelWidth = 250.0f;
+      else if (app.uiPanels.rightPanelWidth > (app.uiPanels.window_w / 2.0f)) app.uiPanels.rightPanelWidth = app.uiPanels.window_w / 2.0f;
+      if (app.panel.mainPanel.center.panel.w < 450.0f) app.uiPanels.leftPanelWidth -= (450.0f - app.panel.mainPanel.center.panel.w);
+
+      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+      App::Set_Textures(app);
+    }
+
+    else if (app.selected == App::EXPANDER_FIXTURES) {
+      app.uiPanels.shapeListWidth = app.uiPanels.window_w - Mouse::Cursor_Point().x - app.uiPanels.rightPanelWidth;
+      if (app.uiPanels.shapeListWidth < 125.0f) app.uiPanels.shapeListWidth = 125.0f;
+      else if (app.uiPanels.shapeListWidth > 400.0f) app.uiPanels.shapeListWidth = 400.0f;
+      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+    if (app.panel.mainPanel.center.panel.w < 450.0f) app.uiPanels.leftPanelWidth -= (450.0f - app.panel.mainPanel.center.panel.w);
+      App::Set_Textures(app);
+    }
+  }
+
+  void Set_Expander(App::App &app) {
+    //if left click up
+    if (app.selected == App::EXPANDER_LEFT || app.selected == App::EXPANDER_RIGHT || app.selected == App::EXPANDER_FIXTURES) {
+      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+      App::Set_Textures(app);
+      app.selected = App::NONE;
+    }
+  }
+
   void Render_Shape_List(App::App &app) {
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.panel);
@@ -474,7 +516,21 @@ namespace Center::Center {
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderLeft);
 
+    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.body);
+    SDL_SetRenderDrawColor(app.context.renderer, 115, 55, 155, 255);
+    SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.body);
+    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+//    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderLeft);
+
     Render_Shape_List_Names(app);
+
+    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.expanderLeft);
+    SDL_SetRenderDrawColor(app.context.renderer, 155, 155, 55, 255);
+    SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.expanderLeft);
+    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+//    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderLeft);
 
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.scroll.panel);
@@ -530,6 +586,7 @@ namespace Center::Center {
   };
 
   void Render(App::App &app) {
+    Expander_Left(app);
     Render_Image(app);
     Render_Shape_List(app);
     Render_Left_Scroll(app);

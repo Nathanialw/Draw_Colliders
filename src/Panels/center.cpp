@@ -31,6 +31,9 @@ namespace Center {
       if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {
         return SDL_SYSTEM_CURSOR_SIZEWE;
       }
+      if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.expanderLeft, &cursor)) {
+        return SDL_SYSTEM_CURSOR_SIZEWE;
+      }
       if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {
         return SDL_SYSTEM_CURSOR_SIZEWE;
       }

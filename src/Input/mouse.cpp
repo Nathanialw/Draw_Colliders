@@ -152,11 +152,14 @@ namespace Mouse {
               return true;
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {
+
               // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
+              app.selected = App::EXPANDER_RIGHT;
               return true;
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {
               // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
+              app.selected = App::EXPANDER_LEFT;
               return true;
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
@@ -167,8 +170,15 @@ namespace Mouse {
               }
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.panel, &cursor)) {
-              auto vertex = Center::Center::Select_From_Shape_List_Names(app);
-              app.selectedShape = {vertex.shape, vertex.indexPolygon};
+              if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.expanderLeft, &cursor)) {
+                app.selected = App::EXPANDER_FIXTURES;
+                return true;
+              }
+              if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.body, &cursor)) {
+                auto vertex = Center::Center::Select_From_Shape_List_Names(app);
+                app.selectedShape = {vertex.shape, vertex.indexPolygon};
+                return true;
+              }
             }
           }
         }
@@ -226,6 +236,7 @@ namespace Mouse {
 
     if (event.type == SDL_MOUSEBUTTONUP) {
       if (event.button.button == SDL_BUTTON_LEFT) {
+        Center::Center::Set_Expander(app);
         if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor)) {}
         else if (SDL_HasIntersectionF(&app.panel.top.panel, &cursor)) {}
         else if (SDL_HasIntersectionF(&app.panel.bottom, &cursor)) {}

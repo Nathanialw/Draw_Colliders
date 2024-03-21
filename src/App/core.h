@@ -42,15 +42,21 @@ namespace App {
   };
 
   enum Mouse_Selected {
+    NONE,
+    EXPANDER_LEFT,
+    EXPANDER_RIGHT,
+    EXPANDER_FIXTURES,
     SHAPE,
     VERTEX,
-    VERTEXLIST,
-    IMAGELIST,
-    MENU
-//    FILTERBOX ?? maybe
+    VERTEX_LIST,
+    IMAGE_LIST,
+    MENU,
+    FILTERBOX,
+    SIZE
   };
 
   struct App {
+    Graphics::UI_Panels uiPanels;
     Graphics::Panels panel;
     Graphics::Context context;
 
@@ -75,6 +81,8 @@ namespace App {
     Shape selectedShape;
     Vertex selectedVertex;
     Vertex vertex;
+
+    Mouse_Selected selected = NONE;
 
     int imageIndex = 0;
     bool filterImages = false;

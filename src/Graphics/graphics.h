@@ -60,6 +60,8 @@ namespace Graphics {
     SDL_FRect panel{};
     std::array<std::vector<SDL_FRect>, Shape::SIZE> shapes;
     ScrollBar scroll{};
+    SDL_FRect expanderLeft{};
+    SDL_FRect body{};
   };
 
   struct Center_Panel {
@@ -177,7 +179,23 @@ namespace Graphics {
     std::vector<SDL_Texture*> smallImages;
   };
 
-  Panels Set_Panels(SDL_Window* window);
+  struct UI_Panels {
+    float window_h = 0.0f;
+    float window_w = 0.0f;
+
+    float bottomHeight = 25.0f;
+    float leftPanelWidth = 200.0f;
+    float rightPanelWidth = 250.0f;
+    float filterHeight = 30.0f;
+    float scrollWidth = 20.0f;
+    float scrollBarHeight = 60.0f;
+    float expanderWidth = 10.0f;
+    float shapeListWidth = 125.0f;
+    float space = 2.0f;
+    float buttonBarHeight = 50.0f;
+  };
+
+  Panels Set_Panels (SDL_Window* window, UI_Panels &ui_panels);
   Context CreateWindowAndRenderer();
   SDL_Texture* Load_Texture(const Context &context, const std::string &filePath);
   Image_Import Load_Image(const Context &context);
