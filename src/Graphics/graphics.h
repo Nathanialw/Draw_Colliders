@@ -48,13 +48,12 @@ namespace Graphics {
 
   enum Shape {
     POINT,
-    CIRCLE,
     LINE,
+    CIRCLE,
     AABB,
     POLYGON,
     SIZE,
   };
-
 
   struct Shapes {
     SDL_FRect panel{};
@@ -183,14 +182,19 @@ namespace Graphics {
     float window_h = 0.0f;
     float window_w = 0.0f;
 
-    float bottomHeight = 25.0f;
+    float scrollBarLeftY = 0.0f;
+    float scrollBarRightY = 0.0f;
+    float scrollBarFixturesY = 0.0f;
+
     float leftPanelWidth = 200.0f;
     float rightPanelWidth = 250.0f;
+    float shapeListWidth = 125.0f;
+
+    float bottomHeight = 25.0f;
     float filterHeight = 30.0f;
     float scrollWidth = 20.0f;
     float scrollBarHeight = 60.0f;
     float expanderWidth = 10.0f;
-    float shapeListWidth = 125.0f;
     float space = 2.0f;
     float buttonBarHeight = 50.0f;
   };

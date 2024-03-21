@@ -466,17 +466,46 @@ namespace Center::Center {
     return {Graphics::Shape::SIZE, 0};
   }
 
-  void Expander_Left(App::App &app) {
+
+  bool Update_ScrollBar(App::App &app) {
     //only need to update if the left mouse is held down
 
+    //grab and move scroll bar offset from the mouse.y
+    if (app.selected == App::SCROLLBAR_LEFT) {
+      app.uiPanels.scrollBarLeftY = Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.panel.y - app.cachedScrollBarPosition;
+      if (app.uiPanels.scrollBarLeftY < 0.0f) app.uiPanels.scrollBarLeftY = 0.0f;
+      else if (app.uiPanels.scrollBarLeftY > app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h)
+        app.uiPanels.scrollBarLeftY = app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h;
+      return true;
+    }
+    else if (app.selected == App::SCROLLBAR_RIGHT) {
+      app.uiPanels.scrollBarRightY = Mouse::Cursor_Point().y - app.panel.mainPanel.right.scroll.panel.y - app.cachedScrollBarPosition;
+      if (app.uiPanels.scrollBarRightY < 0.0f) app.uiPanels.scrollBarRightY = 0.0f;
+      else if (app.uiPanels.scrollBarRightY > app.panel.mainPanel.right.scroll.panel.h - app.panel.mainPanel.right.scroll.bar.h)
+        app.uiPanels.scrollBarRightY = app.panel.mainPanel.right.scroll.panel.h - app.panel.mainPanel.right.scroll.bar.h;
+      return true;
+    }
+    else if (app.selected == App::SCROLLBAR_FIXTURES) {
+      app.uiPanels.scrollBarFixturesY = Mouse::Cursor_Point().y - app.panel.mainPanel.center.shapes.scroll.panel.y - app.cachedScrollBarPosition;
+      if (app.uiPanels.scrollBarFixturesY < 0.0f) app.uiPanels.scrollBarFixturesY = 0.0f;
+      else if (app.uiPanels.scrollBarFixturesY > app.panel.mainPanel.center.shapes.scroll.panel.h - app.panel.mainPanel.center.shapes.scroll.bar.h)
+        app.uiPanels.scrollBarFixturesY = app.panel.mainPanel.center.shapes.scroll.panel.h - app.panel.mainPanel.center.shapes.scroll.bar.h;
+      return true;
+    }
+    //place the lise (for render and selection) at an offset proportional to the position of the scroll bar
+
+    //set on button release
+    return false;
+  }
+
+
+  bool Update_Expander(App::App &app) {
     if (app.selected == App::EXPANDER_LEFT) {
       app.uiPanels.leftPanelWidth = Mouse::Cursor_Point().x;
       if (app.uiPanels.leftPanelWidth < 100.0f) app.uiPanels.leftPanelWidth = 100.0f;
       else if (app.uiPanels.leftPanelWidth > app.uiPanels.window_w / 2.0f) app.uiPanels.leftPanelWidth = app.uiPanels.window_w / 2.0f;
       if (app.panel.mainPanel.center.panel.w < 450.0f) app.uiPanels.rightPanelWidth -= (450.0f - app.panel.mainPanel.center.panel.w);
-
-      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
-      App::Set_Textures(app);
+      return true;
     }
 
     else if (app.selected == App::EXPANDER_RIGHT) {
@@ -484,28 +513,41 @@ namespace Center::Center {
       if (app.uiPanels.rightPanelWidth < 250.0f) app.uiPanels.rightPanelWidth = 250.0f;
       else if (app.uiPanels.rightPanelWidth > (app.uiPanels.window_w / 2.0f)) app.uiPanels.rightPanelWidth = app.uiPanels.window_w / 2.0f;
       if (app.panel.mainPanel.center.panel.w < 450.0f) app.uiPanels.leftPanelWidth -= (450.0f - app.panel.mainPanel.center.panel.w);
-
-      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
-      App::Set_Textures(app);
+      return true;
     }
 
     else if (app.selected == App::EXPANDER_FIXTURES) {
       app.uiPanels.shapeListWidth = app.uiPanels.window_w - Mouse::Cursor_Point().x - app.uiPanels.rightPanelWidth;
       if (app.uiPanels.shapeListWidth < 125.0f) app.uiPanels.shapeListWidth = 125.0f;
       else if (app.uiPanels.shapeListWidth > 400.0f) app.uiPanels.shapeListWidth = 400.0f;
-      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
-    if (app.panel.mainPanel.center.panel.w < 450.0f) app.uiPanels.leftPanelWidth -= (450.0f - app.panel.mainPanel.center.panel.w);
-      App::Set_Textures(app);
+      if (app.panel.mainPanel.center.panel.w < 450.0f) app.uiPanels.leftPanelWidth -= (450.0f - app.panel.mainPanel.center.panel.w);
+      return true;
     }
+    return false;
+  }
+
+  void Update_UI_Position(App::App &app) {
+    if (app.selected == App::NONE)
+      return;
+
+    if (!Update_Expander(app))
+      if (!Update_ScrollBar(app))
+        return;
+
+    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+    App::Set_Textures(app);
   }
 
   void Set_Expander(App::App &app) {
+    if (app.selected == App::NONE)
+      return;
+
     //if left click up
-    if (app.selected == App::EXPANDER_LEFT || app.selected == App::EXPANDER_RIGHT || app.selected == App::EXPANDER_FIXTURES) {
-      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
-      App::Set_Textures(app);
+//    if (app.selected != App::NONE) {
+//      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+//      App::Set_Textures(app);
       app.selected = App::NONE;
-    }
+//    }
   }
 
   void Render_Shape_List(App::App &app) {
@@ -586,7 +628,7 @@ namespace Center::Center {
   };
 
   void Render(App::App &app) {
-    Expander_Left(app);
+    Update_UI_Position(app);
     Render_Image(app);
     Render_Shape_List(app);
     Render_Left_Scroll(app);

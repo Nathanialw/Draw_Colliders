@@ -46,6 +46,9 @@ namespace App {
     EXPANDER_LEFT,
     EXPANDER_RIGHT,
     EXPANDER_FIXTURES,
+    SCROLLBAR_LEFT,
+    SCROLLBAR_RIGHT,
+    SCROLLBAR_FIXTURES,
     SHAPE,
     VERTEX,
     VERTEX_LIST,
@@ -83,6 +86,7 @@ namespace App {
     Vertex vertex;
 
     Mouse_Selected selected = NONE;
+    float cachedScrollBarPosition = 0.0f;
 
     int imageIndex = 0;
     bool filterImages = false;

@@ -132,6 +132,7 @@ bool PolygonOverlap_SAT(std::vector<SDL_FPoint> &r1, std::vector<SDL_FPoint> &r2
   return true;
 }
 
+///works for concave polygons too
 bool Point_In_Polygon(const std::vector<SDL_FPoint> &point, const std::vector<SDL_FPoint> &polygon) {
   int n = polygon.size();
   int counter = 0;

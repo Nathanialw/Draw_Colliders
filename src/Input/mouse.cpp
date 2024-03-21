@@ -88,6 +88,14 @@ namespace Mouse {
 
         if (SDL_HasIntersectionF(&app.panel.center, &cursor)) {
           if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor)) {
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.right.scroll.bar, &cursor)) {
+              app.selected = App::SCROLLBAR_RIGHT;
+              app.cachedScrollBarPosition = Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.panel.y;
+              return true;
+            }
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.right.body, &cursor)) {
+              return true;
+            }
             // modify settings
             return true;
           }
@@ -102,6 +110,8 @@ namespace Mouse {
             }
             // use scroll
             if (SDL_HasIntersectionF(&app.panel.mainPanel.left.scroll.bar, &cursor)) {
+              app.selected = App::SCROLLBAR_LEFT;
+              app.cachedScrollBarPosition = Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.panel.y;
               return Center::Left::Scroll(app);
             }
           };
@@ -177,6 +187,11 @@ namespace Mouse {
               if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.body, &cursor)) {
                 auto vertex = Center::Center::Select_From_Shape_List_Names(app);
                 app.selectedShape = {vertex.shape, vertex.indexPolygon};
+                return true;
+              }
+              if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.scroll.bar, &cursor)) {
+                app.selected = App::SCROLLBAR_FIXTURES;
+                app.cachedScrollBarPosition = Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.panel.y;
                 return true;
               }
             }
