@@ -112,7 +112,6 @@ namespace Mouse {
             if (SDL_HasIntersectionF(&app.panel.mainPanel.left.scroll.bar, &cursor)) {
               app.selected = App::SCROLLBAR_LEFT;
               app.cachedScrollBarPosition = (Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.bar.y);
-              return Center::Left::Scroll(app);
             }
           };
           if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
@@ -326,12 +325,16 @@ namespace Mouse {
     }
 
     if (event.type == SDL_MOUSEWHEEL) {
-      if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor))
-        return Center::Center::Set_Scale(app, event.wheel.y);
+      if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
+        if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor))
+          return Center::Center::Set_Scale(app, event.wheel.y);
+        if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.body, &cursor))
+          return Center::Center::Scroll(app, event.wheel.y);
+      }
       if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor))
-        return Center::Left::Scroll(app);
+        return Center::Left::Scroll(app, event.wheel.y);
       if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor))
-        return Center::Right::Scroll(app);
+        return Center::Right::Scroll(app, event.wheel.y);
       return true;
     }
     return false;

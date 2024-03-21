@@ -25,8 +25,22 @@ namespace Center::Right {
   };
 
 
-  bool Scroll(App::App &app) {
+  bool Scroll(App::App &app, const Sint32 &scroll) {
+    int maxElementsToDisplay = 0;
+    int numElements = 0;
 
+    if (scroll < 0) {
+      app.uiPanels.scrollBarRightY += 10.0f;
+      if (app.uiPanels.scrollBarRightY > app.panel.mainPanel.right.scroll.panel.h - app.panel.mainPanel.right.scroll.bar.h)
+        app.uiPanels.scrollBarRightY = app.panel.mainPanel.right.scroll.panel.h - app.panel.mainPanel.right.scroll.bar.h;
+    }
+    else {
+      app.uiPanels.scrollBarRightY -= 10.0f;
+      if (app.uiPanels.scrollBarRightY < 0.0f) app.uiPanels.scrollBarRightY = 0.0f;
+    }
+    App::Set_Bar_Size(maxElementsToDisplay, numElements, app.panel.mainPanel.center.shapes.scroll.panel.h, app.uiPanels.scrollBarFixturesHeight);
+    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+    App::Set_Textures(app);
     return true;
   }
 }

@@ -9,6 +9,7 @@ NEEDS
 -colour scheme
 -always have selected shape render on top
 -dialogue boxes
+-load side images as small images to not waste VRAM
 
 WANTS
 -select box to grab multiple shapes

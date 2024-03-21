@@ -240,8 +240,19 @@ namespace Center::Left {
     return true;
   }
 
-  bool Scroll(App::App &app) {
-    //scroll down the list of images
+  bool Scroll(App::App &app, const Sint32 &scroll) {
+    if (scroll < 0) {
+      app.uiPanels.scrollBarLeftY += 10.0f;
+     if (app.uiPanels.scrollBarLeftY > app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h)
+       app.uiPanels.scrollBarLeftY = app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h;
+    }
+    else {
+      app.uiPanels.scrollBarLeftY -= 10.0f;
+      if (app.uiPanels.scrollBarLeftY < 0.0f) app.uiPanels.scrollBarLeftY = 0.0f;
+    }
+    App::Set_Bar_Size(app.uiPanels.numElement, app.interface.left.images.size(), app.panel.mainPanel.left.scroll.panel.h, app.uiPanels.scrollBarLeftHeight);
+    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+    App::Set_Textures(app);
     return true;
   }
 }

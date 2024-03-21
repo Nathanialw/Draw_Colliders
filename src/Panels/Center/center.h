@@ -27,6 +27,8 @@ namespace Center::Center {
   bool Set(App::App &app, SDL_FPoint &point);
   bool Set_Vertex(App::App &app);
   bool Update_Image(App::App &app);
+
+  bool Scroll(App::App &app, const Sint32 &scroll);
   App::Shape Select_From_Shape_List_Names(App::App &app);
 
   void Set_Expander(App::App &app);

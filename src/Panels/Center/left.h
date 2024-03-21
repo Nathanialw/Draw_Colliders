@@ -16,7 +16,7 @@ namespace Center::Left {
   Data::Center Select_Image(App::App &app);
   bool Set_Image(App::App &app);
   void Render(App::App &app);
-  bool Scroll(App::App &app);
+  bool Scroll(App::App &app, const Sint32 &scroll);
   bool Filter_Images(App::App &app);
 
 }

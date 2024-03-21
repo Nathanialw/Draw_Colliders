@@ -592,12 +592,32 @@ namespace Center::Center {
     if (app.selected == App::NONE)
       return;
 
-    //if left click up
-//    if (app.selected != App::NONE) {
-//      app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
-//      App::Set_Textures(app);
-      app.selected = App::NONE;
-//    }
+    app.selected = App::NONE;
+  }
+
+  bool Scroll(App::App &app, const Sint32 &scroll) {
+    float h = 25.0f;
+    float spacing = 2.0f;
+    int numElements= 0;
+
+    for (int j = 0; j < Graphics::Shape::SIZE; ++j)
+      numElements += app.interface.shapeList.shapeList[j].size();
+
+    int maxElementsToDisplay = (int)(app.panel.mainPanel.center.shapes.body.h / (h + spacing)) + 1;
+
+    if (scroll < 0) {
+      app.uiPanels.scrollBarFixturesY += 10.0f;
+      if (app.uiPanels.scrollBarFixturesY > app.panel.mainPanel.center.shapes.scroll.panel.h - app.panel.mainPanel.center.shapes.scroll.bar.h)
+        app.uiPanels.scrollBarFixturesY = app.panel.mainPanel.center.shapes.scroll.panel.h - app.panel.mainPanel.center.shapes.scroll.bar.h;
+    }
+    else {
+      app.uiPanels.scrollBarFixturesY -= 10.0f;
+      if (app.uiPanels.scrollBarFixturesY < 0.0f) app.uiPanels.scrollBarFixturesY = 0.0f;
+    }
+    App::Set_Bar_Size(maxElementsToDisplay, numElements, app.panel.mainPanel.center.shapes.scroll.panel.h, app.uiPanels.scrollBarFixturesHeight);
+    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+    App::Set_Textures(app);
+    return true;
   }
 
   void Render_Shape_List(App::App &app) {
