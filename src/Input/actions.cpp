@@ -160,6 +160,7 @@ namespace Action {
   bool Add_Images(App::App &app) {
     std::vector<Graphics::Image_Import> imagesImport = Graphics::Load_Images(app.context);
     if (!imagesImport.empty()) {
+
       for (const auto &imageImport : imagesImport) {
         Import_Image(app.interface.center, app.interface.left, imageImport);
       }

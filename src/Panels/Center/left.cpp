@@ -128,6 +128,7 @@ namespace Center::Left {
           SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
         }
         SDL_RenderCopyF(app.context.renderer, app.interface.left.images[i].texture.texture, nullptr, &dRect);
+
         SDL_Rect rect = {
             (int) dRect.x + (int) dRect.w + (int) app.uiPanels.spacing,
             (int) dRect.y,

@@ -136,33 +136,28 @@ namespace Save {
     //clear values
     Data::Left newLeft;
     app.interface.left = newLeft;
-    bool setCenter = true;
     app.texture.shapes.resize(num);
 
-    for (int i = 0; i < num; ++i) {
-      if (app.interface.left.imageNameStr.size() <= i)
-        app.interface.left.imageNameStr.resize(i + 1);
-      if (app.interface.left.imagePathStr.size() <= i)
-        app.interface.left.imagePathStr.resize(i + 1);
+    for (int p = 0; p < num; ++p) {
+      if (app.interface.left.imageNameStr.size() <= p)
+        app.interface.left.imageNameStr.resize(p + 1);
+      if (app.interface.left.imagePathStr.size() <= p)
+        app.interface.left.imagePathStr.resize(p + 1);
+      if (app.interface.left.images.size() <= p)
+        app.interface.left.images.resize(p + 1);
 
-      auto &image = app.datafile["image[" + std::to_string(i) + "]"];
+      auto &image = app.datafile["image[" + std::to_string(p) + "]"];
       std::string name = image["name"].Get_String();
       std::string path = image["path"].Get_String();
 
       //load
-      SDL_Texture* texture = Graphics::Load_Texture(app.context, path);
-      if (texture) {
-        Data::Center imageLoaded;
-        imageLoaded.texture.texture = texture;
-        imageLoaded.index = app.interface.left.images.size();
-        app.interface.left.images.emplace_back(imageLoaded);
-        app.interface.left.images[i].texture.scale = app.datafile["image[" + std::to_string(i) + "]"]["scale"].Get_Real();
-        app.interface.left.imageNameStr[i] = name;
-        app.interface.left.imagePathStr[i] = path;
-      }
+      app.interface.left.images[p].index = p;
+      app.interface.left.images[p].texture.scale = app.datafile["image[" + std::to_string(p) + "]"]["scale"].Get_Real();
+      app.interface.left.imageNameStr[p] = name;
+      app.interface.left.imagePathStr[p] = path;
 //        load the image to the center if there is no image
 
-      auto &shapes = app.interface.left.images[i];
+      auto &shapes = app.interface.left.images[p];
       //need to save the number of each shape
       int shape_count = image[shapeStr[0]]["shape_count"].Get_Int();
       if (shape_count != 0 && shapes.shapes[Graphics::POINT].size() <= shape_count)
@@ -174,7 +169,7 @@ namespace Save {
       shape_count = image[shapeStr[1]]["shape_count"].Get_Int();
       if (shape_count != 0 && shapes.shapes[Graphics::CIRCLE].size() <= shape_count) {
         shapes.shapes[Graphics::CIRCLE].resize(shape_count);
-        app.texture.shapes[i][Graphics::CIRCLE].resize(shape_count);
+        app.texture.shapes[p][Graphics::CIRCLE].resize(shape_count);
       }
       for (int l = 0; l < shape_count; ++l) {
         shapes.shapes[Graphics::CIRCLE][l] = Circle::Create(image[shapeStr[1]][std::to_string(l)]["x"].Get_Real(), image[shapeStr[1]][std::to_string(l)]["y"].Get_Real(), image[shapeStr[1]][std::to_string(l)]["y"].Get_Real() + image[shapeStr[1]][std::to_string(l)]["r"].Get_Real());
@@ -190,7 +185,7 @@ namespace Save {
       shape_count = image[shapeStr[3]]["shape_count"].Get_Int();
       if (shape_count != 0 && shapes.shapes[Graphics::AABB].size() <= shape_count) {
         shapes.shapes[Graphics::AABB].resize(shape_count);
-        app.texture.shapes[i][Graphics::AABB].resize(shape_count);
+        app.texture.shapes[p][Graphics::AABB].resize(shape_count);
       }
       for (int l = 0; l < shape_count; ++l) {
         shapes.shapes[Graphics::AABB][l].vertices.resize(4);
@@ -204,7 +199,7 @@ namespace Save {
       shape_count = image[shapeStr[4]]["shape_count"].Get_Int();
       if (shape_count != 0 && shapes.shapes[Graphics::POLYGON].size() <= shape_count) {
         shapes.shapes[Graphics::POLYGON].resize(shape_count);
-        app.texture.shapes[i][Graphics::POLYGON].resize(shape_count);
+        app.texture.shapes[p][Graphics::POLYGON].resize(shape_count);
       }
       for (int l = 0; l < shape_count; ++l) {
         int vertex_count = image[shapeStr[4]][std::to_string(l)]["vertex_count"].Get_Int();
@@ -220,17 +215,7 @@ namespace Save {
         }
       }
 
-      if (setCenter) {
-        app.interface.center = app.interface.left.images[0];
-        Data::Shape_List shapeList;
-        for (int i = 0; i < Graphics::Shape::SIZE; ++i) {
-          for (int j = 0; j < app.interface.center.shapes[i].size(); ++j) {
-            shapeList.shapeList[i].push_back(std::to_string(j));
-          }
-        }
-        app.interface.shapeList = shapeList;
-        setCenter = false;
-      }
+
     }
   }
 
@@ -250,10 +235,33 @@ namespace Save {
     }
   }
 
+  bool Load_Textures(App::App &app) {
+    bool setCenter = true;
+    auto& images = app.interface.left;
+    for (int k = 0; k < images.images.size(); ++k) {
+      images.images[k].texture.texture = Graphics::Load_Texture(app.context, images.imagePathStr[k]);
+
+      if (setCenter) {
+        app.interface.center = app.interface.left.images[k];
+        Data::Shape_List shapeList;
+        for (int i = 0; i < Graphics::Shape::SIZE; ++i) {
+          for (int j = 0; j < app.interface.center.shapes[i].size(); ++j) {
+            shapeList.shapeList[i].push_back(std::to_string(j));
+          }
+        }
+        app.interface.shapeList = shapeList;
+        setCenter = false;
+      }
+    }
+    return true;
+  }
+
 //  Load As
   bool Load_As(App::App &app) {
 
     bool loaded = false;
+
+    //cannot load textures in another thread
     auto thread_func = [&app, &loaded]() {
       Open_File_Async(app, loaded);
     };
@@ -263,6 +271,7 @@ namespace Save {
     Graphics::Wait(loaded);
     LOAD_THREAD.join();
 
+    Load_Textures(app);
     return true;
   }
 
