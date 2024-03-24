@@ -99,7 +99,7 @@ namespace Graphics {
     panels.mainPanel.right.body = {panels.mainPanel.right.panel.x, panels.mainPanel.right.panel.y, ui_panels.rightPanelWidth - ui_panels.scrollWidth, panels.center.h};
     panels.mainPanel.right.scroll.panel = {panels.mainPanel.right.panel.x + panels.mainPanel.right.panel.w - ui_panels.scrollWidth, panels.mainPanel.right.panel.y, ui_panels.scrollWidth, panels.mainPanel.right.panel.h};
     panels.mainPanel.right.scroll.bar = {panels.mainPanel.right.panel.x + panels.mainPanel.right.panel.w - ui_panels.scrollWidth, panels.mainPanel.right.panel.y + ui_panels.scrollBarRightY, ui_panels.scrollWidth, ui_panels.scrollBarRightHeight};
-    panels.mainPanel.right.scroll.elementHeight = 40.0f;
+    panels.mainPanel.right.scroll.elementHeight = 25.0f;
     panels.mainPanel.right.scroll.elementSpacing =  5.0f;
 
 

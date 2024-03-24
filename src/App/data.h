@@ -48,8 +48,25 @@ namespace Data {
     std::vector<Graphics::Image> imageNames;
   };
 
+  union Option_Value {
+    int numValue;
+    bool isChecked;
+  };
+
+  enum Option_Type {
+    checkBox,
+    numInput
+  };
+
+  struct Option_Input {
+    Graphics::Button checkBox;
+    Option_Type type;
+  };
 
   struct Right {
+    std::array<std::string, 9> optionName;
+    std::array<Option_Value, 9> option;
+    std::array<Option_Input, 9> optionInput;
   };
 
   struct Menu {
