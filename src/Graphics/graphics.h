@@ -31,6 +31,8 @@ namespace Graphics {
   struct ScrollBar {
     SDL_FRect panel;
     SDL_FRect bar;
+    float elementHeight = 0.0f;
+    float elementSpacing = 0.0f;
   };
 
   struct Left_Panel {

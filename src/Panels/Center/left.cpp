@@ -15,6 +15,7 @@
 #include <ranges>
 #include <iostream>
 #include <string>
+#include "../../UI/scroll_bar.h"
 
 namespace Center::Left {
 
@@ -144,17 +145,14 @@ namespace Center::Left {
   bool Hover_Image(App::App &app) {
     float x = app.panel.mainPanel.left.body.x;
     float y = app.panel.mainPanel.left.body.y;
-    float w = 40.0f;
-    float h = 40.0f;
-    float spacing = 5.0f;
 
     auto cursor = Mouse::Cursor();
     for (int i = 0; i < app.interface.left.images.size(); ++i) {
-      SDL_FRect dRect = {x + spacing, y + spacing, app.panel.mainPanel.left.body.w - (spacing * 3.0f), h};
+      SDL_FRect dRect = {x + app.panel.mainPanel.left.scroll.elementSpacing, y + app.panel.mainPanel.left.scroll.elementSpacing, app.panel.mainPanel.left.body.w - (app.panel.mainPanel.left.scroll.elementSpacing * 3.0f), app.panel.mainPanel.left.scroll.elementHeight};
       if (SDL_HasIntersectionF(&cursor, &dRect)) {
         return true;
       }
-      y += h + spacing;
+      y += app.panel.mainPanel.left.scroll.elementHeight + app.panel.mainPanel.left.scroll.elementSpacing;
     }
     return false;
   };
@@ -242,18 +240,28 @@ namespace Center::Left {
   }
 
   bool Scroll(App::App &app, const Sint32 &scroll) {
-    if (scroll < 0) {
-      app.uiPanels.scrollBarLeftY += 10.0f;
-     if (app.uiPanels.scrollBarLeftY > app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h)
-       app.uiPanels.scrollBarLeftY = app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h;
-    }
-    else {
-      app.uiPanels.scrollBarLeftY -= 10.0f;
-      if (app.uiPanels.scrollBarLeftY < 0.0f) app.uiPanels.scrollBarLeftY = 0.0f;
-    }
-    App::Set_Bar_Size(app.uiPanels.numElement, app.interface.left.images.size(), app.panel.mainPanel.left.scroll.panel.h, app.uiPanels.scrollBarLeftHeight);
-    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
-    App::Set_Textures(app);
+//    if (scroll < 0) {
+//      app.uiPanels.scrollBarLeftY += 10.0f;
+//     if (app.uiPanels.scrollBarLeftY > app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h)
+//       app.uiPanels.scrollBarLeftY = app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h;
+//    }
+//    else {
+//      app.uiPanels.scrollBarLeftY -= 10.0f;
+//      if (app.uiPanels.scrollBarLeftY < 0.0f) app.uiPanels.scrollBarLeftY = 0.0f;
+//    }
+//    App::Set_Bar_Size(app.uiPanels.numElement, app.interface.left.images.size(), app.panel.mainPanel.left.scroll.panel.h, app.uiPanels.scrollBarLeftHeight);
+//    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+//    App::Set_Textures(app);
+
+
+    Scroll_Bar::Scroll(app,
+                       app.panel.mainPanel.left.scroll,
+                       app.uiPanels.scrollBarLeftY,
+                       app.uiPanels.scrollBarFixturesHeight,
+                       app.interface.left.images.size(),
+                       scroll
+    );
+
     return true;
   }
 }

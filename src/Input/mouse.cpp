@@ -93,11 +93,15 @@ namespace Mouse {
               app.cachedScrollBarPosition = (Mouse::Cursor_Point().y - app.panel.mainPanel.right.scroll.bar.y);
               return true;
             }
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {
+              // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
+              app.selected = App::EXPANDER_RIGHT;
+              return true;
+            }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.right.body, &cursor)) {
               return true;
             }
             // modify settings
-            return true;
           }
           if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor)) {
             // select image
@@ -108,13 +112,25 @@ namespace Mouse {
             if (SDL_HasIntersectionF(&app.panel.mainPanel.left.search, &cursor)) {
               return Center::Left::Filter_Images(app);
             }
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {
+              // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
+              app.selected = App::EXPANDER_LEFT;
+              return true;
+            }
             // use scroll
             if (SDL_HasIntersectionF(&app.panel.mainPanel.left.scroll.bar, &cursor)) {
               app.selected = App::SCROLLBAR_LEFT;
               app.cachedScrollBarPosition = (Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.bar.y);
+              return true;
             }
           };
           if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
+            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {
+              // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
+              app.selected = App::EXPANDER_LEFT;
+              return true;
+            }
+
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor)) {
               // check for vertex under mouse
               // select a vertex
@@ -161,14 +177,8 @@ namespace Mouse {
               return true;
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {
-
               // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
               app.selected = App::EXPANDER_RIGHT;
-              return true;
-            }
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {
-              // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
-              app.selected = App::EXPANDER_LEFT;
               return true;
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {

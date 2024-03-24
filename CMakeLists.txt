@@ -39,6 +39,8 @@ add_executable(Box2D_Colliders
         src/Input/window.cpp
         src/Input/actions.cpp
 
+        src/UI/scroll_bar.cpp
+
         src/Panels/menu.cpp
         src/Panels/top.cpp
         src/Panels/bottom.cpp

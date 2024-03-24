@@ -11,6 +11,7 @@
 #include "../../Input/actions.h"
 #include "../../Input/mouse.h"
 #include "../../../lib/SDL2_gxf/SDL2_gfxPrimitives.h"
+#include "../../UI/scroll_bar.h"
 
 namespace Center::Center {
   int appMax = 10;
@@ -408,14 +409,14 @@ namespace Center::Center {
     float x = app.panel.mainPanel.center.shapes.body.x;
     float y = app.panel.mainPanel.center.shapes.body.y;
     float w = 40.0f;
-    float h = 25.0f;
-    float spacing = 2.0f;
+//    float h = 25.0f;
+//    float spacing = 2.0f;
     int numElements= 0;
 
     for (int j = 0; j < Graphics::Shape::SIZE; ++j)
       numElements += app.interface.shapeList.shapeList[j].size();
 
-    int maxElementsToDisplay = (int)(app.panel.mainPanel.center.shapes.body.h / (h + spacing)) + 1;
+    int maxElementsToDisplay = (int)(app.panel.mainPanel.center.shapes.body.h / (app.panel.mainPanel.center.shapes.scroll.elementHeight + app.panel.mainPanel.center.shapes.scroll.elementSpacing)) + 1;
     App::Set_Bar_Size(maxElementsToDisplay, numElements, app.panel.mainPanel.center.shapes.scroll.panel.h, app.uiPanels.scrollBarFixturesHeight);
 
     auto index = App::Get_Min_Index(app.panel.mainPanel.center.shapes.scroll.bar.x,
@@ -440,12 +441,12 @@ namespace Center::Center {
 //        index.max;
       }
       for (int i = min; i < app.interface.shapeList.shapeList[j].size(); ++i) {
-        SDL_FRect dRect = {x, y + spacing, w - (spacing * 2.0f), h};
+        SDL_FRect dRect = {x, y + app.panel.mainPanel.center.shapes.scroll.elementSpacing, w - (app.panel.mainPanel.center.shapes.scroll.elementSpacing * 2.0f), app.panel.mainPanel.center.shapes.scroll.elementHeight};
         if (j == app.selectedShape.shape && (i - 1) == app.selectedShape.indexPolygon) {
           SDL_FRect rect = {
-              dRect.x + spacing,
+              dRect.x + app.panel.mainPanel.center.shapes.scroll.elementSpacing,
               dRect.y,
-              app.panel.mainPanel.center.shapes.body.w - (spacing * 2.0f),
+              app.panel.mainPanel.center.shapes.body.w - (app.panel.mainPanel.center.shapes.scroll.elementSpacing * 2.0f),
               dRect.h,
           };
           SDL_SetRenderDrawColor(app.context.renderer, 100, 100, 200, 255);
@@ -456,13 +457,13 @@ namespace Center::Center {
         }
 
         SDL_Rect rect = {
-            (int)dRect.x + (int)spacing,
+            (int)dRect.x + (int)app.panel.mainPanel.center.shapes.scroll.elementSpacing,
             (int)dRect.y,
-            (int)app.panel.mainPanel.center.shapes.body.w - (int)(spacing * 3.0f),
+            (int)app.panel.mainPanel.center.shapes.body.w - (int)(app.panel.mainPanel.center.shapes.scroll.elementSpacing * 3.0f),
             (int)dRect.h,
         };
         Text::Render(app.context.renderer, app.context.font, app.interface.shapeList.shapeList[j][i].c_str(), rect);
-        y += h + spacing;
+        y += app.panel.mainPanel.center.shapes.scroll.elementHeight + app.panel.mainPanel.center.shapes.scroll.elementSpacing;
       }
     }
   }
@@ -518,75 +519,6 @@ namespace Center::Center {
     return {Graphics::Shape::SIZE, 0};
   }
 
-  bool Update_ScrollBar(App::App &app) {
-    //only need to update if the left mouse is held down
-
-    if (app.selected == App::SCROLLBAR_LEFT) {
-      app.uiPanels.scrollBarLeftY = (Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.panel.y) - app.cachedScrollBarPosition;
-      if (app.uiPanels.scrollBarLeftY < 0.0f) app.uiPanels.scrollBarLeftY = 0.0f;
-      else if (app.uiPanels.scrollBarLeftY > app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h)
-        app.uiPanels.scrollBarLeftY = app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h;
-      return true;
-    }
-    else if (app.selected == App::SCROLLBAR_RIGHT) {
-      app.uiPanels.scrollBarRightY = Mouse::Cursor_Point().y - app.panel.mainPanel.right.scroll.panel.y - app.cachedScrollBarPosition;
-      if (app.uiPanels.scrollBarRightY < 0.0f) app.uiPanels.scrollBarRightY = 0.0f;
-      else if (app.uiPanels.scrollBarRightY > app.panel.mainPanel.right.scroll.panel.h - app.panel.mainPanel.right.scroll.bar.h)
-        app.uiPanels.scrollBarRightY = app.panel.mainPanel.right.scroll.panel.h - app.panel.mainPanel.right.scroll.bar.h;
-      return true;
-    }
-    else if (app.selected == App::SCROLLBAR_FIXTURES) {
-      app.uiPanels.scrollBarFixturesY = Mouse::Cursor_Point().y - app.panel.mainPanel.center.shapes.scroll.panel.y - app.cachedScrollBarPosition;
-      if (app.uiPanels.scrollBarFixturesY < 0.0f) app.uiPanels.scrollBarFixturesY = 0.0f;
-      else if (app.uiPanels.scrollBarFixturesY > app.panel.mainPanel.center.shapes.scroll.panel.h - app.panel.mainPanel.center.shapes.scroll.bar.h)
-        app.uiPanels.scrollBarFixturesY = app.panel.mainPanel.center.shapes.scroll.panel.h - app.panel.mainPanel.center.shapes.scroll.bar.h;
-      return true;
-    }
-
-    //place the list (for render and selection) at an offset proportional to the position of the scroll bar
-
-    //set on button release
-    return false;
-  }
-
-  bool Update_Expander(App::App &app) {
-    if (app.selected == App::EXPANDER_LEFT) {
-      app.uiPanels.leftPanelWidth = Mouse::Cursor_Point().x;
-      if (app.uiPanels.leftPanelWidth < 100.0f) app.uiPanels.leftPanelWidth = 100.0f;
-      else if (app.uiPanels.leftPanelWidth > app.uiPanels.window_w / 2.0f) app.uiPanels.leftPanelWidth = app.uiPanels.window_w / 2.0f;
-      if (app.panel.mainPanel.center.panel.w < 450.0f) app.uiPanels.rightPanelWidth -= (450.0f - app.panel.mainPanel.center.panel.w);
-      return true;
-    }
-
-    else if (app.selected == App::EXPANDER_RIGHT) {
-      app.uiPanels.rightPanelWidth = app.uiPanels.window_w - Mouse::Cursor_Point().x;
-      if (app.uiPanels.rightPanelWidth < 250.0f) app.uiPanels.rightPanelWidth = 250.0f;
-      else if (app.uiPanels.rightPanelWidth > (app.uiPanels.window_w / 2.0f)) app.uiPanels.rightPanelWidth = app.uiPanels.window_w / 2.0f;
-      if (app.panel.mainPanel.center.panel.w < 450.0f) app.uiPanels.leftPanelWidth -= (450.0f - app.panel.mainPanel.center.panel.w);
-      return true;
-    }
-
-    else if (app.selected == App::EXPANDER_FIXTURES) {
-      app.uiPanels.shapeListWidth = app.uiPanels.window_w - Mouse::Cursor_Point().x - app.uiPanels.rightPanelWidth;
-      if (app.uiPanels.shapeListWidth < 125.0f) app.uiPanels.shapeListWidth = 125.0f;
-      else if (app.uiPanels.shapeListWidth > 400.0f) app.uiPanels.shapeListWidth = 400.0f;
-      if (app.panel.mainPanel.center.panel.w < 450.0f) app.uiPanels.leftPanelWidth -= (450.0f - app.panel.mainPanel.center.panel.w);
-      return true;
-    }
-    return false;
-  }
-
-  void Update_UI_Position(App::App &app) {
-    if (app.selected == App::NONE)
-      return;
-
-    if (!Update_Expander(app))
-      if (!Update_ScrollBar(app))
-        return;
-
-    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
-    App::Set_Textures(app);
-  }
 
   void Set_Expander(App::App &app) {
     if (app.selected == App::NONE)
@@ -596,27 +528,17 @@ namespace Center::Center {
   }
 
   bool Scroll(App::App &app, const Sint32 &scroll) {
-    float h = 25.0f;
-    float spacing = 2.0f;
     int numElements= 0;
-
     for (int j = 0; j < Graphics::Shape::SIZE; ++j)
       numElements += app.interface.shapeList.shapeList[j].size();
 
-    int maxElementsToDisplay = (int)(app.panel.mainPanel.center.shapes.body.h / (h + spacing)) + 1;
+    Scroll_Bar::Scroll(app,
+                       app.panel.mainPanel.center.shapes.scroll,
+                       app.uiPanels.scrollBarFixturesY,
+                       app.uiPanels.scrollBarFixturesHeight,
+                       numElements,
+                       scroll);
 
-    if (scroll < 0) {
-      app.uiPanels.scrollBarFixturesY += 10.0f;
-      if (app.uiPanels.scrollBarFixturesY > app.panel.mainPanel.center.shapes.scroll.panel.h - app.panel.mainPanel.center.shapes.scroll.bar.h)
-        app.uiPanels.scrollBarFixturesY = app.panel.mainPanel.center.shapes.scroll.panel.h - app.panel.mainPanel.center.shapes.scroll.bar.h;
-    }
-    else {
-      app.uiPanels.scrollBarFixturesY -= 10.0f;
-      if (app.uiPanels.scrollBarFixturesY < 0.0f) app.uiPanels.scrollBarFixturesY = 0.0f;
-    }
-    App::Set_Bar_Size(maxElementsToDisplay, numElements, app.panel.mainPanel.center.shapes.scroll.panel.h, app.uiPanels.scrollBarFixturesHeight);
-    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
-    App::Set_Textures(app);
     return true;
   }
 
@@ -698,7 +620,7 @@ namespace Center::Center {
   };
 
   void Render(App::App &app) {
-    Update_UI_Position(app);
+    Scroll_Bar::Update_UI_Position(app);
     Render_Image(app);
     Render_Shape_List(app);
     Render_Left_Scroll(app);

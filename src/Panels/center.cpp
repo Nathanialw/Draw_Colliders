@@ -24,10 +24,6 @@ namespace Center {
     }
 
     if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
-      if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor)) {
-        if (app.moveImage) return SDL_SYSTEM_CURSOR_HAND;
-        else return SDL_SYSTEM_CURSOR_CROSSHAIR;
-      }
       if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {
         return SDL_SYSTEM_CURSOR_SIZEWE;
       }
@@ -36,6 +32,10 @@ namespace Center {
       }
       if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {
         return SDL_SYSTEM_CURSOR_SIZEWE;
+      }
+      if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor)) {
+        if (app.moveImage) return SDL_SYSTEM_CURSOR_HAND;
+        else return SDL_SYSTEM_CURSOR_CROSSHAIR;
       }
     }
 
