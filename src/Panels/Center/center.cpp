@@ -417,9 +417,9 @@ namespace Center::Center {
       numElements += app.interface.shapeList.shapeList[j].size();
 
     int maxElementsToDisplay = (int)(app.panel.mainPanel.center.shapes.body.h / (app.panel.mainPanel.center.shapes.scroll.elementHeight + app.panel.mainPanel.center.shapes.scroll.elementSpacing)) + 1;
-    App::Set_Bar_Size(maxElementsToDisplay, numElements, app.panel.mainPanel.center.shapes.scroll.panel.h, app.uiPanels.scrollBarFixturesHeight);
+    Scroll_Bar::Set_Bar_Size(maxElementsToDisplay, numElements, app.panel.mainPanel.center.shapes.scroll.panel.h, app.uiPanels.scrollBarFixturesHeight);
 
-    auto index = App::Get_Min_Index(app.panel.mainPanel.center.shapes.scroll.bar.x,
+    auto index = Scroll_Bar::Get_Min_Index(app.panel.mainPanel.center.shapes.scroll.bar.x,
                                     app.panel.mainPanel.center.shapes.scroll.panel.h,
                                     app.uiPanels.scrollBarFixturesY,
                                     app.uiPanels.scrollBarFixturesHeight,
@@ -481,7 +481,7 @@ namespace Center::Center {
 
     int maxElementsToDisplay = (int)(app.panel.mainPanel.center.shapes.body.h / (h + spacing)) + 1;
 
-    auto index = App::Get_Min_Index(app.panel.mainPanel.center.shapes.scroll.bar.x,
+    auto index = Scroll_Bar::Get_Min_Index(app.panel.mainPanel.center.shapes.scroll.bar.x,
                                     app.panel.mainPanel.center.shapes.scroll.panel.h,
                                     app.uiPanels.scrollBarFixturesY,
                                     app.uiPanels.scrollBarFixturesHeight,
@@ -537,7 +537,9 @@ namespace Center::Center {
                        app.uiPanels.scrollBarFixturesY,
                        app.uiPanels.scrollBarFixturesHeight,
                        numElements,
-                       scroll);
+                       scroll,
+                       app.panel.mainPanel.center.shapes.body.w
+                       );
 
     return true;
   }

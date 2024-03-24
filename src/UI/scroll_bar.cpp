@@ -7,8 +7,73 @@
 
 namespace Scroll_Bar {
 
-  bool Scroll(App::App &app, const Graphics::ScrollBar &scrollBar, float &scrollBarPosition, float &scrollBarHeight, const int &numElements, const Sint32 &scroll) {
+
+  Index Get_Min_Index(const float &scrollPanelX, const float &scrollH, const float &scrollBarY, const float &barH, const int &containerSize, const int &numElements) {
+    float offset = (scrollPanelX + scrollBarY) - scrollPanelX;
+    float remaining = (scrollH - barH);
+    float pixelCount = remaining / ((float)(containerSize) - (float)numElements + 1.0f);
+
+    int minIndex = (offset / pixelCount);
+    if (minIndex < 0)
+      minIndex = 0;
+
+    int max = Get_Min(numElements, containerSize);
+    auto maxIndex = (minIndex + max);
+    if (maxIndex > containerSize)
+      maxIndex = containerSize;
+
+    return {minIndex, maxIndex};
+  }
+
+  //set body.w += bar.w
+  //set bar.w -= bar.w and bar.x += bar.w
+  bool Set_Bar_Size(const float &numElement, const float &num, const float &panelH, float &barH) {
+    if ((numElement - num) < 0) {
+      float percentSize = numElement / num;
+      barH = percentSize * panelH;
+      return true;
+    }
+    else {
+      return false;
+
+
+      //expand the body by the width of the bard
+      //hide the bar
+
+      //or
+
+      //grey it out and make it non-interactable and only render the panel not the scrollbar
+    }
+  }
+
+  void Hide_Scroll_Bar(Graphics::ScrollBar &scrollBar, const float &barWidth, float &bodyW, const bool &show) {
+    if (show && scrollBar.show) {
+      scrollBar.panel.w = barWidth;
+      scrollBar.bar.w = barWidth;
+      scrollBar.bar.x -= barWidth;
+      scrollBar.panel.x -= barWidth;
+      bodyW -= barWidth;
+      scrollBar.show = true;
+    }
+    else if (!show && !scrollBar.show) {
+      scrollBar.panel.x += barWidth;
+      scrollBar.panel.w = 0.0f;
+      scrollBar.bar.x += barWidth;
+      scrollBar.bar.w = 0.0f;
+      bodyW += barWidth;
+      scrollBar.show = false;
+    }
+  }
+
+  void Update(App::App &app, Graphics::ScrollBar &scrollBar, float &scrollBarHeight, const int &numElements,float &bodyW) {
     int maxElementsToDisplay = (int)(scrollBar.panel.h / (scrollBar.elementHeight + scrollBar.elementSpacing)) + 1;
+    auto hideScrollBar = Set_Bar_Size(maxElementsToDisplay, numElements, scrollBar.panel.h, scrollBarHeight);
+    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+    Hide_Scroll_Bar(scrollBar, app.uiPanels.scrollWidth, bodyW, hideScrollBar);
+    App::Set_Textures(app);
+  }
+
+  bool Scroll(App::App &app, Graphics::ScrollBar &scrollBar, float &scrollBarPosition, float &scrollBarHeight, const int &numElements, const Sint32 &scroll, float &bodyW) {
 
     if (scroll < 0) {
       scrollBarPosition += 10.0f;
@@ -19,9 +84,8 @@ namespace Scroll_Bar {
       scrollBarPosition -= 10.0f;
       if (scrollBarPosition < 0.0f) scrollBarPosition = 0.0f;
     }
-    App::Set_Bar_Size(maxElementsToDisplay, numElements, scrollBar.panel.h, scrollBarHeight);
-    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
-    App::Set_Textures(app);
+
+    Update(app, scrollBar, scrollBarHeight, numElements, bodyW);
     return true;
   }
 

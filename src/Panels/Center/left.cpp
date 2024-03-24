@@ -68,8 +68,8 @@ namespace Center::Left {
     // so it is proportional to the size of the list
 
     if (!app.interface.left.filteredIndexes.empty()) {
-      App::Set_Bar_Size(app.uiPanels.numElement, app.interface.left.filteredIndexes.size(), app.panel.mainPanel.left.scroll.panel.h, app.uiPanels.scrollBarLeftHeight);
-      auto index = App::Get_Min_Index(app.panel.mainPanel.left.scroll.bar.x,
+      Scroll_Bar::Set_Bar_Size(app.uiPanels.numElement, app.interface.left.filteredIndexes.size(), app.panel.mainPanel.left.scroll.panel.h, app.uiPanels.scrollBarLeftHeight);
+      auto index = Scroll_Bar::Get_Min_Index(app.panel.mainPanel.left.scroll.bar.x,
                                       app.panel.mainPanel.left.scroll.panel.h,
                                       app.uiPanels.scrollBarLeftY,
                                       app.uiPanels.scrollBarLeftHeight,
@@ -105,8 +105,8 @@ namespace Center::Left {
     }
 
     else {
-      App::Set_Bar_Size(app.uiPanels.numElement, app.interface.left.images.size(), app.panel.mainPanel.left.scroll.panel.h, app.uiPanels.scrollBarLeftHeight);
-      auto index = App::Get_Min_Index(app.panel.mainPanel.left.scroll.bar.x,
+      Scroll_Bar::Set_Bar_Size(app.uiPanels.numElement, app.interface.left.images.size(), app.panel.mainPanel.left.scroll.panel.h, app.uiPanels.scrollBarLeftHeight);
+      auto index = Scroll_Bar::Get_Min_Index(app.panel.mainPanel.left.scroll.bar.x,
                     app.panel.mainPanel.left.scroll.panel.h,
                     app.uiPanels.scrollBarLeftY,
                     app.uiPanels.scrollBarLeftHeight,
@@ -163,7 +163,7 @@ namespace Center::Left {
 
     auto cursor = Mouse::Cursor();
     if (!app.interface.left.filteredIndexes.empty()) {
-      auto index = App::Get_Min_Index(app.panel.mainPanel.left.scroll.bar.x,
+      auto index = Scroll_Bar::Get_Min_Index(app.panel.mainPanel.left.scroll.bar.x,
                                       app.panel.mainPanel.left.scroll.panel.h,
                                       app.uiPanels.scrollBarLeftY,
                                       app.uiPanels.scrollBarLeftHeight,
@@ -181,7 +181,7 @@ namespace Center::Left {
       }
     }
     else {
-      auto index = App::Get_Min_Index(app.panel.mainPanel.left.scroll.bar.x,
+      auto index = Scroll_Bar::Get_Min_Index(app.panel.mainPanel.left.scroll.bar.x,
                                       app.panel.mainPanel.left.scroll.panel.h,
                                       app.uiPanels.scrollBarLeftY,
                                       app.uiPanels.scrollBarLeftHeight,
@@ -240,26 +240,13 @@ namespace Center::Left {
   }
 
   bool Scroll(App::App &app, const Sint32 &scroll) {
-//    if (scroll < 0) {
-//      app.uiPanels.scrollBarLeftY += 10.0f;
-//     if (app.uiPanels.scrollBarLeftY > app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h)
-//       app.uiPanels.scrollBarLeftY = app.panel.mainPanel.left.scroll.panel.h - app.panel.mainPanel.left.scroll.bar.h;
-//    }
-//    else {
-//      app.uiPanels.scrollBarLeftY -= 10.0f;
-//      if (app.uiPanels.scrollBarLeftY < 0.0f) app.uiPanels.scrollBarLeftY = 0.0f;
-//    }
-//    App::Set_Bar_Size(app.uiPanels.numElement, app.interface.left.images.size(), app.panel.mainPanel.left.scroll.panel.h, app.uiPanels.scrollBarLeftHeight);
-//    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
-//    App::Set_Textures(app);
-
-
     Scroll_Bar::Scroll(app,
                        app.panel.mainPanel.left.scroll,
                        app.uiPanels.scrollBarLeftY,
                        app.uiPanels.scrollBarFixturesHeight,
                        app.interface.left.images.size(),
-                       scroll
+                       scroll,
+                       app.panel.mainPanel.left.body.w
     );
 
     return true;

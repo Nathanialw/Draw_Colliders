@@ -99,15 +99,6 @@ namespace App {
     std::string saveName;
   };
 
-  struct Index {
-    int min = 0;
-    int max = 0;
-  };
-
-  Index Get_Min_Index(const float &scrollPanelX, const float &scrollH, const float &scrollBarY, const float &barH, const int &containerSize, const int &numElements);
-  void Set_Bar_Size(const float &numElement, const float &num, const float &panelH, float &barH);
-
-
 
   void Close(App &app);
   void New(App &app);

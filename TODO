@@ -38,6 +38,5 @@ UI
 
 
 bugs
--expander bars aren't quite placed properly
 -circles stop rendering if you zoom into them too closely
 -vertices sprite renders too small

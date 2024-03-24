@@ -34,7 +34,8 @@ namespace Center::Right {
                        app.uiPanels.scrollBarRightY,
                        app.uiPanels.scrollBarFixturesHeight,
                        numElements,
-                       scroll
+                       scroll,
+                       app.panel.mainPanel.right.body.w
         );
 
     return true;

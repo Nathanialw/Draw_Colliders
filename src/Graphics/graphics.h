@@ -33,6 +33,7 @@ namespace Graphics {
     SDL_FRect bar;
     float elementHeight = 0.0f;
     float elementSpacing = 0.0f;
+    bool show = false;
   };
 
   struct Left_Panel {
