@@ -7,60 +7,18 @@
 
 namespace Top {
 
-  typedef int (*Menu_Button)(App::App &app);
-
-  int New(App::App &app) {
-    Action::New_Project(app);
-    return 0;
-  }
-  int Open(App::App &app) {
-    Action::Open_Project(app);
-    return 1;
-  }
-  int Save(App::App &app) {
-    Action::Save(app);
-    return 4;
-  }
-  int Save_As(App::App &app) {
-    Action::Save_As(app);
-    return 4;
-  }
-  int Add_Image(App::App &app) {
-    Action::Add_Image(app);
-    return 4;
-  }
-  int Delete_Image(App::App &app) {
-    Action::Remove_Image(app);
-    return 4;
-  }
-  int Add_Sprites(App::App &app) {
-    Action::Add_Images(app);
-    return 3;
-  }
-  int Publish(App::App &app) {
-    Action::Publish(app);
-    return 5;
-  }
-  int Publish_As(App::App &app) {
-    Action::Publish_As(app);
-    return 5;
-  }
-  int Unused(App::App &app) {
-    return 5;
-  }
-
-  std::array<Menu_Button, Graphics::menuSize> menuButtons = {
-      New,
-      Open,
-      Save,
-      Save_As,
-      Unused,
-      Add_Image,
-      Delete_Image,
-      Add_Sprites,
-      Unused,
-      Publish,
-      Publish_As,
+  std::array<Action::Button , Graphics::menuSize> menuButtons = {
+      Action::New_Project,
+      Action::Open_Project,
+      Action::Save,
+      Action::Save_As,
+      Action::Unused,
+      Action::Add_Image,
+      Action::Remove_Image,
+      Action::Add_Image,
+      Action::Unused,
+      Action::Publish,
+      Action::Publish_As,
   };
 
   bool Click_Menu_Button(App::App &app, const SDL_FPoint &point) {

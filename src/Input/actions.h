@@ -12,24 +12,6 @@
 
 namespace Action {
 
-  bool Delete_Shape(App::App &app);
-  bool Delete_Vertex(App::App &app);
-  bool Add_Vertex(App::App &app);
-  bool Add_Vertex_Center(App::App &app);
-  bool Add_Image(App::App &app);
-  bool Add_Images(App::App &app);
-  bool Remove_Image(App::App &app);
-  bool New_Project(App::App &app);
-  bool Open_Project(App::App &app);
-  bool Close_Project(App::App &app);
-  bool Quit_Project(App::App &app);
-  bool Quit_Application(App::App &app);
-  bool Publish(App::App &app);
-  bool Publish_As(App::App &app);
-  bool Save(App::App &app);
-  bool Save_As(App::App &app);
-  bool Load(App::App &app);
-
   typedef int (*Button)(App::App &app);
 
   typedef Shape::Shape (*CREATE_SHAPE)();
@@ -44,5 +26,21 @@ namespace Action {
   int Delete_Vertex_If_Polygon_Selected(App::App &app);
   int Unused(App::App &app);
 
+  int Delete_Shape(App::App &app);
+  int Delete_Vertex(App::App &app);
+  int Add_Vertex(App::App &app);
+  int Add_Vertex_Center(App::App &app);
+  int Add_Image(App::App &app);
+  int Add_Images(App::App &app);
+  int Remove_Image(App::App &app);
+  int New_Project(App::App &app);
+  int Open_Project(App::App &app);
+  int Close_Project(App::App &app);
+  int Quit_Application(App::App &app);
+  int Publish(App::App &app);
+  int Publish_As(App::App &app);
+  int Save(App::App &app);
+  int Save_As(App::App &app);
+  int Load(App::App &app);
 
 }

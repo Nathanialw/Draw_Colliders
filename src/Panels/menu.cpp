@@ -44,19 +44,19 @@ namespace Menu {
     menu[FILE].text = "File";
     menu[FILE].subMenu.resize(7);
     menu[FILE].subMenu[0].text = "New";
-    menu[FILE].subMenu[0].action;
+    menu[FILE].subMenu[0].action = Action::New_Project;
     menu[FILE].subMenu[1].text = "Open";
-    menu[FILE].subMenu[1].action;
+    menu[FILE].subMenu[1].action = Action::Open_Project;
     menu[FILE].subMenu[2].text = "Open Recent";
     menu[FILE].subMenu[2].action;
     menu[FILE].subMenu[3].text = "Close";
-    menu[FILE].subMenu[3].action;
-    menu[FILE].subMenu[4].text = " ";
-    menu[FILE].subMenu[4].action;
-    menu[FILE].subMenu[5].text = " ";
-    menu[FILE].subMenu[5].action;
+    menu[FILE].subMenu[3].action = Action::Close_Project;
+    menu[FILE].subMenu[4].text = "Publish";
+    menu[FILE].subMenu[4].action = Action::Publish;
+    menu[FILE].subMenu[5].text = "Publish As";
+    menu[FILE].subMenu[5].action = Action::Publish_As;
     menu[FILE].subMenu[6].text = "Quit";
-    menu[FILE].subMenu[6].action;
+    menu[FILE].subMenu[6].action = Action::Quit_Application;
 
     menu[EDIT].text = "Edit";
     menu[EDIT].subMenu.resize(8);
@@ -76,12 +76,15 @@ namespace Menu {
     menu[EDIT].subMenu[7].text = "New Polygon";
     menu[EDIT].subMenu[7].action = Action::Create_Polygon;
 
+    //to start open a new panel in the center of screen with 2 buttons that close the panel and an event loop to handle it
     menu[OPTIONS].text = "Options";
-    menu[OPTIONS].subMenu.resize(2);
+    menu[OPTIONS].subMenu.resize(3);
     menu[OPTIONS].subMenu[0].text = "options";
     menu[OPTIONS].subMenu[0].action;
     menu[OPTIONS].subMenu[1].text = "preferences";
     menu[OPTIONS].subMenu[1].action;
+    menu[OPTIONS].subMenu[2].text = "Keybindings";
+    menu[OPTIONS].subMenu[2].action;
 
     menu[VIEW].text = "View";
     menu[VIEW].subMenu.resize(3);

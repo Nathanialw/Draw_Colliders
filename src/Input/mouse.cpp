@@ -82,6 +82,7 @@ namespace Mouse {
 
         if (Menu::Is_Open()) {
           if (Menu::SubMenu_Select(app)) {
+            Menu::Clear(app);
             return true;
             //action
           } else {

@@ -12,7 +12,7 @@
 #include "iostream"
 
 namespace Action {
-  bool Delete_Shape(App::App &app, const Graphics::Shape &shap, const int &shapeIndex) {
+  bool Delete_Shape_(App::App &app, const Graphics::Shape &shap, const int &shapeIndex) {
     auto &shape = app.interface.center.shapes[shap];
     shape.erase(shape.begin() + shapeIndex, shape.begin() + shapeIndex + 1);
     shape.shrink_to_fit();
@@ -27,9 +27,9 @@ namespace Action {
     return true;
   }
 
-  bool Delete_Shape(App::App &app) {
+  bool Delete_Shape_(App::App &app) {
     if (app.selectedShape.shape != Graphics::SIZE) {
-      Delete_Shape(app, app.selectedShape.shape, app.selectedShape.indexPolygon );
+      Delete_Shape_(app, app.selectedShape.shape, app.selectedShape.indexPolygon );
       app.vertex.shape = Graphics::SIZE;
       app.vertex.indexPolygon = 0;
       app.vertex.indexVertex = 0;
@@ -38,19 +38,18 @@ namespace Action {
     return false;
   }
 
-  bool Delete_Vertex(App::App &app) {
+  bool Delete_Vertex_(App::App &app) {
     //delete vertex
     if (app.selectedVertex.shape == Graphics::POLYGON) {
       auto &polygon = app.interface.center.shapes[Graphics::POLYGON][app.selectedVertex.indexPolygon];
       if (polygon.vertices.size() < 4)
-        Delete_Shape(app, app.selectedVertex.shape, app.selectedVertex.indexPolygon);
+        Delete_Shape_(app, app.selectedVertex.shape, app.selectedVertex.indexPolygon);
       else {
         polygon.vertices.erase(polygon.vertices.begin() + app.selectedVertex.indexVertex, polygon.vertices.begin() + app.selectedVertex.indexVertex + 1);
         polygon.moving.erase(polygon.moving.begin() + app.selectedVertex.indexVertex, polygon.moving.begin() + app.selectedVertex.indexVertex + 1);
         polygon.vertices.shrink_to_fit();
         polygon.moving.shrink_to_fit();
       }
-//      SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][Graphics::POLYGON][app.selectedVertex.indexPolygon]);
       app.selectedVertex.shape = Graphics::SIZE;
       app.selectedVertex.indexVertex = 0;
       app.selectedVertex.indexPolygon = 0;
@@ -62,7 +61,7 @@ namespace Action {
     return false;
   }
 
-  int Get_Vertex_Position(const std::vector<SDL_FPoint> &vertexes, const SDL_FPoint &point) {
+  int Get_Vertex_Position_(const std::vector<SDL_FPoint> &vertexes, const SDL_FPoint &point) {
     float distance = MAXFLOAT;
     int index = 0;
 //    check each line segment
@@ -79,7 +78,7 @@ namespace Action {
     return index;
   }
 
-  bool Add_Vertex(App::App &app) {
+  bool Add_Vertex_(App::App &app) {
     //add vertex
     if (app.selectedShape.shape == Graphics::POLYGON) {
       i2 m{};
@@ -88,7 +87,7 @@ namespace Action {
       pos = Offset_From_Image_Center(app, pos);
       //instead of push back, insert vertex between the 2 closest vertices to the mouse
       auto &vertices = app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].vertices;
-      int index = Get_Vertex_Position(vertices, pos);
+      int index = Get_Vertex_Position_(vertices, pos);
 
       if (index > vertices.size())
         vertices.push_back({pos.x,pos.y});
@@ -99,7 +98,6 @@ namespace Action {
         moving.push_back(false);
       else
         moving.insert(moving.begin() + index, false);
-//      SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][Graphics::POLYGON][app.selectedShape.indexPolygon]);
       app.selectedVertex.shape = Graphics::POLYGON;
       app.selectedVertex.indexPolygon = app.selectedShape.indexPolygon;
       app.selectedVertex.indexVertex = index;
@@ -108,11 +106,11 @@ namespace Action {
     return false;
   }
 
-  bool Add_Vertex_Center(App::App &app) {
+  bool Add_Vertex_Center_(App::App &app) {
     if (app.selectedShape.shape == Graphics::POLYGON) {
       auto &vertices = app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].vertices;
       SDL_FPoint pos = {0.0f, 0.0f};
-      int index = Get_Vertex_Position(vertices, pos);
+      int index = Get_Vertex_Position_(vertices, pos);
 
       if (index > vertices.size())
         vertices.push_back({pos.x,pos.y});
@@ -124,7 +122,6 @@ namespace Action {
       else
         moving.insert(moving.begin() + index, false);
 
-//      SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][Graphics::POLYGON][app.selectedShape.indexPolygon]);
       app.selectedVertex.shape = Graphics::POLYGON;
       app.selectedVertex.indexPolygon = app.selectedShape.indexPolygon;
       app.selectedVertex.indexVertex = index;
@@ -133,7 +130,7 @@ namespace Action {
     return false;
   }
 
-  void Import_Image(Data::Center &center, Data::Left &left, const Graphics::Image_Import &imageImport) {
+  void Import_Image_(Data::Center &center, Data::Left &left, const Graphics::Image_Import &imageImport) {
     Data::Center image;
     image.texture.texture = imageImport.texture;
     image.index = left.images.size();
@@ -147,10 +144,10 @@ namespace Action {
       center = image;
   }
 
-  bool Add_Image(App::App &app) {
+  bool Add_Image_(App::App &app) {
     auto imageImport = Graphics::Load_Image(app.context);
     if (imageImport.texture) {
-      Import_Image(app.interface.center, app.interface.left, imageImport);
+      Import_Image_(app.interface.center, app.interface.left, imageImport);
 
       Scroll_Bar::Update(app, app.panel.mainPanel.left.scroll, app.uiPanels.scrollBarLeftHeight, app.interface.left.images.size(), app.panel.mainPanel.left.body.w);
       return true;
@@ -158,12 +155,12 @@ namespace Action {
     return false;
   }
 
-  bool Add_Images(App::App &app) {
+  bool Add_Images_(App::App &app) {
     std::vector<Graphics::Image_Import> imagesImport = Graphics::Load_Images(app.context);
     if (!imagesImport.empty()) {
 
       for (const auto &imageImport : imagesImport) {
-        Import_Image(app.interface.center, app.interface.left, imageImport);
+        Import_Image_(app.interface.center, app.interface.left, imageImport);
       }
 
       Scroll_Bar::Update(app, app.panel.mainPanel.left.scroll, app.uiPanels.scrollBarLeftHeight, app.interface.left.images.size(), app.panel.mainPanel.left.body.w);
@@ -172,15 +169,8 @@ namespace Action {
     return false;
   }
 
-  bool Remove_Image(App::App &app) {
+  bool Remove_Image_(App::App &app) {
     if (app.interface.left.images.size() > app.imageIndex) {
-
-//      for (auto &shapes : app.texture.shapes[app.imageIndex]) {
-//        for (auto &shape :shapes) {
-//          SDL_DestroyTexture(shape);
-//        }
-//      }
-//      app.texture.shapes.erase(app.texture.shapes.begin() + app.imageIndex);
 
       SDL_DestroyTexture(app.interface.left.images[app.imageIndex].texture.texture);
       app.interface.left.images.erase(app.interface.left.images.begin() + app.imageIndex);
@@ -208,56 +198,82 @@ namespace Action {
     return false;
   }
 
-  bool New_Project(App::App &app) {
-    App::New(app);
-    return true;
-  }
 
-  bool Close_Project(App::App &app) {
+  int Delete_Shape(App::App &app){
+    if (Delete_Shape_(app))
+      return 1;
+    return 0;
+  };
+  int Delete_Vertex(App::App &app){
+    if (Delete_Vertex_(app))
+      return 1;
+    return 0;
+  };
+  int Add_Vertex(App::App &app){
+    if (Add_Vertex_(app))
+      return 1;
+    return 0;
+  };
+  int Add_Vertex_Center(App::App &app){
+    if (Add_Vertex_Center_(app))
+      return 1;
+    return 0;
+  };
+  int Add_Image(App::App &app){
+    if (Add_Image_(app))
+      return 1;
+    return 0;
+  };
+  int Add_Images(App::App &app){
+    if (Add_Images_(app))
+      return 1;
+    return 0;
+  };
+  int Remove_Image(App::App &app){
+    if (Remove_Image_(app))
+      return 1;
+    return 0;
+  };
+  int New_Project(App::App &app){
     App::New(app);
-    return true;
-  }
-
-  bool Open_Project(App::App &app) {
+    return 1;
+  };
+  int Open_Project(App::App &app){
     Save::Load_As(app);
-    return true;
-  }
-
-  bool Quit_Application(App::App &app) {
+    return 1;
+  };
+  int Close_Project(App::App &app){
+    App::New(app);
+    return 1;
+  };
+  int Quit_Application(App::App &app){
     app.running = !app.running;
-    return true;
-  }
-
-  bool Save(App::App &app) {
+    return 1;
+  };
+  int Publish(App::App &app){
+    SQLite::Publish(app);
+    return 1;
+  };
+  int Publish_As(App::App &app){
+    SQLite::Publish(app);
+    return 1;
+  };
+  int Save(App::App &app){
     if (!app.saveName.empty())
       Save::Save(app, app.saveName);
     else if (Save::Save_As(app))
-      return true;
-    return false;
-  }
-
-  bool Save_As(App::App &app) {
+      return 1;
+    return 0;
+  };
+  int Save_As(App::App &app){
     if (Save::Save_As(app))
-      return true;
-    return false;
-  }
-
-  bool Load(App::App &app) {
+      return 1;
+    return 0;
+  };
+  int Load(App::App &app){
     Save::Load_As(app);
-    return true;
-  }
-
-  bool Publish(App::App &app) {
-    SQLite::Publish(app);
-    return true;
-  }
-
-  bool Publish_As(App::App &app) {
-    SQLite::Publish(app);
-    return true;
-  }
-
-
+    return 1;
+  };
 
 
 

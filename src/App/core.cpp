@@ -32,9 +32,32 @@ namespace App {
     app.panel.top.buttons[10].texture = app.texture.publishAs;
   }
 
-  void Init (App &app) {
-    app.context = Graphics::CreateWindowAndRenderer();
-    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
+  void New(App &app) {
+    Data::Left newLeft;
+    Data::Center newCenter;
+    Data::Right newRight;
+
+    app.interface.left = newLeft;
+    app.interface.center = newCenter;
+    app.interface.right = newRight;
+    //reset shape list
+    Data::Shape_List shapeList;
+    app.interface.shapeList = shapeList;
+    Vertex vertex;
+    app.vertex = vertex;
+    app.selectedVertex = vertex;
+    Shape shape;
+    app.selectedShape = shape;
+    app.imageIndex = 0;
+    app.filterImages = false;
+    app.interface.left.filteredIndexes.clear();
+    app.moveImage = false;
+    app.moveVertex = false;
+    app.initialPosition = {0, 0};
+    app.offset = {0.0f, 0.0f};
+    app.zoomToMouse = true;
+    app.menuOpen = false;
+    app.saveName.clear();
     app.interface.right.optionName = {
         "Export:",
         "format",
@@ -76,7 +99,13 @@ namespace App {
         Data::Option_Type::NUMINPUT,
         Data::Option_Type::NUMINPUT,
     };
+  }
+
+  void Init (App &app) {
+    app.context = Graphics::CreateWindowAndRenderer();
+    app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
     app.texture = Graphics::Load_Icons(app.context.renderer);
+    New(app);
     Set_Textures(app);
     app.context.font = Text::Load_Font(app.context.renderer);
     Mouse::Set_Cursor(app, SDL_SYSTEM_CURSOR_ARROW);
@@ -93,33 +122,7 @@ namespace App {
     SDL_Quit();
   }
 
-  void New(App &app) {
-    Data::Left newLeft;
-    Data::Center newCenter;
-    Data::Right newRight;
 
-    app.interface.left = newLeft;
-    app.interface.center = newCenter;
-    app.interface.right = newRight;
-    //reset shape list
-    Data::Shape_List shapeList;
-    app.interface.shapeList = shapeList;
-    Vertex vertex;
-    app.vertex = vertex;
-    app.selectedVertex = vertex;
-    Shape shape;
-    app.selectedShape = shape;
-    app.imageIndex = 0;
-    app.filterImages = false;
-    app.interface.left.filteredIndexes.clear();
-    app.moveImage = false;
-    app.moveVertex = false;
-    app.initialPosition = {0, 0};
-    app.offset = {0.0f, 0.0f};
-    app.zoomToMouse = true;
-    app.menuOpen = false;
-    app.saveName.clear();
-  }
 
   Offsets Calc_Offset(const App &app) {
     SDL_Point size;
