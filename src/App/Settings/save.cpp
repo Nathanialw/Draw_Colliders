@@ -34,23 +34,23 @@ namespace Save {
       image["path"].Set_String(app.interface.left.imagePathStr[i]);
       image["scale"].Set_Real(app.interface.left.images[i].texture.scale);
       int k = 0;
-      image[shapeStr[0]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::POINT].size());
-      for (const auto &point: app.interface.left.images[i].shapes[Graphics::POINT]) {
+      image[shapeStr[0]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Shape::POINT].size());
+      for (const auto &point: app.interface.left.images[i].shapes[Shape::POINT]) {
         image[shapeStr[0]][std::to_string(k)]["x"].Set_Real(point.vertices[0].x);
         image[shapeStr[0]][std::to_string(k)]["y"].Set_Real(point.vertices[0].y);
         k++;
       }
       k = 0;
-      image[shapeStr[1]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::CIRCLE].size());
-      for (const auto &circle: app.interface.left.images[i].shapes[Graphics::CIRCLE]) {
+      image[shapeStr[1]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Shape::CIRCLE].size());
+      for (const auto &circle: app.interface.left.images[i].shapes[Shape::CIRCLE]) {
         image[shapeStr[1]][std::to_string(k)]["x"].Set_Real(circle.vertices[0].x);
         image[shapeStr[1]][std::to_string(k)]["y"].Set_Real(circle.vertices[0].y);
         image[shapeStr[1]][std::to_string(k)]["r"].Set_Real(circle.vertices[1].y - circle.vertices[0].y);
         k++;
       }
       k = 0;
-      image[shapeStr[2]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::LINE].size());
-      for (const auto &line: app.interface.left.images[i].shapes[Graphics::LINE]) {
+      image[shapeStr[2]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Shape::LINE].size());
+      for (const auto &line: app.interface.left.images[i].shapes[Shape::LINE]) {
         int vertexCount = 0;
         for (const auto &vertex : line.vertices) {
           image[shapeStr[2]][std::to_string(k)][std::to_string(vertexCount)]["x"].Set_Real(vertex.x);
@@ -60,8 +60,8 @@ namespace Save {
         k++;
       }
       k = 0;
-      image[shapeStr[3]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::AABB].size());
-      for (const auto &aabb: app.interface.left.images[i].shapes[Graphics::AABB]) {
+      image[shapeStr[3]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Shape::AABB].size());
+      for (const auto &aabb: app.interface.left.images[i].shapes[Shape::AABB]) {
         int vertexCount = 0;
         for (const auto &vertex : aabb.vertices) {
           image[shapeStr[3]][std::to_string(k)][std::to_string(vertexCount)]["x"].Set_Real(vertex.x);
@@ -71,8 +71,8 @@ namespace Save {
         k++;
       }
       k = 0;
-      image[shapeStr[4]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Graphics::POLYGON].size());
-      for (const auto &polygon: app.interface.left.images[i].shapes[Graphics::POLYGON]) {
+      image[shapeStr[4]]["shape_count"].Set_Int(app.interface.left.images[i].shapes[Shape::POLYGON].size());
+      for (const auto &polygon: app.interface.left.images[i].shapes[Shape::POLYGON]) {
         int vertexCount = 0;
         image[shapeStr[4]][std::to_string(k)]["vertex_count"].Set_Int(polygon.vertices.size());
         for (const auto &vertex : polygon.vertices) {
@@ -160,58 +160,58 @@ namespace Save {
       auto &shapes = app.interface.left.images[p];
       //need to save the number of each shape
       int shape_count = image[shapeStr[0]]["shape_count"].Get_Int();
-      if (shape_count != 0 && shapes.shapes[Graphics::POINT].size() <= shape_count)
-        shapes.shapes[Graphics::POINT].resize(shape_count);
+      if (shape_count != 0 && shapes.shapes[Shape::POINT].size() <= shape_count)
+        shapes.shapes[Shape::POINT].resize(shape_count);
       for (int l = 0; l < shape_count; ++l) {
-        shapes.shapes[Graphics::POINT][l] = Point::Create((float)image[shapeStr[0]][std::to_string(l)]["x"].Get_Real(), (float)image[shapeStr[0]][std::to_string(l)]["y"].Get_Real());
+        shapes.shapes[Shape::POINT][l] = Point::Create((float)image[shapeStr[0]][std::to_string(l)]["x"].Get_Real(), (float)image[shapeStr[0]][std::to_string(l)]["y"].Get_Real());
       }
 
       shape_count = image[shapeStr[1]]["shape_count"].Get_Int();
-      if (shape_count != 0 && shapes.shapes[Graphics::CIRCLE].size() <= shape_count) {
-        shapes.shapes[Graphics::CIRCLE].resize(shape_count);
-        app.texture.shapes[p][Graphics::CIRCLE].resize(shape_count);
+      if (shape_count != 0 && shapes.shapes[Shape::CIRCLE].size() <= shape_count) {
+        shapes.shapes[Shape::CIRCLE].resize(shape_count);
+        app.texture.shapes[p][Shape::CIRCLE].resize(shape_count);
       }
       for (int l = 0; l < shape_count; ++l) {
-        shapes.shapes[Graphics::CIRCLE][l] = Circle::Create(image[shapeStr[1]][std::to_string(l)]["x"].Get_Real(), image[shapeStr[1]][std::to_string(l)]["y"].Get_Real(), image[shapeStr[1]][std::to_string(l)]["y"].Get_Real() + image[shapeStr[1]][std::to_string(l)]["r"].Get_Real());
+        shapes.shapes[Shape::CIRCLE][l] = Circle::Create(image[shapeStr[1]][std::to_string(l)]["x"].Get_Real(), image[shapeStr[1]][std::to_string(l)]["y"].Get_Real(), image[shapeStr[1]][std::to_string(l)]["y"].Get_Real() + image[shapeStr[1]][std::to_string(l)]["r"].Get_Real());
       }
 
       shape_count = image[shapeStr[2]]["shape_count"].Get_Int();
-      if (shape_count != 0 && shapes.shapes[Graphics::LINE].size() <= shape_count)
-        shapes.shapes[Graphics::LINE].resize(shape_count);
+      if (shape_count != 0 && shapes.shapes[Shape::LINE].size() <= shape_count)
+        shapes.shapes[Shape::LINE].resize(shape_count);
       for (int l = 0; l < shape_count; ++l) {
-        shapes.shapes[Graphics::LINE][l] = Line_Segment::Create(image[shapeStr[2]][std::to_string(l)]["0"]["x"].Get_Real(), image[shapeStr[2]][std::to_string(l)]["0"]["y"].Get_Real(), image[shapeStr[2]][std::to_string(l)]["1"]["x"].Get_Real(), image[shapeStr[2]][std::to_string(l)]["1"]["y"].Get_Real());
+        shapes.shapes[Shape::LINE][l] = Line_Segment::Create(image[shapeStr[2]][std::to_string(l)]["0"]["x"].Get_Real(), image[shapeStr[2]][std::to_string(l)]["0"]["y"].Get_Real(), image[shapeStr[2]][std::to_string(l)]["1"]["x"].Get_Real(), image[shapeStr[2]][std::to_string(l)]["1"]["y"].Get_Real());
       }
 
       shape_count = image[shapeStr[3]]["shape_count"].Get_Int();
-      if (shape_count != 0 && shapes.shapes[Graphics::AABB].size() <= shape_count) {
-        shapes.shapes[Graphics::AABB].resize(shape_count);
-        app.texture.shapes[p][Graphics::AABB].resize(shape_count);
+      if (shape_count != 0 && shapes.shapes[Shape::AABB].size() <= shape_count) {
+        shapes.shapes[Shape::AABB].resize(shape_count);
+        app.texture.shapes[p][Shape::AABB].resize(shape_count);
       }
       for (int l = 0; l < shape_count; ++l) {
-        shapes.shapes[Graphics::AABB][l].vertices.resize(4);
-        shapes.shapes[Graphics::AABB][l].moving.resize(4);
+        shapes.shapes[Shape::AABB][l].vertices.resize(4);
+        shapes.shapes[Shape::AABB][l].moving.resize(4);
         for (int j = 0; j < 4; ++j) {
-          shapes.shapes[Graphics::AABB][l].vertices[j] = {(float)image[shapeStr[3]][std::to_string(l)][std::to_string(j)]["x"].Get_Real(), (float)image[shapeStr[3]][std::to_string(l)][std::to_string(j)]["y"].Get_Real()};
-          shapes.shapes[Graphics::AABB][l].moving[j] = false;
+          shapes.shapes[Shape::AABB][l].vertices[j] = {(float)image[shapeStr[3]][std::to_string(l)][std::to_string(j)]["x"].Get_Real(), (float)image[shapeStr[3]][std::to_string(l)][std::to_string(j)]["y"].Get_Real()};
+          shapes.shapes[Shape::AABB][l].moving[j] = false;
         }
       }
 
       shape_count = image[shapeStr[4]]["shape_count"].Get_Int();
-      if (shape_count != 0 && shapes.shapes[Graphics::POLYGON].size() <= shape_count) {
-        shapes.shapes[Graphics::POLYGON].resize(shape_count);
-        app.texture.shapes[p][Graphics::POLYGON].resize(shape_count);
+      if (shape_count != 0 && shapes.shapes[Shape::POLYGON].size() <= shape_count) {
+        shapes.shapes[Shape::POLYGON].resize(shape_count);
+        app.texture.shapes[p][Shape::POLYGON].resize(shape_count);
       }
       for (int l = 0; l < shape_count; ++l) {
         int vertex_count = image[shapeStr[4]][std::to_string(l)]["vertex_count"].Get_Int();
-        if (vertex_count != 0 && shapes.shapes[Graphics::POLYGON][l].vertices.size() <= vertex_count) {
-          shapes.shapes[Graphics::POLYGON][l].vertices.resize(vertex_count);
-          shapes.shapes[Graphics::POLYGON][l].moving.resize(vertex_count);
+        if (vertex_count != 0 && shapes.shapes[Shape::POLYGON][l].vertices.size() <= vertex_count) {
+          shapes.shapes[Shape::POLYGON][l].vertices.resize(vertex_count);
+          shapes.shapes[Shape::POLYGON][l].moving.resize(vertex_count);
         }
 
         for (int j = 0; j < vertex_count; ++j) {
-          shapes.shapes[Graphics::POLYGON][l].vertices[j].x = image[shapeStr[4]][std::to_string(l)][std::to_string(j)]["x"].Get_Real();
-          shapes.shapes[Graphics::POLYGON][l].vertices[j].y = image[shapeStr[4]][std::to_string(l)][std::to_string(j)]["y"].Get_Real();
-          shapes.shapes[Graphics::POLYGON][l].moving[j] = false;
+          shapes.shapes[Shape::POLYGON][l].vertices[j].x = image[shapeStr[4]][std::to_string(l)][std::to_string(j)]["x"].Get_Real();
+          shapes.shapes[Shape::POLYGON][l].vertices[j].y = image[shapeStr[4]][std::to_string(l)][std::to_string(j)]["y"].Get_Real();
+          shapes.shapes[Shape::POLYGON][l].moving[j] = false;
         }
       }
 
@@ -244,7 +244,7 @@ namespace Save {
       if (setCenter) {
         app.interface.center = app.interface.left.images[k];
         Data::Shape_List shapeList;
-        for (int i = 0; i < Graphics::Shape::SIZE; ++i) {
+        for (int i = 0; i < Shape::SIZE; ++i) {
           for (int j = 0; j < app.interface.center.shapes[i].size(); ++j) {
             shapeList.shapeList[i].push_back(std::to_string(j));
           }

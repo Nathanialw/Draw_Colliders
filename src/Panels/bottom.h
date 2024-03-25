@@ -11,4 +11,5 @@
 
 namespace Bottom {
   bool Bottom_Panel();
+  bool Render(App::App &app);
 }

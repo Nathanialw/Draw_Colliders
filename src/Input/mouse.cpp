@@ -146,12 +146,12 @@ namespace Mouse {
               // select a vertex
               app.vertex = App::Get_Vertex(app, cursor);
               bool vertexSelected = false;
-              if (app.vertex.shape != Graphics::SIZE) {
+              if (app.vertex.shape != Shape::SIZE) {
                 vertexSelected = true;
                 app.selectedVertex.shape = app.vertex.shape;
                 app.selectedVertex.indexVertex = app.vertex.indexVertex;
                 app.selectedVertex.indexPolygon = app.vertex.indexPolygon;
-                if (app.vertex.shape == Graphics::POINT) {
+                if (app.vertex.shape == Shape::POINT) {
                   app.selectedShape.shape = app.vertex.shape;
                   app.selectedShape.indexPolygon = app.vertex.indexPolygon;
                 }
@@ -160,11 +160,11 @@ namespace Mouse {
               // select a shape
               // we want to grab the vertices too so we can move them when we move the shape
               app.vertex = App::Get_Shape(app, cursor);
-              if (app.vertex.shape == Graphics::SIZE)
+              if (app.vertex.shape == Shape::SIZE)
                 return false;
               else {
                 // move selected vertices
-                if (doubleClick && app.selectedShape.shape == Graphics::POLYGON) {
+                if (doubleClick && app.selectedShape.shape == Shape::POLYGON) {
                   // create vertex at mouse
                   // need to calculate which edge the mouse is closest to and insert the vertex between those 2 points
                   Action::Add_Vertex(app);

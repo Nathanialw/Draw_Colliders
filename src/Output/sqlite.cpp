@@ -128,7 +128,7 @@ namespace SQLite {
   void Publish(App::App &app) {
     auto db = Create_Tables();
 
-    std::array<std::string, Graphics::SIZE> shapeStr = {"POINT", "CIRCLE", "LINE", "AABB", "POLYGON"};
+    std::array<std::string, Shape::SIZE> shapeStr = {"POINT", "CIRCLE", "LINE", "AABB", "POLYGON"};
 
     auto numBodies = app.interface.left.images.size();
 
@@ -136,11 +136,11 @@ namespace SQLite {
       const auto &body = app.interface.left.images[i];
       auto name = app.interface.left.imageNameStr[i];
       int shapeNum = 0;
-      int numFixtures = body.shapes[Graphics::AABB].size();
-      numFixtures += body.shapes[Graphics::POLYGON].size();
-      numFixtures += body.shapes[Graphics::POINT].size();
-      numFixtures += body.shapes[Graphics::CIRCLE].size();
-      numFixtures += body.shapes[Graphics::LINE].size();
+      int numFixtures = body.shapes[Shape::AABB].size();
+      numFixtures += body.shapes[Shape::POLYGON].size();
+      numFixtures += body.shapes[Shape::POINT].size();
+      numFixtures += body.shapes[Shape::CIRCLE].size();
+      numFixtures += body.shapes[Shape::LINE].size();
 
       char* err;
 //      std::string sql = "INSERT INTO BODYDEF (name, isDynamic, isBullet, numFixtures) VALUES (" + Append_Quotes(name) + ", " + Append_Quotes(body.isDynamic) + ", " + Append_Quotes(body.isBullet) + ", " + Append_Quotes(numFixtures) + ")";

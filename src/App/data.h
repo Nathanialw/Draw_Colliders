@@ -57,20 +57,20 @@ namespace Data {
   };
 
   struct Shape_List {
-    std::array<std::vector<std::string>, Graphics::Shape::SIZE> shapeList;
+    std::array<std::vector<std::string>, Shape::SIZE> shapeList;
 
     Shape_List () {
-      shapeList[Graphics::POINT].emplace_back("Points");
-      shapeList[Graphics::CIRCLE].emplace_back("Circles");
-      shapeList[Graphics::LINE].emplace_back("Lines");
-      shapeList[Graphics::AABB].emplace_back("AABBs");
-      shapeList[Graphics::POLYGON].emplace_back("Polygons");
+      shapeList[Shape::POINT].emplace_back("Points");
+      shapeList[Shape::CIRCLE].emplace_back("Circles");
+      shapeList[Shape::LINE].emplace_back("Lines");
+      shapeList[Shape::AABB].emplace_back("AABBs");
+      shapeList[Shape::POLYGON].emplace_back("Polygons");
     }
   };
 
   struct Center {
     Graphics::Image texture;
-    std::array<std::vector<Shape::Shape>, Graphics::SIZE> shapes;
+    std::array<std::vector<Shape::Shape>, Shape::SIZE> shapes;
     std::array<Options, Options::SIZE> options{};
 
     int index = 0;

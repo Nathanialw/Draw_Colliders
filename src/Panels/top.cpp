@@ -32,20 +32,20 @@ namespace Top {
   };
 
   void Render_Button_Bar(App::App &app) {
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.top.panel);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 255, 255, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.top.panel);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
 
     for (const auto &btn: app.panel.top.buttons) {
       if (btn.texture) {
-        SDL_SetRenderDrawColor(app.context.renderer, 200, 200, 200, 255);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
         SDL_RenderFillRectF(app.context.renderer, &btn.button);
         SDL_RenderCopyF(app.context.renderer, btn.texture, nullptr, &btn.button);
-        SDL_SetRenderDrawColor(app.context.renderer, 0, 255, 255, 255);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
         SDL_RenderDrawRectF(app.context.renderer, &btn.button);
-        SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
       }
     }
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.buttonBar);

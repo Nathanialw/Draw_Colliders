@@ -17,7 +17,7 @@ namespace Scroll_Bar {
     int max = 0;
   };
 
-  bool Set_Bar_Size(const float &numElement, const float &num, const float &panelH, float &barH);
+  bool Set_Bar_Size(const float &numElement, const int &num, const float &panelH, float &barH);
   Index Get_Min_Index(const float &scrollPanelX, const float &scrollH, const float &scrollBarY, const float &barH, const int &containerSize, const int &numElements);
 
   void Update(App::App &app, Graphics::ScrollBar &scrollBar, float &scrollBarHeight, const int &numElements,float &bodyW);

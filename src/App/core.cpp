@@ -185,12 +185,12 @@ namespace App {
     auto &shape = app.interface.center.shapes;
 
     for (int k = 0; k < Graphics::SIZE; ++k) {
-      if (k == Graphics::CIRCLE) {
+      if (k == ::Shape::CIRCLE) {
         for (int i = 0; i < shape[k].size(); ++i) {
           auto vRect = Vertex_To_Rect(app, shape[k][i].vertices[1], o, shape[k][i].moving[1]);
           if (SDL_HasIntersectionF(&vRect, &cursor)) {
             shape[k][i].moving[1] = true;
-            return {(Graphics::Shape) k, i, 1};
+            return {(::Shape::shape) k, i, 1};
           }
         }
       }
@@ -200,23 +200,23 @@ namespace App {
             auto vRect = Vertex_To_Rect(app, shape[k][i].vertices[j], o, shape[k][i].moving[j]);
             if (SDL_HasIntersectionF(&vRect, &cursor)) {
               shape[k][i].moving[j] = true;
-              return {(Graphics::Shape)k, i, j};
+              return {(::Shape::shape)k, i, j};
             }
           }
         }
       }
     }
-    return {Graphics::SIZE, 0};
+    return {::Shape::SIZE, 0};
   }
 
-  Vertex Move (Data::Center &shape, const int &k, const int &i) {
+  Vertex Move (Data::Center &shape, int k, const int &i) {
     for (auto &&move: shape.shapes[k][i].moving)
       move = true;
-    return {(Graphics::Shape) k, i, -1};
+    return {(::Shape::shape)k, i, -1};
   }
 
-  Vertex Check_If_Selected(App &app, const SDL_FRect &cursor, const Graphics::Shape &selectedShape, const int &index) {
-    if (selectedShape != Graphics::SIZE) {
+  Vertex Check_If_Selected(App &app, const SDL_FRect &cursor, const ::Shape::shape &selectedShape, const int &index) {
+    if (selectedShape != ::Shape::SIZE) {
       auto &shape = app.interface.center;
       auto o = Calc_Offset(app);
       std::vector<SDL_FPoint> mouseVertexes;
@@ -230,20 +230,20 @@ namespace App {
         SDL_FPoint v = Vertex_To_Screen(app, shape.shapes[selectedShape][index].vertices[j], o, shape.shapes[selectedShape][index].moving[j]);
         shapeVertexes.emplace_back(v);
       }
-      if (selectedShape == Graphics::CIRCLE) {
+      if (selectedShape == ::Shape::CIRCLE) {
           if (Circle_Intersect(shapeVertexes[0].x, shapeVertexes[0].y, shapeVertexes[1].y - shapeVertexes[0].y, cursor))
             return Move(shape, selectedShape, index);
         }
-      else if (selectedShape == Graphics::POLYGON) {
+      else if (selectedShape == ::Shape::POLYGON) {
         if (Point_In_Polygon(mouseVertexes, shapeVertexes))
           return Move(shape, selectedShape, index);
       }
-      else if (selectedShape == Graphics::AABB || selectedShape == Graphics::LINE) {
+      else if (selectedShape == ::Shape::AABB || selectedShape == ::Shape::LINE) {
         if (PolygonOverlap_SAT(mouseVertexes, shapeVertexes))
           return Move(shape, selectedShape, index);
       }
     }
-    return {Graphics::SIZE, 0};
+    return {::Shape::SIZE, 0};
   }
 
   Vertex Get_Shape(App &app, const SDL_FRect &cursor) {
@@ -251,17 +251,17 @@ namespace App {
 
     //check if I already have a shape first, return it if I still have it selected
     auto shape = Check_If_Selected(app, cursor, app.selectedShape.shape, app.selectedShape.indexPolygon);
-    if (shape.shape != Graphics::SIZE)
+    if (shape.shape != ::Shape::SIZE)
       return shape;
 
-    for (int k = 0; k < Graphics::SIZE; ++k) {
+    for (int k = 0; k < ::Shape::SIZE; ++k) {
       for (int i = (int)shapes[k].size() - 1; i >= 0; --i) {
-        shape = Check_If_Selected(app, cursor, (Graphics::Shape)k, i);
-        if (shape.shape != Graphics::SIZE)
+        shape = Check_If_Selected(app, cursor, (::Shape::shape)k, i);
+        if (shape.shape != ::Shape::SIZE)
           return shape;
       }
     }
-    return {Graphics::SIZE, 0};
+    return {::Shape::SIZE, 0};
   }
 
 }

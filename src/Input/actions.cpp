@@ -12,7 +12,7 @@
 #include "iostream"
 
 namespace Action {
-  bool Delete_Shape_(App::App &app, const Graphics::Shape &shap, const int &shapeIndex) {
+  bool Delete_Shape_(App::App &app, const Shape::shape &shap, const int &shapeIndex) {
     auto &shape = app.interface.center.shapes[shap];
     shape.erase(shape.begin() + shapeIndex, shape.begin() + shapeIndex + 1);
     shape.shrink_to_fit();
@@ -21,16 +21,16 @@ namespace Action {
     shapeList.shrink_to_fit();
 
     if (shap == app.selectedShape.shape && shapeIndex == app.selectedShape.indexPolygon) {
-      app.selectedShape.shape = Graphics::SIZE;
+      app.selectedShape.shape = Shape::SIZE;
       app.selectedShape.indexPolygon = 0;
     }
     return true;
   }
 
   bool Delete_Shape_(App::App &app) {
-    if (app.selectedShape.shape != Graphics::SIZE) {
+    if (app.selectedShape.shape != Shape::SIZE) {
       Delete_Shape_(app, app.selectedShape.shape, app.selectedShape.indexPolygon );
-      app.vertex.shape = Graphics::SIZE;
+      app.vertex.shape = Shape::SIZE;
       app.vertex.indexPolygon = 0;
       app.vertex.indexVertex = 0;
       return true;
@@ -40,8 +40,8 @@ namespace Action {
 
   bool Delete_Vertex_(App::App &app) {
     //delete vertex
-    if (app.selectedVertex.shape == Graphics::POLYGON) {
-      auto &polygon = app.interface.center.shapes[Graphics::POLYGON][app.selectedVertex.indexPolygon];
+    if (app.selectedVertex.shape == Shape::POLYGON) {
+      auto &polygon = app.interface.center.shapes[Shape::POLYGON][app.selectedVertex.indexPolygon];
       if (polygon.vertices.size() < 4)
         Delete_Shape_(app, app.selectedVertex.shape, app.selectedVertex.indexPolygon);
       else {
@@ -50,10 +50,10 @@ namespace Action {
         polygon.vertices.shrink_to_fit();
         polygon.moving.shrink_to_fit();
       }
-      app.selectedVertex.shape = Graphics::SIZE;
+      app.selectedVertex.shape = Shape::SIZE;
       app.selectedVertex.indexVertex = 0;
       app.selectedVertex.indexPolygon = 0;
-      app.vertex.shape = Graphics::SIZE;
+      app.vertex.shape = Shape::SIZE;
       app.vertex.indexPolygon = 0;
       app.vertex.indexVertex = 0;
       return true;
@@ -80,25 +80,25 @@ namespace Action {
 
   bool Add_Vertex_(App::App &app) {
     //add vertex
-    if (app.selectedShape.shape == Graphics::POLYGON) {
+    if (app.selectedShape.shape == Shape::POLYGON) {
       i2 m{};
       SDL_GetMouseState(&m.x, &m.y);
       SDL_FPoint pos = {(float)m.x, (float)m.y};
       pos = Offset_From_Image_Center(app, pos);
       //instead of push back, insert vertex between the 2 closest vertices to the mouse
-      auto &vertices = app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].vertices;
+      auto &vertices = app.interface.center.shapes[Shape::POLYGON][app.selectedShape.indexPolygon].vertices;
       int index = Get_Vertex_Position_(vertices, pos);
 
       if (index > vertices.size())
         vertices.push_back({pos.x,pos.y});
       else
         vertices.insert(vertices.begin() + index, {pos.x,pos.y});
-      auto &moving = app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].moving;
+      auto &moving = app.interface.center.shapes[Shape::POLYGON][app.selectedShape.indexPolygon].moving;
       if (index > moving.size())
         moving.push_back(false);
       else
         moving.insert(moving.begin() + index, false);
-      app.selectedVertex.shape = Graphics::POLYGON;
+      app.selectedVertex.shape = Shape::POLYGON;
       app.selectedVertex.indexPolygon = app.selectedShape.indexPolygon;
       app.selectedVertex.indexVertex = index;
       return true;
@@ -107,8 +107,8 @@ namespace Action {
   }
 
   bool Add_Vertex_Center_(App::App &app) {
-    if (app.selectedShape.shape == Graphics::POLYGON) {
-      auto &vertices = app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].vertices;
+    if (app.selectedShape.shape == Shape::POLYGON) {
+      auto &vertices = app.interface.center.shapes[Shape::POLYGON][app.selectedShape.indexPolygon].vertices;
       SDL_FPoint pos = {0.0f, 0.0f};
       int index = Get_Vertex_Position_(vertices, pos);
 
@@ -116,13 +116,13 @@ namespace Action {
         vertices.push_back({pos.x,pos.y});
       else
         vertices.insert(vertices.begin() + index, {pos.x,pos.y});
-      auto &moving = app.interface.center.shapes[Graphics::POLYGON][app.selectedShape.indexPolygon].moving;
+      auto &moving = app.interface.center.shapes[Shape::POLYGON][app.selectedShape.indexPolygon].moving;
       if (index > moving.size())
         moving.push_back(false);
       else
         moving.insert(moving.begin() + index, false);
 
-      app.selectedVertex.shape = Graphics::POLYGON;
+      app.selectedVertex.shape = Shape::POLYGON;
       app.selectedVertex.indexPolygon = app.selectedShape.indexPolygon;
       app.selectedVertex.indexVertex = index;
       return true;
@@ -279,7 +279,7 @@ namespace Action {
 
   typedef Shape::Shape (*CREATE_SHAPE)();
 
-  bool Add_Shape(App::App &app, const Graphics::Shape &shape, const CREATE_SHAPE &Create) {
+  bool Add_Shape(App::App &app, const Shape::shape &shape, const CREATE_SHAPE &Create) {
     if (app.interface.center.texture.texture) {
       auto &shapeList = app.interface.shapeList.shapeList[shape];
       for (int j = 0; j < app.interface.center.shapes[shape].size(); ++j) {
@@ -297,23 +297,23 @@ namespace Action {
   }
 
   int Create_Circle(App::App &app) {
-    Add_Shape(app, Graphics::CIRCLE, Circle::Create);
+    Add_Shape(app, Shape::CIRCLE, Circle::Create);
     return 0;
   }
   int Create_Point(App::App &app) {
-    Add_Shape(app, Graphics::POINT, Point::Create);
+    Add_Shape(app, Shape::POINT, Point::Create);
     return 1;
   }
   int Create_Polygon(App::App &app) {
-    Add_Shape(app, Graphics::POLYGON, Polygon::Create);
+    Add_Shape(app, Shape::POLYGON, Polygon::Create);
     return 2;
   }
   int Create_Rect(App::App &app) {
-    Add_Shape(app, Graphics::AABB, AABB::Create);
+    Add_Shape(app, Shape::AABB, AABB::Create);
     return 3;
   }
   int Create_Line(App::App &app) {
-    Add_Shape(app, Graphics::LINE, Line_Segment::Create);
+    Add_Shape(app, Shape::LINE, Line_Segment::Create);
     return 4;
   }
   int Delete_Selected_Shape(App::App &app) {

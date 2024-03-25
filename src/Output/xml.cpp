@@ -13,7 +13,7 @@ using namespace tinyxml2;
 namespace XML {
 
   void Publish(App::App &app) {
-    std::array<std::string, Graphics::SIZE> shapeStr = {"POINT", "CIRCLE", "LINE", "AABB", "POLYGON"};
+    std::array<std::string, Shape::SIZE> shapeStr = {"POINT", "CIRCLE", "LINE", "AABB", "POLYGON"};
 
     XMLDocument xmlDoc;
 
@@ -32,11 +32,11 @@ namespace XML {
       body->SetAttribute("name", name.c_str());
       body->SetAttribute("dynamic", false);
 
-      int numFixtures = app.interface.left.images[i].shapes[Graphics::AABB].size();
-      numFixtures += app.interface.left.images[i].shapes[Graphics::POLYGON].size();
-      numFixtures += app.interface.left.images[i].shapes[Graphics::POINT].size();
-      numFixtures += app.interface.left.images[i].shapes[Graphics::CIRCLE].size();
-      numFixtures += app.interface.left.images[i].shapes[Graphics::LINE].size();
+      int numFixtures = app.interface.left.images[i].shapes[Shape::AABB].size();
+      numFixtures += app.interface.left.images[i].shapes[Shape::POLYGON].size();
+      numFixtures += app.interface.left.images[i].shapes[Shape::POINT].size();
+      numFixtures += app.interface.left.images[i].shapes[Shape::CIRCLE].size();
+      numFixtures += app.interface.left.images[i].shapes[Shape::LINE].size();
       body->SetAttribute("numFixtures", numFixtures);
 //      body->SetAttribute("isDynamic", app.interface.left.images[i].isDynamic);
 //      body->SetAttribute("isBullet", app.interface.left.images[i].isBullet);

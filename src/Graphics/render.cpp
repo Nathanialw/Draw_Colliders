@@ -28,11 +28,11 @@ namespace Render {
     Center::Center::Render(app);
     Center::Right::Render(app);
     Center::Left::Render(app);
+    Bottom::Render(app);
 
     Render_Panel(app, app.panel.top.panel, 50, 155, 100);
     ::Top::Render_Button_Bar(app);
     ::Menu::Render(app);
-    Render_Panel(app, app.panel.bottom, 25, 50, 100);
   }
 
   void Present(App::App &app) {

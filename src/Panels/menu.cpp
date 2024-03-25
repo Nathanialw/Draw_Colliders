@@ -11,26 +11,13 @@
 
 namespace Menu {
 
-  enum class Color {
-    BLACK,
-    BLUE,
-    WHITE,
-    SIZE,
-  };
-
-  SDL_Color color[(int)Color::SIZE] = {
-      {0, 0, 0, 255},
-      {0, 0, 255, 255},
-      {200, 200, 200, 255},
-  };
-
   struct Button {
     std::vector<Button> subMenu;
     Action::Button action = Action::UNIMPLEMENTED;
 
     SDL_FRect panel{};
     SDL_FRect subPanel{};
-    int8_t colorIndex = 0;
+    Graphics::Color colorIndex = Graphics::COOL_GRAY;
     std::string text;
     bool render = false;
   };
@@ -47,49 +34,49 @@ namespace Menu {
 
   std::array<Button, SIZE> menu = {};
 
-  void Add_Button(std::vector<Button> &btns, const std::string &text, const Action::Button &actionBtn) {
+  Button Add_Button(const std::string &text, const Action::Button &actionBtn) {
     Button btn;
     btn.text = text;
     btn.action = actionBtn;
-    btns.emplace_back(btn);
+    return btn;
   }
 
   void Init(App::App &app) {
     menu[FILE].text = "File";
-    Add_Button(menu[FILE].subMenu, "New", Action::New_Project);
-    Add_Button(menu[FILE].subMenu, "Open", Action::Open_Project);
-    Add_Button(menu[FILE].subMenu, "Open Recent", Action::UNIMPLEMENTED);
-    Add_Button(menu[FILE].subMenu, "Close", Action::Close_Project);
-    Add_Button(menu[FILE].subMenu, "Publish", Action::Publish);
-    Add_Button(menu[FILE].subMenu, "Publish As", Action::Publish_As);
-    Add_Button(menu[FILE].subMenu, "Quit", Action::Quit_Application);
+    menu[FILE].subMenu.emplace_back(Add_Button("New", Action::New_Project));
+    menu[FILE].subMenu.emplace_back(Add_Button("Open", Action::Open_Project));
+    menu[FILE].subMenu.emplace_back(Add_Button("Open Recent", Action::UNIMPLEMENTED));
+    menu[FILE].subMenu.emplace_back(Add_Button("Close", Action::Close_Project));
+    menu[FILE].subMenu.emplace_back(Add_Button("Publish", Action::Publish));
+    menu[FILE].subMenu.emplace_back(Add_Button("Publish As", Action::Publish_As));
+    menu[FILE].subMenu.emplace_back(Add_Button("Quit", Action::Quit_Application));
 
     menu[EDIT].text = "Edit";
-    Add_Button(menu[EDIT].subMenu, "Delete Shape", Action::Delete_Selected_Shape);
-    Add_Button(menu[EDIT].subMenu, "Delete Vertex", Action::Delete_Vertex_If_Polygon_Selected);
-    Add_Button(menu[EDIT].subMenu, "New Point", Action::Create_Point);
-    Add_Button(menu[EDIT].subMenu, "New Circle", Action::Create_Circle);
-    Add_Button(menu[EDIT].subMenu, "New Line", Action::Create_Line);
-    Add_Button(menu[EDIT].subMenu, "New AABB", Action::Create_Rect);
-    Add_Button(menu[EDIT].subMenu, "New Polygon", Action::Create_Polygon);
+    menu[EDIT].subMenu.emplace_back(Add_Button("Delete Shape", Action::Delete_Selected_Shape));
+    menu[EDIT].subMenu.emplace_back(Add_Button("Delete Vertex", Action::Delete_Vertex_If_Polygon_Selected));
+    menu[EDIT].subMenu.emplace_back(Add_Button("New Point", Action::Create_Point));
+    menu[EDIT].subMenu.emplace_back(Add_Button("New Circle", Action::Create_Circle));
+    menu[EDIT].subMenu.emplace_back(Add_Button("New Line", Action::Create_Line));
+    menu[EDIT].subMenu.emplace_back(Add_Button("New AABB", Action::Create_Rect));
+    menu[EDIT].subMenu.emplace_back(Add_Button("New Polygon", Action::Create_Polygon));
 
     //to start open a new panel in the center of screen with 2 buttons that close the panel and an event loop to handle it
     menu[OPTIONS].text = "Options";
-    Add_Button(menu[OPTIONS].subMenu, "Options", Action::UNIMPLEMENTED);
-    Add_Button(menu[OPTIONS].subMenu, "Preferences", Action::UNIMPLEMENTED);
-    Add_Button(menu[OPTIONS].subMenu, "Keybindings", Action::UNIMPLEMENTED);
+    menu[OPTIONS].subMenu.emplace_back(Add_Button("Options", Action::UNIMPLEMENTED));
+    menu[OPTIONS].subMenu.emplace_back(Add_Button("Preferences", Action::UNIMPLEMENTED));
+    menu[OPTIONS].subMenu.emplace_back(Add_Button("Keybindings", Action::UNIMPLEMENTED));
 
     menu[VIEW].text = "View";
-    Add_Button(menu[VIEW].subMenu, "Zoom++", Action::UNIMPLEMENTED);
-    Add_Button(menu[VIEW].subMenu, "Zoom--", Action::UNIMPLEMENTED);
-    Add_Button(menu[VIEW].subMenu, "Center", Action::UNIMPLEMENTED);
+    menu[VIEW].subMenu.emplace_back(Add_Button("Zoom++", Action::UNIMPLEMENTED));
+    menu[VIEW].subMenu.emplace_back(Add_Button("Zoom--", Action::UNIMPLEMENTED));
+    menu[VIEW].subMenu.emplace_back(Add_Button("Center", Action::UNIMPLEMENTED));
 
     //add current window name ie "New Document - Box2d_Colliders" and selection indicator checkmark
     menu[WINDOW].text = "Window";
-    Add_Button(menu[WINDOW].subMenu, "current window", Action::UNIMPLEMENTED);
+    menu[WINDOW].subMenu.emplace_back(Add_Button("current window", Action::UNIMPLEMENTED));
 
     menu[HELP].text = "Help";
-    Add_Button(menu[HELP].subMenu, "Documentation", Action::UNIMPLEMENTED);
+    menu[HELP].subMenu.emplace_back(Add_Button("Documentation", Action::UNIMPLEMENTED));
 
 
     float x = app.panel.menu.panel.x;
@@ -100,10 +87,11 @@ namespace Menu {
 
     for (auto & i : menu) {
       SDL_FRect dRect = {x + spacing, y, w, h};
-      auto menuRect = Text::Render(app.context.renderer, app.context.font, i.text.c_str(), dRect.x, dRect.y);
-      menuRect.w += (int)spacing * 3;
-      menuRect.x -= (int)spacing;
-      menuRect.h = h;
+      auto menuRect = Text::Get_Rect_Size(app.context.renderer, app.context.font, i.text.c_str(), dRect.x, dRect.y, FC_ALIGN_LEFT);
+      auto panel = Rect_To_FRect(menuRect);
+      panel.w += spacing * 3.0f;
+      panel.x -= spacing;
+      panel.h = h;
 
       float width = 0.0f;
       float offsetY = 0.0f;
@@ -115,9 +103,9 @@ namespace Menu {
       }
 
       //cache the rect
-      i.panel = Rect_To_FRect(menuRect);
+      i.panel = panel;
       i.subPanel = {
-          (float)menuRect.x,
+          panel.x,
           dRect.y + i.panel.h,
           (float) width + (spacing * 2.0f),
           dRect.y + ((i.panel.h - (spacing / 2.0f)) * (float)i.subMenu.size())
@@ -126,8 +114,8 @@ namespace Menu {
       app.menu.x = 0.0f;
       app.menu.y = 0.0f;
       app.menu.w += width;
-      app.menu.h = (float) menuRect.h;
-      x += (float)menuRect.w;
+      app.menu.h = panel.h;
+      x += (float)panel.w;
     }
   }
 
@@ -140,11 +128,11 @@ namespace Menu {
   }
 
   void Render_Panel(App::App &app) {
-    Graphics::Set_Render_Draw_Color(app.context.renderer, color[0]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.menu.panel);
-    SDL_SetRenderDrawColor(app.context.renderer, 152, 25, 125, 255);
-    SDL_RenderDrawRectF(app.context.renderer, &app.panel.menu.panel);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+//    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+//    SDL_RenderDrawRectF(app.context.renderer, &app.panel.menu.panel);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
   }
 
   void Render_Menu(App::App &app) {
@@ -170,13 +158,13 @@ namespace Menu {
           (float)rect.w,
           (float)h,
       };
-      Graphics::Set_Render_Draw_Color(app.context.renderer, color[i.colorIndex]);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[i.colorIndex]);
       SDL_RenderFillRectF(app.context.renderer, &fRect);
       Text::Render(app.context.renderer, app.context.font, i.text.c_str(), rect.x, rect.y);
 
       x += (float)rect.w;
     }
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
   }
 
   void Render_Subpanel(App::App &app) {
@@ -187,13 +175,13 @@ namespace Menu {
         float w = i.subPanel.w;
         float h = i.subPanel.h;
         float spacing = 5.0f;
-        SDL_SetRenderDrawColor(app.context.renderer, 155, 25, 0, 255);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
 
         //render to text, not every frame
         for (const auto &button : i.subMenu) {
           y += spacing;
           SDL_FRect dRect = {x + spacing, y, w, h};
-          auto rect = Text::Render(app.context.renderer, app.context.font, button.text.c_str(), dRect.x, dRect.y);
+          auto rect = Text::Get_Rect_Size(app.context.renderer, app.context.font, i.text.c_str(), dRect.x, dRect.y, FC_ALIGN_LEFT);
 
           rect.w += (int)spacing * 2;
           rect.x -= (int)spacing;
@@ -206,15 +194,15 @@ namespace Menu {
               (float)rect.h + spacing};
 
           if (Point_FRect_Intersect(Mouse::Cursor_Point(), fRect)) {
-            SDL_SetRenderDrawColor(app.context.renderer, 55, 55, 55, 255);
+            Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
             SDL_RenderFillRectF(app.context.renderer, &fRect);
-            SDL_SetRenderDrawColor(app.context.renderer, 155, 25, 0, 255);
+            Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
           }
 
           Text::Render(app.context.renderer, app.context.font, button.text.c_str(), dRect.x, dRect.y);
           y += (float)rect.h;
         }
-        SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
       }
     }
   }
@@ -259,14 +247,13 @@ namespace Menu {
   void Render_Menu_Selected(App::App &app) {
     for (auto &button: menu) {
       if (button.render) {
-        SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
         SDL_RenderFillRectF(app.context.renderer, &button.subPanel);
-        SDL_SetRenderDrawColor(app.context.renderer, 200, 200, 200, 100);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
         SDL_RenderDrawRectF(app.context.renderer, &button.subPanel);
       }
     }
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
-
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
   }
 
   void Render(App::App &app) {
@@ -308,56 +295,23 @@ namespace Menu {
 
         if (Point_FRect_Intersect(cursor, button.panel)) {
           //highlight
-          button.colorIndex = 1;
+          button.colorIndex = Graphics::DEEP_PURPLE;
           //toggle rendering panel at index
           if (app.menuOpen) {
             button.render = true;
           }
         }
         else {
-          button.colorIndex = 0;
+          button.colorIndex = Graphics::COOL_GRAY;
         }
       }
     }
     else {
       for (auto &button: menu) {
         if (!button.render) {
-          button.colorIndex = 0;
+          button.colorIndex = Graphics::COOL_GRAY;
         }
       }
     }
-//
-//    for (int i = 0; i < menu.size(); ++i) {
-//      if (menu[i].render) {
-//        float x = menu[i].subPanel.x;
-//        float y = menu[i].subPanel.y;
-//        float w = menu[i].subPanel.w;
-//        float h = menu[i].subPanel.h;
-//        float spacing = 5.0f;
-//
-//        //render to text, not every frame
-//        float subMenuH = 0.0f;
-//        for (const auto &subpanel :subPanels[i]) {
-//          SDL_FRect dRect = {x + spacing, y, w, h};
-//          auto rect = Text::Render(app.context.renderer, app.context.font, subpanel.c_str(), dRect.x, dRect.y);
-//          auto fRect = Rect_To_FRect(rect);
-//          fRect.w = menu[i].subPanel.w;
-//          if (Point_FRect_Intersect(Mouse::Cursor_Point(), fRect)) {
-//            std::cout << subpanel << std::endl;
-//          }
-//
-//          if (rect.h > 0.0f)
-//            subMenuH = rect.h;
-//
-//          rect.w += (int)spacing * 2;
-//          rect.x -= (int)spacing;
-//          y += subMenuH;
-//        }
-//      }
-//    }
   }
-  //check with option is clicked
-  //open panel with more options that can be clicked
-  //the panel size will depend on the number of options
-  //these option will be function pointers to actions ie open/close/quit
 }

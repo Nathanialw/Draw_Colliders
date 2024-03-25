@@ -20,40 +20,35 @@
 namespace Center::Left {
 
   void Render(App::App &app) {
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.left.body);
-    SDL_SetRenderDrawColor(app.context.renderer, 25, 25, 25, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.left.body);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.left.search);
     if (app.filterImages && app.interface.left.filteredIndexes.empty() && !app.filterText.empty())
-      SDL_SetRenderDrawColor(app.context.renderer, 255, 125, 125, 255);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
     else
-      SDL_SetRenderDrawColor(app.context.renderer, 125, 125, 125, 255);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.left.search);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 
     auto caretRect = Text::Render(app.context.renderer, app.context.font, app.filterText.c_str(), app.panel.mainPanel.left.search.x + app.uiPanels.spacing, app.panel.mainPanel.left.search.y);
 
     if (app.filterImages) { //render caret
-      SDL_SetRenderDrawColor(app.context.renderer, 255, 255, 255, 255);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
       SDL_RenderDrawLineF(app.context.renderer, (float) caretRect.x + (float) caretRect.w, (float) caretRect.y, (float) caretRect.x + (float) caretRect.w, (float) caretRect.y + (float) caretRect.h);
-      SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
     }
 
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.left.scroll.panel);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 25, 125, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.left.scroll.panel);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.left.scroll.bar);
-    SDL_SetRenderDrawColor(app.context.renderer, 152, 25, 125, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.left.scroll.bar);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 
     float x = app.panel.mainPanel.left.body.x;
     float y = app.panel.mainPanel.left.body.y;
@@ -86,11 +81,10 @@ namespace Center::Left {
               app.panel.mainPanel.left.body.w - (app.uiPanels.spacing * 2.0f),
               dRect.h,
           };
-          SDL_SetRenderDrawColor(app.context.renderer, 100, 100, 200, 255);
+          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
           SDL_RenderFillRectF(app.context.renderer, &rect);
-          SDL_SetRenderDrawColor(app.context.renderer, 155, 155, 155, 255);
+          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
           SDL_RenderDrawRectF(app.context.renderer, &rect);
-          SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
         }
         SDL_RenderCopyF(app.context.renderer, app.interface.left.images[filterIndex].texture.texture, nullptr, &dRect);
         SDL_Rect rect = {
@@ -122,11 +116,10 @@ namespace Center::Left {
               app.panel.mainPanel.left.body.w - (app.uiPanels.spacing * 2.0f),
               dRect.h,
           };
-          SDL_SetRenderDrawColor(app.context.renderer, 100, 100, 200, 255);
+          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
           SDL_RenderFillRectF(app.context.renderer, &rect);
-          SDL_SetRenderDrawColor(app.context.renderer, 155, 155, 155, 255);
+          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
           SDL_RenderDrawRectF(app.context.renderer, &rect);
-          SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
         }
         SDL_RenderCopyF(app.context.renderer, app.interface.left.images[i].texture.texture, nullptr, &dRect);
 
@@ -213,12 +206,12 @@ namespace Center::Left {
         app.interface.left.images[currentImage.index] = currentImage;
       }
       app.interface.center = image;
-      app.selectedShape.shape = Graphics::SIZE;
-      app.selectedVertex.shape = Graphics::SIZE;
+      app.selectedShape.shape = Shape::SIZE;
+      app.selectedVertex.shape = Shape::SIZE;
 
       //clear and repopulate shape list
       Data::Shape_List shapeList;
-      for (int i = 0; i < Graphics::Shape::SIZE; ++i) {
+      for (int i = 0; i < Shape::SIZE; ++i) {
         for (int j = 0; j < app.interface.center.shapes[i].size(); ++j) {
           shapeList.shapeList[i].push_back(std::to_string(j));
         }

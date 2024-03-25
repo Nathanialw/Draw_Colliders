@@ -84,11 +84,11 @@ namespace Center::Center {
 
   bool Update_Image(App::App &app) {
     if (app.moveImage || app.moveVertex || app.zoomToMouse) {
-      if (app.vertex.shape == Graphics::CIRCLE && app.vertex.indexVertex == 1) {
+      if (app.vertex.shape == Shape::CIRCLE && app.vertex.indexVertex == 1) {
         int x;
         int y;
         SDL_GetMouseState(&x, &y);
-        auto r = (app.interface.center.shapes[Graphics::CIRCLE][app.vertex.indexPolygon].vertices[1].y - app.interface.center.shapes[Graphics::CIRCLE][app.vertex.indexPolygon].vertices[0].y) * app.interface.center.texture.scale;
+        auto r = (app.interface.center.shapes[Shape::CIRCLE][app.vertex.indexPolygon].vertices[1].y - app.interface.center.shapes[Shape::CIRCLE][app.vertex.indexPolygon].vertices[0].y) * app.interface.center.texture.scale;
         int oY = app.initialPosition.y - y;
         if (oY > r) oY = r;
         app.offset = {0, (float)oY};
@@ -115,77 +115,77 @@ namespace Center::Center {
   }
 
   bool Set_Rect_Vertexes(App::App &app) {
-    for (int i = 0; i < app.interface.center.shapes[Graphics::AABB][app.vertex.indexPolygon].vertices.size() ; ++i) {
+    for (int i = 0; i < app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices.size() ; ++i) {
       if (app.vertex.indexVertex == 0) { //top left
         if (i == 1)
-          app.interface.center.shapes[Graphics::AABB][app.vertex.indexPolygon].vertices[1].y -= app.offset.y / app.interface.center.texture.scale;
+          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[1].y -= app.offset.y / app.interface.center.texture.scale;
         else if (i == 3)
-          app.interface.center.shapes[Graphics::AABB][app.vertex.indexPolygon].vertices[3].x -= app.offset.x / app.interface.center.texture.scale;
+          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[3].x -= app.offset.x / app.interface.center.texture.scale;
       }
       else if (app.vertex.indexVertex == 1) { //top right
         if (i == 0)
-          app.interface.center.shapes[Graphics::AABB][app.vertex.indexPolygon].vertices[0].y -= app.offset.y / app.interface.center.texture.scale;
+          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[0].y -= app.offset.y / app.interface.center.texture.scale;
         else if (i == 2)
-          app.interface.center.shapes[Graphics::AABB][app.vertex.indexPolygon].vertices[2].x -= app.offset.x / app.interface.center.texture.scale;
+          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[2].x -= app.offset.x / app.interface.center.texture.scale;
       }
       else if (app.vertex.indexVertex == 2) { //bottom right
         if (i == 1)
-          app.interface.center.shapes[Graphics::AABB][app.vertex.indexPolygon].vertices[1].x -= app.offset.x / app.interface.center.texture.scale;
+          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[1].x -= app.offset.x / app.interface.center.texture.scale;
         else if (i == 3)
-          app.interface.center.shapes[Graphics::AABB][app.vertex.indexPolygon].vertices[3].y -= app.offset.y / app.interface.center.texture.scale;
+          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[3].y -= app.offset.y / app.interface.center.texture.scale;
       }
       else if (app.vertex.indexVertex == 3) { // bottom left
         if (i == 2)
-          app.interface.center.shapes[Graphics::AABB][app.vertex.indexPolygon].vertices[2].y -= app.offset.y / app.interface.center.texture.scale;
+          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[2].y -= app.offset.y / app.interface.center.texture.scale;
         else if (i == 0)
-          app.interface.center.shapes[Graphics::AABB][app.vertex.indexPolygon].vertices[0].x -= app.offset.x / app.interface.center.texture.scale;
+          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[0].x -= app.offset.x / app.interface.center.texture.scale;
       }
     }
     return true;
   }
 
   bool Set_Vertex(App::App &app) {
-    if (app.vertex.shape == Graphics::SIZE) {
+    if (app.vertex.shape == Shape::SIZE) {
       return false;
     }
 
     if (!app.interface.center.shapes[app.vertex.shape].empty()) {
       if (!app.interface.center.shapes[app.vertex.shape][app.vertex.indexPolygon].vertices.empty()) {
         if (app.vertex.indexVertex == -1 && app.selectedShape.indexPolygon < app.interface.center.shapes[app.selectedShape.shape].size()) {
-          if (app.selectedShape.shape == Graphics::SIZE)
+          if (app.selectedShape.shape == Shape::SIZE)
             return false;
           for (int i = 0; i < app.interface.center.shapes[app.selectedShape.shape][app.selectedShape.indexPolygon].vertices.size(); ++i) {
             Set_vertex(app, app.interface.center.shapes[app.selectedShape.shape][app.selectedShape.indexPolygon].vertices[i]);
             app.interface.center.shapes[app.selectedShape.shape][app.vertex.indexPolygon].moving[i] = false;
           }
         } else {
-          if (app.selectedVertex.shape == Graphics::AABB)
+          if (app.selectedVertex.shape == Shape::AABB)
             Set_Rect_Vertexes(app);
           Set_vertex(app, app.interface.center.shapes[app.vertex.shape][app.vertex.indexPolygon].vertices[app.vertex.indexVertex]);
           app.interface.center.shapes[app.vertex.shape][app.vertex.indexPolygon].moving[app.vertex.indexVertex] = false;
         }
       }
       app.offset = {0, 0};
-      app.vertex = {Graphics::SIZE, 0, 0};
+      app.vertex = {Shape::SIZE, 0, 0};
       return true;
     }
     return false;
   }
 
-  void Set_Color(App::App &app, const int &i, const Graphics::Shape &shape) {
+  void Set_Color(App::App &app, const int &i, const Shape::shape &shape) {
     if (app.selectedShape.shape == shape && app.selectedShape.indexPolygon == i)
       SDL_SetRenderDrawColor(app.context.renderer, 0, 255, 255, 255);
     else
       SDL_SetRenderDrawColor(app.context.renderer, 255, 0, 0, 255);
   }
 
-  void Reset_Color(App::App &app, const int &i, const Graphics::Shape &shape) {
+  void Reset_Color(App::App &app, const int &i, const Shape::shape &shape) {
     if (app.selectedShape.shape == shape && app.selectedShape.indexPolygon == i)
       SDL_SetRenderDrawColor(app.context.renderer, 255, 0, 0, 255);
   }
 
   void Update_Vertex_Render(App::App &app, SDL_FRect &rect, const int &i, const int &j) {
-    if (app.moveVertex && app.vertex.shape == Graphics::AABB) {
+    if (app.moveVertex && app.vertex.shape == Shape::AABB) {
       if (app.vertex.indexPolygon == i) {
         if (app.vertex.indexVertex == 0) { //top left
           if (j == 1)
@@ -220,15 +220,15 @@ namespace Center::Center {
     SDL_SetRenderDrawColor(app.context.renderer, 255, 0, 0, 255);
     SDL_Color shapeFill = {200, 200, 200, 100};
 
-    for (int k = 0; k < Graphics::Shape::SIZE; ++k) {
+    for (int k = 0; k < Shape::SIZE; ++k) {
       for (int i = 0; i < app.interface.center.shapes[k].size(); ++i) {
         std::vector<SDL_FPoint> points;
 
-        Set_Color(app, i, (Graphics::Shape)k);
+        Set_Color(app, i, (Shape::shape)k);
         for (int j = 0; j < app.interface.center.shapes[k][i].vertices.size(); ++j) {
           SDL_FRect rect = Vertex_To_Rect(app, app.interface.center.shapes[k][i].vertices[j], o, app.interface.center.shapes[k][i].moving[j]);
           //updates rect vertices position, needs to be moved
-          if (k == Graphics::Shape::AABB)
+          if (k == Shape::AABB)
             Update_Vertex_Render(app, rect, i, j);
           points.push_back({rect.x + o.r, rect.y + o.r});
 
@@ -242,7 +242,7 @@ namespace Center::Center {
             SDL_SetTextureColorMod(app.texture.vertex, 255, 0, 0);
 
           SDL_RenderCopyF(app.context.renderer, app.texture.vertex, nullptr, &rect);
-          Set_Color(app, i, (Graphics::Shape)k);
+          Set_Color(app, i, (Shape::shape)k);
 
           //renders coordinates text, maybe needs to be moved
           int x = (int)app.interface.center.shapes[k][i].vertices[j].x;
@@ -251,9 +251,9 @@ namespace Center::Center {
           Text::Render(app.context.renderer, app.context.font, coords.c_str(), rect.x + (o.r * 2), rect.y - o.r);
         }
 
-        if (k == Graphics::Shape::CIRCLE) {
+        if (k == Shape::shape::CIRCLE) {
           SDL_Color color;
-          (app.selectedShape.shape == Graphics::CIRCLE && app.selectedShape.indexPolygon == i) ? color = {0,255,255,255} : color = {255,0,0,255};
+          (app.selectedShape.shape == Shape::CIRCLE && app.selectedShape.indexPolygon == i) ? color = {0,255,255,255} : color = {255,0,0,255};
           float r = points[1].y - points[0].y;
 
 //          int g = 0;
@@ -279,7 +279,7 @@ namespace Center::Center {
           thickCircleRGBA(app.context.renderer, points[0].x, points[0].y, r, color.r, color.g, color.b, color.a, 2);
         }
 
-        else if (k == Graphics::Shape::POLYGON || k == Graphics::Shape::AABB) {
+        else if (k == Shape::POLYGON || k == Shape::AABB) {
           std::vector<double> xPolygonPoints;
           std::vector<double> yPolygonPoints;
 
@@ -314,11 +314,11 @@ namespace Center::Center {
 //          SDL_RenderCopyF(app.context.renderer, app.texture.shapes[app.interface.center.index][k][i], nullptr, &rect);
           aaFilledPolygonRGBA(app.context.renderer, xPolygonPoints.data(), yPolygonPoints.data(), (int) yPolygonPoints.size(), shapeFill.r, shapeFill.g, shapeFill.b, shapeFill.a);
         }
-        Set_Color(app, i, (Graphics::Shape)k);
+        Set_Color(app, i, (Shape::shape)k);
         SDL_RenderDrawLinesF(app.context.renderer, points.data(), (int)points.size());
         if (points.size() > 2)
           SDL_RenderDrawLineF(app.context.renderer, points[(int)points.size() - 1].x, points[(int)points.size() - 1].y, points[0].x, points[0].y);
-        Reset_Color(app, i, (Graphics::Shape)k);
+        Reset_Color(app, i, (Shape::shape)k);
       }
     }
 //    app.zoom = false;
@@ -326,6 +326,12 @@ namespace Center::Center {
   }
 
   void Render_Image(App::App &app) {
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.panel);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.panel);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
+
     if (app.interface.center.texture.texture) {
       SDL_Point size;
       SDL_QueryTexture(app.interface.center.texture.texture, nullptr, nullptr, &size.x, &size.y);
@@ -345,6 +351,12 @@ namespace Center::Center {
        rect.x -= (float) app.interface.center.texture.offset.x;
        rect.y -= (float) app.interface.center.texture.offset.y;
 
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+      SDL_RenderFillRectF(app.context.renderer, &rect);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
+      SDL_RenderDrawRectF(app.context.renderer, &rect);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
+
       SDL_RenderCopyF(app.context.renderer, app.interface.center.texture.texture, nullptr, &rect);
     }
     Render_Shapes(app);
@@ -354,11 +366,9 @@ namespace Center::Center {
     float x = app.panel.mainPanel.center.shapes.body.x;
     float y = app.panel.mainPanel.center.shapes.body.y;
     float w = 40.0f;
-//    float h = 25.0f;
-//    float spacing = 2.0f;
     int numElements= 0;
 
-    for (int j = 0; j < Graphics::Shape::SIZE; ++j)
+    for (int j = 0; j < Shape::shape::SIZE; ++j)
       numElements += app.interface.shapeList.shapeList[j].size();
 
     int maxElementsToDisplay = (int)(app.panel.mainPanel.center.shapes.body.h / (app.panel.mainPanel.center.shapes.scroll.elementHeight + app.panel.mainPanel.center.shapes.scroll.elementSpacing)) + 1;
@@ -371,9 +381,8 @@ namespace Center::Center {
                                     numElements,
                                     maxElementsToDisplay);
 
-    for (int j = 0; j < Graphics::Shape::SIZE; ++j) {
+    for (int j = 0; j < Shape::shape::SIZE; ++j) {
       int min = 0;
-      int max = 0;
       if (index.min > app.interface.shapeList.shapeList[j].size()) {
         index.min -= app.interface.shapeList.shapeList[j].size();
         continue;
@@ -381,9 +390,6 @@ namespace Center::Center {
       else {
         min = index.min;
         index.min = 0;
-        //the rendering might be overflowing the window and I may need to cap this
-//        max = index.max;
-//        index.max;
       }
       for (int i = min; i < app.interface.shapeList.shapeList[j].size(); ++i) {
         SDL_FRect dRect = {x, y + app.panel.mainPanel.center.shapes.scroll.elementSpacing, w - (app.panel.mainPanel.center.shapes.scroll.elementSpacing * 2.0f), app.panel.mainPanel.center.shapes.scroll.elementHeight};
@@ -394,11 +400,11 @@ namespace Center::Center {
               app.panel.mainPanel.center.shapes.body.w - (app.panel.mainPanel.center.shapes.scroll.elementSpacing * 2.0f),
               dRect.h,
           };
-          SDL_SetRenderDrawColor(app.context.renderer, 100, 100, 200, 255);
+          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
           SDL_RenderFillRectF(app.context.renderer, &rect);
-          SDL_SetRenderDrawColor(app.context.renderer, 155, 155, 155, 255);
+          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DARK_INDIGO]);
           SDL_RenderDrawRectF(app.context.renderer, &rect);
-          SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
         }
 
         SDL_Rect rect = {
@@ -421,7 +427,7 @@ namespace Center::Center {
     float spacing = 2.0f;
     int numElements= 0;
 
-    for (int j = 0; j < Graphics::Shape::SIZE; ++j)
+    for (int j = 0; j < Shape::SIZE; ++j)
       numElements += app.interface.shapeList.shapeList[j].size();
 
     int maxElementsToDisplay = (int)(app.panel.mainPanel.center.shapes.body.h / (h + spacing)) + 1;
@@ -433,7 +439,7 @@ namespace Center::Center {
                                     numElements,
                                     maxElementsToDisplay);
 
-    for (int j = 0; j < Graphics::Shape::SIZE; ++j) {
+    for (int j = 0; j < Shape::SIZE; ++j) {
       int min = 0;
       int max = 0;
       if (index.min > app.interface.shapeList.shapeList[j].size()) {
@@ -456,12 +462,12 @@ namespace Center::Center {
         };
         auto cursor = Mouse::Cursor_Point();
         if (Point_FRect_Intersect(cursor, rect) && i != 0)
-          return {Graphics::Shape(j), i - 1};
+          return {Shape::shape(j), i - 1};
 
         y += h + spacing;
       }
     }
-    return {Graphics::Shape::SIZE, 0};
+    return {Shape::SIZE, 0};
   }
 
 
@@ -474,7 +480,7 @@ namespace Center::Center {
 
   bool Scroll(App::App &app, const Sint32 &scroll) {
     int numElements= 0;
-    for (int j = 0; j < Graphics::Shape::SIZE; ++j)
+    for (int j = 0; j < Shape::SIZE; ++j)
       numElements += app.interface.shapeList.shapeList[j].size();
 
     Scroll_Bar::Scroll(app,
@@ -490,79 +496,71 @@ namespace Center::Center {
   }
 
   void Render_Shape_List(App::App &app) {
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.panel);
-    SDL_SetRenderDrawColor(app.context.renderer, 155, 155, 155, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.panel);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderLeft);
 
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.body);
-    SDL_SetRenderDrawColor(app.context.renderer, 115, 55, 155, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.body);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderLeft);
 
     Render_Shape_List_Names(app);
 
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.expanderLeft);
-    SDL_SetRenderDrawColor(app.context.renderer, 155, 155, 55, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.expanderLeft);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderLeft);
 
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.scroll.panel);
-    SDL_SetRenderDrawColor(app.context.renderer, 255, 0, 55, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.scroll.panel);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderRight);
 
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.scroll.bar);
-    SDL_SetRenderDrawColor(app.context.renderer, 255, 0, 55, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.scroll.bar);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderRight);
   };
 
   void Render_Left_Scroll(App::App &app) {
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.expanderLeft);
-    SDL_SetRenderDrawColor(app.context.renderer, 155, 155, 155, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.expanderLeft);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderLeft);
   };
 
   void Render_Right_Scroll(App::App &app) {
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.expanderRight);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 255, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.expanderRight);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderRight);
   };
 
   void Render_Button_Bar(App::App &app) {
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.buttonBar.panel);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 255, 255, 255);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.buttonBar.panel);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 
     for (const auto &btn: app.panel.mainPanel.center.buttonBar.buttons) {
       if (btn.texture) {
-        SDL_SetRenderDrawColor(app.context.renderer, 200, 200, 200, 255);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
         SDL_RenderFillRectF(app.context.renderer, &btn.button);
         SDL_RenderCopyF(app.context.renderer, btn.texture, nullptr, &btn.button);
-        SDL_SetRenderDrawColor(app.context.renderer, 0, 255, 255, 255);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
         SDL_RenderDrawRectF(app.context.renderer, &btn.button);
-        SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
       }
     }
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.buttonBar);
   };
 

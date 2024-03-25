@@ -12,7 +12,17 @@
 
 namespace Shape {
 
-  struct  Shape {
+  enum shape {
+    POINT,
+    LINE,
+    CIRCLE,
+    AABB,
+    POLYGON,
+    SIZE,
+  };
+
+
+  struct Shape {
     std::vector<SDL_FPoint> vertices{};
     std::vector<bool> moving{};
 

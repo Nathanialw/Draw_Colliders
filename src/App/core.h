@@ -31,13 +31,13 @@ namespace App {
   };
 
   struct Vertex {
-    Graphics::Shape shape = Graphics::SIZE;
+    ::Shape::shape shape = ::Shape::SIZE;
     int indexPolygon = 0;
     int indexVertex = 0;
   };
 
   struct Shape {
-    Graphics::Shape shape = Graphics::SIZE;
+    ::Shape::shape shape = ::Shape::SIZE;
     int indexPolygon = 0;
   };
 

@@ -27,7 +27,7 @@ namespace Scroll_Bar {
 
   //set body.w += bar.w
   //set bar.w -= bar.w and bar.x += bar.w
-  bool Set_Bar_Size(const float &numElement, const float &num, const float &panelH, float &barH) {
+  bool Set_Bar_Size(const float &numElement, const int &num, const float &panelH, float &barH) {
     if ((numElement - num) < 0) {
       float percentSize = numElement / num;
       barH = percentSize * panelH;

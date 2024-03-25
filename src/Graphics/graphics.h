@@ -8,8 +8,33 @@
 #include "vector"
 #include "array"
 #include "../../lib/SDL_FontCache/SDL_FontCache.h"
+#include "../App/Bounding_Boxes/shape.h"
 
 namespace Graphics {
+
+//  dark indigo #2C2C54 44 44 84
+//  deep purple-gray #474787 71 71 135
+//  cool gray #AAABB8
+//  light gray #ECECEC
+
+  enum Color {
+    DARK_INDIGO,
+    DEEP_PURPLE,
+    COOL_GRAY,
+    LIGHT_GRAY,
+    BLACK,
+    WHITE,
+    SIZE,
+  };
+
+  static SDL_Color color[(int)Color::SIZE] = {
+      {44, 44, 84, 255},
+      {71, 71, 135, 255},
+      {170, 171, 184, 255},
+      {236, 236, 236, 255},
+      {0, 0, 0, 255},
+      {200, 200, 200, 255},
+  };
 
   struct Image_Import {
     SDL_Texture* texture = nullptr;
@@ -47,15 +72,6 @@ namespace Graphics {
   struct Button_Bar {
     SDL_FRect panel{};
     std::array<Button, ButtonBarSize> buttons;
-  };
-
-  enum Shape {
-    POINT,
-    LINE,
-    CIRCLE,
-    AABB,
-    POLYGON,
-    SIZE,
   };
 
   struct Shapes {
@@ -148,7 +164,7 @@ namespace Graphics {
     SDL_Texture* alphaTexture = nullptr;
 
     //image index // shape type // shape index
-    std::vector<std::array<std::vector<SDL_Texture*>, Graphics::SIZE>> shapes{};
+    std::vector<std::array<std::vector<SDL_Texture*>, Shape::SIZE>> shapes{};
     // imported images
     std::vector<SDL_Texture*> images;
 
@@ -186,6 +202,8 @@ namespace Graphics {
     float space = 2.0f;
     float buttonBarHeight = 50.0f;
   };
+
+  void SetRenderDrawColor(SDL_Renderer *renderer, const SDL_Color &color);
 
   Panels Set_Panels (SDL_Window* window, UI_Panels &ui_panels);
   Context CreateWindowAndRenderer();
