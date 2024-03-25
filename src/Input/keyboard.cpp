@@ -52,7 +52,6 @@ namespace Keyboard {
           }
         }
       }
-      return true;
     }
 
     //application hotkeys
