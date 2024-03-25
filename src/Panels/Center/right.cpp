@@ -8,19 +8,19 @@
 
 namespace Center::Right {
   void Render(App::App &app) {
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.right.body);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.right.body);
 
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.right.scroll.panel);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.right.scroll.panel);
 
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.right.scroll.bar);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.right.scroll.bar);
 
     int maxElementsToDisplay = (int)(app.panel.mainPanel.right.body.h / (app.panel.mainPanel.right.scroll.elementHeight + app.panel.mainPanel.right.scroll.elementSpacing)) + 1;
@@ -52,7 +52,7 @@ namespace Center::Right {
       SDL_FRect fRect = {(x + (float)rect.w  - (app.panel.mainPanel.right.scroll.elementSpacing * 2.0f + app.uiPanels.scrollWidth)), (y + app.panel.mainPanel.right.scroll.elementSpacing), (float)rect.h, (float)rect.h};
 
       if (app.interface.right.optionInput[i].type == Data::CHECKBOX) {
-        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
         SDL_RenderFillRectF(app.context.renderer, &fRect);
         (app.interface.right.option[i].isChecked) ? SDL_RenderCopyF(app.context.renderer, app.texture.checkedBox, nullptr, &fRect) : SDL_RenderCopyF(app.context.renderer, app.texture.uncheckedBox, nullptr, &fRect);
       }

@@ -135,7 +135,6 @@ namespace Graphics {
     SDL_FRect rect = {0.0f, 0.0f, (float)w.w, (float)w.h };
     SDL_RenderFillRectF(context.renderer, &rect);
     SDL_RenderPresent(context.renderer);
-    SDL_SetRenderDrawColor(context.renderer, 0,0,0, 255);
   }
 
   void Wait(bool &loaded) {

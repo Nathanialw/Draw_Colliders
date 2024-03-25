@@ -15,13 +15,6 @@
 namespace Render {
   using namespace Graphics;
 
-  void Render_Panel (const App::App &app, const SDL_FRect &rect, const int r, const int g, const int b) {
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
-    SDL_RenderFillRectF(app.context.renderer, &rect);
-    SDL_SetRenderDrawColor(app.context.renderer, r, g, b, 255);
-    SDL_RenderDrawRectF(app.context.renderer, &rect);
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
-  }
 
   void Copy(App::App &app) {
 //    Render_Panel(app, app.panel.mainPanel.center.panel, 50, 50, 100);
@@ -30,7 +23,7 @@ namespace Render {
     Center::Left::Render(app);
     Bottom::Render(app);
 
-    Render_Panel(app, app.panel.top.panel, 50, 155, 100);
+//    Render_Panel(app, app.panel.top.panel, 50, 155, 100);
     ::Top::Render_Button_Bar(app);
     ::Menu::Render(app);
   }

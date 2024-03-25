@@ -18,10 +18,12 @@ namespace Graphics {
 //  light gray #ECECEC
 
   enum Color {
-    DARK_INDIGO,
-    DEEP_PURPLE,
-    COOL_GRAY,
-    LIGHT_GRAY,
+    DARK_BORDERS,
+    SELECTED,
+    BACKGROUND,
+    BORDERS,
+    SHAPESELECTED,
+    SHAPE,
     BLACK,
     WHITE,
     SIZE,
@@ -32,6 +34,8 @@ namespace Graphics {
       {71, 71, 135, 255},
       {170, 171, 184, 255},
       {236, 236, 236, 255},
+      {0, 255, 255, 255},
+      {255, 0, 0, 255},
       {0, 0, 0, 255},
       {200, 200, 200, 255},
   };

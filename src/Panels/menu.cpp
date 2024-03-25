@@ -17,7 +17,7 @@ namespace Menu {
 
     SDL_FRect panel{};
     SDL_FRect subPanel{};
-    Graphics::Color colorIndex = Graphics::COOL_GRAY;
+    Graphics::Color colorIndex = Graphics::BACKGROUND;
     std::string text;
     bool render = false;
   };
@@ -128,9 +128,9 @@ namespace Menu {
   }
 
   void Render_Panel(App::App &app) {
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.menu.panel);
-//    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+//    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
 //    SDL_RenderDrawRectF(app.context.renderer, &app.panel.menu.panel);
     Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
   }
@@ -175,7 +175,7 @@ namespace Menu {
         float w = i.subPanel.w;
         float h = i.subPanel.h;
         float spacing = 5.0f;
-        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
 
         //render to text, not every frame
         for (const auto &button : i.subMenu) {
@@ -194,9 +194,9 @@ namespace Menu {
               (float)rect.h + spacing};
 
           if (Point_FRect_Intersect(Mouse::Cursor_Point(), fRect)) {
-            Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
+            Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::SELECTED]);
             SDL_RenderFillRectF(app.context.renderer, &fRect);
-            Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+            Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
           }
 
           Text::Render(app.context.renderer, app.context.font, button.text.c_str(), dRect.x, dRect.y);
@@ -247,9 +247,9 @@ namespace Menu {
   void Render_Menu_Selected(App::App &app) {
     for (auto &button: menu) {
       if (button.render) {
-        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
         SDL_RenderFillRectF(app.context.renderer, &button.subPanel);
-        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
         SDL_RenderDrawRectF(app.context.renderer, &button.subPanel);
       }
     }
@@ -295,21 +295,21 @@ namespace Menu {
 
         if (Point_FRect_Intersect(cursor, button.panel)) {
           //highlight
-          button.colorIndex = Graphics::DEEP_PURPLE;
+          button.colorIndex = Graphics::SELECTED;
           //toggle rendering panel at index
           if (app.menuOpen) {
             button.render = true;
           }
         }
         else {
-          button.colorIndex = Graphics::COOL_GRAY;
+          button.colorIndex = Graphics::BACKGROUND;
         }
       }
     }
     else {
       for (auto &button: menu) {
         if (!button.render) {
-          button.colorIndex = Graphics::COOL_GRAY;
+          button.colorIndex = Graphics::BACKGROUND;
         }
       }
     }

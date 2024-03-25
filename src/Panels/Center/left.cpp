@@ -20,34 +20,34 @@
 namespace Center::Left {
 
   void Render(App::App &app) {
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.left.body);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.left.body);
 
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.left.search);
     if (app.filterImages && app.interface.left.filteredIndexes.empty() && !app.filterText.empty())
-      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::SELECTED]);
     else
-      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.left.search);
 
     auto caretRect = Text::Render(app.context.renderer, app.context.font, app.filterText.c_str(), app.panel.mainPanel.left.search.x + app.uiPanels.spacing, app.panel.mainPanel.left.search.y);
 
     if (app.filterImages) { //render caret
-      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::SELECTED]);
       SDL_RenderDrawLineF(app.context.renderer, (float) caretRect.x + (float) caretRect.w, (float) caretRect.y, (float) caretRect.x + (float) caretRect.w, (float) caretRect.y + (float) caretRect.h);
     }
 
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.left.scroll.panel);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.left.scroll.panel);
 
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.left.scroll.bar);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.left.scroll.bar);
 
     float x = app.panel.mainPanel.left.body.x;
@@ -81,9 +81,9 @@ namespace Center::Left {
               app.panel.mainPanel.left.body.w - (app.uiPanels.spacing * 2.0f),
               dRect.h,
           };
-          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
+          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::SELECTED]);
           SDL_RenderFillRectF(app.context.renderer, &rect);
-          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
           SDL_RenderDrawRectF(app.context.renderer, &rect);
         }
         SDL_RenderCopyF(app.context.renderer, app.interface.left.images[filterIndex].texture.texture, nullptr, &dRect);
@@ -116,9 +116,9 @@ namespace Center::Left {
               app.panel.mainPanel.left.body.w - (app.uiPanels.spacing * 2.0f),
               dRect.h,
           };
-          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
+          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::SELECTED]);
           SDL_RenderFillRectF(app.context.renderer, &rect);
-          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
           SDL_RenderDrawRectF(app.context.renderer, &rect);
         }
         SDL_RenderCopyF(app.context.renderer, app.interface.left.images[i].texture.texture, nullptr, &dRect);

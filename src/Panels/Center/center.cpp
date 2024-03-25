@@ -174,14 +174,14 @@ namespace Center::Center {
 
   void Set_Color(App::App &app, const int &i, const Shape::shape &shape) {
     if (app.selectedShape.shape == shape && app.selectedShape.indexPolygon == i)
-      SDL_SetRenderDrawColor(app.context.renderer, 0, 255, 255, 255);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::SHAPESELECTED]);
     else
-      SDL_SetRenderDrawColor(app.context.renderer, 255, 0, 0, 255);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::SHAPE]);
   }
 
   void Reset_Color(App::App &app, const int &i, const Shape::shape &shape) {
     if (app.selectedShape.shape == shape && app.selectedShape.indexPolygon == i)
-      SDL_SetRenderDrawColor(app.context.renderer, 255, 0, 0, 255);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::SHAPESELECTED]);
   }
 
   void Update_Vertex_Render(App::App &app, SDL_FRect &rect, const int &i, const int &j) {
@@ -217,7 +217,6 @@ namespace Center::Center {
 
   void Render_Shapes(App::App &app) {
     auto o = App::Calc_Offset(app);
-    SDL_SetRenderDrawColor(app.context.renderer, 255, 0, 0, 255);
     SDL_Color shapeFill = {200, 200, 200, 100};
 
     for (int k = 0; k < Shape::SIZE; ++k) {
@@ -322,13 +321,12 @@ namespace Center::Center {
       }
     }
 //    app.zoom = false;
-    SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
   }
 
   void Render_Image(App::App &app) {
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.panel);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.panel);
     Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
 
@@ -351,9 +349,9 @@ namespace Center::Center {
        rect.x -= (float) app.interface.center.texture.offset.x;
        rect.y -= (float) app.interface.center.texture.offset.y;
 
-      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
       SDL_RenderFillRectF(app.context.renderer, &rect);
-      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
+      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::SELECTED]);
       SDL_RenderDrawRectF(app.context.renderer, &rect);
       Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
 
@@ -400,9 +398,9 @@ namespace Center::Center {
               app.panel.mainPanel.center.shapes.body.w - (app.panel.mainPanel.center.shapes.scroll.elementSpacing * 2.0f),
               dRect.h,
           };
-          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DEEP_PURPLE]);
+          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::SELECTED]);
           SDL_RenderFillRectF(app.context.renderer, &rect);
-          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DARK_INDIGO]);
+          Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::DARK_BORDERS]);
           SDL_RenderDrawRectF(app.context.renderer, &rect);
           Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
         }
@@ -496,67 +494,67 @@ namespace Center::Center {
   }
 
   void Render_Shape_List(App::App &app) {
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.panel);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.panel);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderLeft);
 
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.body);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.body);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderLeft);
 
     Render_Shape_List_Names(app);
 
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.expanderLeft);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.expanderLeft);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderLeft);
 
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.scroll.panel);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.scroll.panel);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderRight);
 
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.scroll.bar);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.shapes.scroll.bar);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderRight);
   };
 
   void Render_Left_Scroll(App::App &app) {
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.expanderLeft);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.expanderLeft);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderLeft);
   };
 
   void Render_Right_Scroll(App::App &app) {
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.expanderRight);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.expanderRight);
 //    SDL_RenderCopyF(app.context.renderer, app.texture, nullptr, &app.panel.mainPanel.center.expanderRight);
   };
 
   void Render_Button_Bar(App::App &app) {
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
     SDL_RenderFillRectF(app.context.renderer, &app.panel.mainPanel.center.buttonBar.panel);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.center.buttonBar.panel);
 
     for (const auto &btn: app.panel.mainPanel.center.buttonBar.buttons) {
       if (btn.texture) {
-        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::COOL_GRAY]);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
         SDL_RenderFillRectF(app.context.renderer, &btn.button);
         SDL_RenderCopyF(app.context.renderer, btn.texture, nullptr, &btn.button);
-        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::LIGHT_GRAY]);
+        Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
         SDL_RenderDrawRectF(app.context.renderer, &btn.button);
       }
     }

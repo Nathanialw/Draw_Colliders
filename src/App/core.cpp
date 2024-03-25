@@ -184,7 +184,7 @@ namespace App {
     auto o = Calc_Offset(app);
     auto &shape = app.interface.center.shapes;
 
-    for (int k = 0; k < Graphics::SIZE; ++k) {
+    for (int k = 0; k < ::Shape::SIZE; ++k) {
       if (k == ::Shape::CIRCLE) {
         for (int i = 0; i < shape[k].size(); ++i) {
           auto vRect = Vertex_To_Rect(app, shape[k][i].vertices[1], o, shape[k][i].moving[1]);
