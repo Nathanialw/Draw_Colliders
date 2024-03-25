@@ -18,6 +18,15 @@ namespace Text {
     return FC_DrawBoxContainedLine(font, renderer, rect, text);
   }
 
+  FC_Rect Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const float &x, const float &y, const SDL_Color &color, const FC_Scale &scale) {
+    return FC_DrawScale(font, renderer, x, y, scale, color, text);
+  }
+
+  FC_Rect Get_Rect_Size(SDL_Renderer *renderer, FC_Font* font, const char* text, const float &x, const float &y, FC_AlignEnum align) {
+    const FC_Scale scale = {1.0, 1.0f};
+    return FC_GetBounds(font, x, y, align, scale, text);
+  };
+
   std::string Get_File_Name(const std::string &filePath) {
     std::string string = filePath;
 

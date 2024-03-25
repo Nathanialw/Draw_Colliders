@@ -29,23 +29,23 @@ namespace Graphics {
   };
 
   struct ScrollBar {
-    SDL_FRect panel;
-    SDL_FRect bar;
+    SDL_FRect panel{};
+    SDL_FRect bar{};
     float elementHeight = 0.0f;
     float elementSpacing = 0.0f;
     bool show = false;
   };
 
   struct Left_Panel {
-    SDL_FRect panel;
-    SDL_FRect body;
+    SDL_FRect panel{};
+    SDL_FRect body{};
     ScrollBar scroll;
-    SDL_FRect search;
+    SDL_FRect search{};
   };
 
   const int ButtonBarSize = 9;
   struct Button_Bar {
-    SDL_FRect panel;
+    SDL_FRect panel{};
     std::array<Button, ButtonBarSize> buttons;
   };
 
@@ -76,8 +76,8 @@ namespace Graphics {
   };
 
   struct Right_Panel {
-    SDL_FRect panel;
-    SDL_FRect body;
+    SDL_FRect panel{};
+    SDL_FRect body{};
     ScrollBar scroll;
   };
 
@@ -110,7 +110,7 @@ namespace Graphics {
   struct Context {
     SDL_Renderer *renderer{};
     SDL_Window *window{};
-    FC_Font *font;
+    FC_Font *font{};
 
     int width{};
     int height{};

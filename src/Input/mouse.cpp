@@ -3,13 +3,10 @@
 //
 
 #include "SDL2/SDL.h"
-#include "string"
-#include "iostream"
 
 #include "../App/core.h"
 #include "mouse.h"
 #include "actions.h"
-#include "../Utils/utils.h"
 
 #include "../Panels/menu.h"
 #include "../Panels/top.h"

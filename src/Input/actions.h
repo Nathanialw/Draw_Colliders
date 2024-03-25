@@ -24,7 +24,7 @@ namespace Action {
   int Delete_Selected_Shape(App::App &app);
   int Create_Vertex_If_Polygon_Selected(App::App &app);
   int Delete_Vertex_If_Polygon_Selected(App::App &app);
-  int Unused(App::App &app);
+  int UNIMPLEMENTED(App::App &app);
 
   int Delete_Shape(App::App &app);
   int Delete_Vertex(App::App &app);

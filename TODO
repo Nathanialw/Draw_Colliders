@@ -2,7 +2,6 @@
 
 NEEDS
 -right side buttons
--complete main menu dropdowns
 -scroll bars
 -show/hide shapes
 -enforce unique image names
@@ -35,7 +34,7 @@ WANTS
 
 UI
 -grey out add/remove vertex when a polygon is not selected
-
+-small image should be a square, not stretched, size to height and cut off right side if it is too wide, maybe center
 
 bugs
 -circles stop rendering if you zoom into them too closely

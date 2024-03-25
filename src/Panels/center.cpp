@@ -7,10 +7,14 @@
 #include "center.h"
 #include "../Input/mouse.h"
 #include "../App/core.h"
+#include "menu.h"
 
 namespace Center {
   SDL_SystemCursor Mouse(App::App &app) {
     auto cursor = Mouse::Cursor();
+
+    if (Menu::Is_Open())
+      return SDL_SYSTEM_CURSOR_ARROW;
 
     if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor)) {
       if (SDL_HasIntersectionF(&app.panel.mainPanel.left.search, &cursor)) {

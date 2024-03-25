@@ -18,4 +18,7 @@ namespace Text {
 
   FC_Rect Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const float &x, const float &y);
   FC_Rect Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const SDL_Rect &rect);
+  FC_Rect Render(SDL_Renderer *renderer, FC_Font* font, const char* text, const float &x, const float &y, const SDL_Color &color, const FC_Scale &scale);
+
+  FC_Rect Get_Rect_Size(SDL_Renderer *renderer, FC_Font* font, const char* text, const float &x, const float &y, FC_AlignEnum align);
 }

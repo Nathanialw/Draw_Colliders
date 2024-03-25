@@ -328,7 +328,7 @@ namespace Action {
     Action::Delete_Vertex(app);
     return 5;
   }
-  int Unused(App::App &app) {
+  int UNIMPLEMENTED(App::App &app) {
     std::cout << "button unassigned" << std::endl;
     return 5;
   }

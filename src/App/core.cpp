@@ -255,7 +255,7 @@ namespace App {
       return shape;
 
     for (int k = 0; k < Graphics::SIZE; ++k) {
-      for (int i = shapes[k].size() - 1; i >= 0; --i) {
+      for (int i = (int)shapes[k].size() - 1; i >= 0; --i) {
         shape = Check_If_Selected(app, cursor, (Graphics::Shape)k, i);
         if (shape.shape != Graphics::SIZE)
           return shape;
