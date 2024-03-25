@@ -10,12 +10,11 @@
 #include "../../Graphics/text.h"
 #include "../../Input/actions.h"
 #include "../../Input/mouse.h"
-#include "../../../lib/SDL2_gxf/SDL2_gfxPrimitives.h"
 #include "../../UI/scroll_bar.h"
 
 namespace Center::Center {
-  int appMax = 10;
-  int imageMoveMax = 20;
+  const int imageMoveMax = 20;
+  const int appMax = 10;
 
   std::array<Action::Button, Graphics::ButtonBarSize> editButtons = {
       Action::Create_Point,
@@ -67,18 +66,19 @@ namespace Center::Center {
     return true;
   }
 
+  bool Set(int &max, SDL_FPoint &offset, SDL_FPoint &point, bool &moveImage) {
+    max = appMax;
+    point.x = point.x + (float)offset.x;
+    point.y = point.y + (float)offset.y;
+    offset = {0.0f, 0.0f};
+    moveImage = false;
+    return true;
+  }
+
   bool Move_Vertex(App::App &app) {
     app.max = imageMoveMax;
     SDL_GetMouseState(&app.initialPosition.x, &app.initialPosition.y);
     app.moveVertex = true;
-    return true;
-  }
-
-  bool Set_vertex(App::App &app, SDL_FPoint &point) {
-    app.max = appMax;
-    point.x = point.x - ((float)app.offset.x / app.interface.center.texture.scale);
-    point.y = point.y - ((float)app.offset.y / app.interface.center.texture.scale);
-    app.moveVertex = false;
     return true;
   }
 
@@ -105,223 +105,6 @@ namespace Center::Center {
     return false;
   }
 
-  bool Set(App::App &app, SDL_FPoint &point) {
-    app.max = appMax;
-    point.x = point.x + (float)app.offset.x;
-    point.y = point.y + (float)app.offset.y;
-    app.offset = {0.0f, 0.0f};
-    app.moveImage = false;
-    return true;
-  }
-
-  bool Set_Rect_Vertexes(App::App &app) {
-    for (int i = 0; i < app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices.size() ; ++i) {
-      if (app.vertex.indexVertex == 0) { //top left
-        if (i == 1)
-          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[1].y -= app.offset.y / app.interface.center.texture.scale;
-        else if (i == 3)
-          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[3].x -= app.offset.x / app.interface.center.texture.scale;
-      }
-      else if (app.vertex.indexVertex == 1) { //top right
-        if (i == 0)
-          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[0].y -= app.offset.y / app.interface.center.texture.scale;
-        else if (i == 2)
-          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[2].x -= app.offset.x / app.interface.center.texture.scale;
-      }
-      else if (app.vertex.indexVertex == 2) { //bottom right
-        if (i == 1)
-          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[1].x -= app.offset.x / app.interface.center.texture.scale;
-        else if (i == 3)
-          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[3].y -= app.offset.y / app.interface.center.texture.scale;
-      }
-      else if (app.vertex.indexVertex == 3) { // bottom left
-        if (i == 2)
-          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[2].y -= app.offset.y / app.interface.center.texture.scale;
-        else if (i == 0)
-          app.interface.center.shapes[Shape::AABB][app.vertex.indexPolygon].vertices[0].x -= app.offset.x / app.interface.center.texture.scale;
-      }
-    }
-    return true;
-  }
-
-  bool Set_Vertex(App::App &app) {
-    if (app.vertex.shape == Shape::SIZE) {
-      return false;
-    }
-
-    if (!app.interface.center.shapes[app.vertex.shape].empty()) {
-      if (!app.interface.center.shapes[app.vertex.shape][app.vertex.indexPolygon].vertices.empty()) {
-        if (app.vertex.indexVertex == -1 && app.selectedShape.indexPolygon < app.interface.center.shapes[app.selectedShape.shape].size()) {
-          if (app.selectedShape.shape == Shape::SIZE)
-            return false;
-          for (int i = 0; i < app.interface.center.shapes[app.selectedShape.shape][app.selectedShape.indexPolygon].vertices.size(); ++i) {
-            Set_vertex(app, app.interface.center.shapes[app.selectedShape.shape][app.selectedShape.indexPolygon].vertices[i]);
-            app.interface.center.shapes[app.selectedShape.shape][app.vertex.indexPolygon].moving[i] = false;
-          }
-        } else {
-          if (app.selectedVertex.shape == Shape::AABB)
-            Set_Rect_Vertexes(app);
-          Set_vertex(app, app.interface.center.shapes[app.vertex.shape][app.vertex.indexPolygon].vertices[app.vertex.indexVertex]);
-          app.interface.center.shapes[app.vertex.shape][app.vertex.indexPolygon].moving[app.vertex.indexVertex] = false;
-        }
-      }
-      app.offset = {0, 0};
-      app.vertex = {Shape::SIZE, 0, 0};
-      return true;
-    }
-    return false;
-  }
-
-  void Set_Color(App::App &app, const int &i, const Shape::shape &shape) {
-    if (app.selectedShape.shape == shape && app.selectedShape.indexPolygon == i)
-      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::SHAPESELECTED]);
-    else
-      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::SHAPE]);
-  }
-
-  void Reset_Color(App::App &app, const int &i, const Shape::shape &shape) {
-    if (app.selectedShape.shape == shape && app.selectedShape.indexPolygon == i)
-      Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::SHAPESELECTED]);
-  }
-
-  void Update_Vertex_Render(App::App &app, SDL_FRect &rect, const int &i, const int &j) {
-    if (app.moveVertex && app.vertex.shape == Shape::AABB) {
-      if (app.vertex.indexPolygon == i) {
-        if (app.vertex.indexVertex == 0) { //top left
-          if (j == 1)
-            rect.y -= app.offset.y;
-          else if (j == 3)
-            rect.x -= app.offset.x;
-        }
-        if (app.vertex.indexVertex == 1) { //top right
-          if (j == 0)
-            rect.y -= app.offset.y;
-          else if (j == 2)
-            rect.x -= app.offset.x;
-        }
-        if (app.vertex.indexVertex == 2) { //bottom right
-          if (j == 1)
-            rect.x -= app.offset.x;
-          else if (j == 3)
-            rect.y -= app.offset.y;
-        }
-        if (app.vertex.indexVertex == 3) { // bottom left
-          if (j == 2)
-            rect.y -= app.offset.y;
-          else if (j == 0)
-            rect.x -= app.offset.x;
-        }
-      }
-    }
-  }
-
-  void Render_Shapes(App::App &app) {
-    auto o = App::Calc_Offset(app);
-    SDL_Color shapeFill = {200, 200, 200, 100};
-
-    for (int k = 0; k < Shape::SIZE; ++k) {
-      for (int i = 0; i < app.interface.center.shapes[k].size(); ++i) {
-        std::vector<SDL_FPoint> points;
-
-        Set_Color(app, i, (Shape::shape)k);
-        for (int j = 0; j < app.interface.center.shapes[k][i].vertices.size(); ++j) {
-          SDL_FRect rect = Vertex_To_Rect(app, app.interface.center.shapes[k][i].vertices[j], o, app.interface.center.shapes[k][i].moving[j]);
-          //updates rect vertices position, needs to be moved
-          if (k == Shape::AABB)
-            Update_Vertex_Render(app, rect, i, j);
-          points.push_back({rect.x + o.r, rect.y + o.r});
-
-
-          //need to not scale the size of the vertices on zoom so they stay the same size always
-          if (app.selectedVertex.shape == k && app.selectedVertex.indexPolygon == i && app.selectedVertex.indexVertex == j)
-            SDL_SetTextureColorMod(app.texture.vertex, 0, 255, 0);
-          else if (app.selectedShape.shape == k && app.selectedShape.indexPolygon == i)
-            SDL_SetTextureColorMod(app.texture.vertex, 0, 255, 255);
-          else
-            SDL_SetTextureColorMod(app.texture.vertex, 255, 0, 0);
-
-          SDL_RenderCopyF(app.context.renderer, app.texture.vertex, nullptr, &rect);
-          Set_Color(app, i, (Shape::shape)k);
-
-          //renders coordinates text, maybe needs to be moved
-          int x = (int)app.interface.center.shapes[k][i].vertices[j].x;
-          int y = (int)app.interface.center.shapes[k][i].vertices[j].y;
-          std::string coords = std::to_string(x) + ", " + std::to_string(y);
-          Text::Render(app.context.renderer, app.context.font, coords.c_str(), rect.x + (o.r * 2), rect.y - o.r);
-        }
-
-        if (k == Shape::shape::CIRCLE) {
-          SDL_Color color;
-          (app.selectedShape.shape == Shape::CIRCLE && app.selectedShape.indexPolygon == i) ? color = {0,255,255,255} : color = {255,0,0,255};
-          float r = points[1].y - points[0].y;
-
-//          int g = 0;
-//          for (const auto &vertex: app.interface.center.shapes[k][i].moving) {
-//            if (vertex) {
-//              g++;
-//            }
-//          }
-//          if ((g !=0 && g != app.interface.center.shapes[k][i].moving.size() || !app.texture.shapes[app.interface.center.index][k][i])) {
-//            SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][k][i]);
-//            app.texture.shapes[app.interface.center.index][k][i] = nullptr;
-//            app.texture.shapes[app.interface.center.index][k][i] = Graphics::Render_Circle(app.context.renderer, points[0].x, points[0].y, r, shapeFill, color);
-//          }
-//
-//          SDL_FRect rect = {
-//              points[0].x - r,
-//              points[0].y - r,
-//              r * 2.0f,
-//              r * 2.0f
-//          };
-//          SDL_RenderCopyF(app.context.renderer, app.texture.shapes[app.interface.center.index][k][i], nullptr, &rect);
-          aaFilledPieRGBA(app.context.renderer, points[0].x, points[0].y, r, r, 0.0f, 360.0f, 0, shapeFill.r, shapeFill.g, shapeFill.b, shapeFill.a);
-          thickCircleRGBA(app.context.renderer, points[0].x, points[0].y, r, color.r, color.g, color.b, color.a, 2);
-        }
-
-        else if (k == Shape::POLYGON || k == Shape::AABB) {
-          std::vector<double> xPolygonPoints;
-          std::vector<double> yPolygonPoints;
-
-//          SDL_FRect rect = {MAXFLOAT, MAXFLOAT, -MAXFLOAT, -MAXFLOAT};
-          for (const auto &vertex: points) {
-            xPolygonPoints.push_back(vertex.x);
-            yPolygonPoints.push_back(vertex.y);
-//            if (vertex.x < rect.x)
-//              rect.x = vertex.x;
-//            if (vertex.y < rect.y)
-//              rect.y = vertex.y;
-          }
-//          for (const auto &vertex: points) {
-//            if (fabs(vertex.x - rect.x) > rect.w)
-//              rect.w = fabs(vertex.x - rect.x);
-//            if (fabs(vertex.y - rect.y) > rect.h)
-//              rect.h = fabs(vertex.y - rect.y);
-//          }
-//          int g = 0;
-//          for (const auto &vertex: app.interface.center.shapes[k][i].moving) {
-//            if (vertex) {
-//              g++;
-//            }
-//          }
-//
-//          if ((g !=0 && g != app.interface.center.shapes[k][i].moving.size()) || !app.texture.shapes[app.interface.center.index][k][i]) {
-//            SDL_DestroyTexture(app.texture.shapes[app.interface.center.index][k][i]);
-//            app.texture.shapes[app.interface.center.index][k][i] = nullptr;
-//            app.texture.shapes[app.interface.center.index][k][i] = Graphics::Render_Polygon_AABB(app.context.renderer, xPolygonPoints, yPolygonPoints, rect.w, rect.h, shapeFill);
-//          }
-//
-//          SDL_RenderCopyF(app.context.renderer, app.texture.shapes[app.interface.center.index][k][i], nullptr, &rect);
-          aaFilledPolygonRGBA(app.context.renderer, xPolygonPoints.data(), yPolygonPoints.data(), (int) yPolygonPoints.size(), shapeFill.r, shapeFill.g, shapeFill.b, shapeFill.a);
-        }
-        Set_Color(app, i, (Shape::shape)k);
-        SDL_RenderDrawLinesF(app.context.renderer, points.data(), (int)points.size());
-        if (points.size() > 2)
-          SDL_RenderDrawLineF(app.context.renderer, points[(int)points.size() - 1].x, points[(int)points.size() - 1].y, points[0].x, points[0].y);
-        Reset_Color(app, i, (Shape::shape)k);
-      }
-    }
-//    app.zoom = false;
-  }
 
   void Render_Image(App::App &app) {
     Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BACKGROUND]);
@@ -357,7 +140,7 @@ namespace Center::Center {
 
       SDL_RenderCopyF(app.context.renderer, app.interface.center.texture.texture, nullptr, &rect);
     }
-    Render_Shapes(app);
+    Render_Shapes(app.context.renderer, app.texture.vertex, app.interface.center.texture, app.interface.center.shapes, app.selectedShape, app.selectedVertex, app.vertex, app.moveVertex, app.offset, app.moveImage,  app.zoomToMouse, app.vertexRadius, app.panel.mainPanel.center.image);
   }
 
   void Render_Shape_List_Names(App::App &app) {
@@ -366,7 +149,7 @@ namespace Center::Center {
     float w = 40.0f;
     int numElements= 0;
 
-    for (int j = 0; j < Shape::shape::SIZE; ++j)
+    for (int j = 0; j < Shape::SIZE; ++j)
       numElements += app.interface.shapeList.shapeList[j].size();
 
     int maxElementsToDisplay = (int)(app.panel.mainPanel.center.shapes.body.h / (app.panel.mainPanel.center.shapes.scroll.elementHeight + app.panel.mainPanel.center.shapes.scroll.elementSpacing)) + 1;
@@ -379,7 +162,7 @@ namespace Center::Center {
                                     numElements,
                                     maxElementsToDisplay);
 
-    for (int j = 0; j < Shape::shape::SIZE; ++j) {
+    for (int j = 0; j < Shape::SIZE; ++j) {
       int min = 0;
       if (index.min > app.interface.shapeList.shapeList[j].size()) {
         index.min -= app.interface.shapeList.shapeList[j].size();
@@ -417,7 +200,7 @@ namespace Center::Center {
     }
   }
 
-  App::Shape Select_From_Shape_List_Names(App::App &app) {
+  Shape::Fixture Select_From_Shape_List_Names(App::App &app) {
     float x = app.panel.mainPanel.center.shapes.body.x;
     float y = app.panel.mainPanel.center.shapes.body.y;
     float w = 40.0f;
@@ -439,7 +222,6 @@ namespace Center::Center {
 
     for (int j = 0; j < Shape::SIZE; ++j) {
       int min = 0;
-      int max = 0;
       if (index.min > app.interface.shapeList.shapeList[j].size()) {
         index.min -= app.interface.shapeList.shapeList[j].size();
         continue;
@@ -447,8 +229,6 @@ namespace Center::Center {
       else {
         min = index.min;
         index.min = 0;
-//        max = index.max;
-//        index.max;
       }
       for (int i = min; i < app.interface.shapeList.shapeList[j].size(); ++i) {
         SDL_FRect dRect = {x, y, w - (spacing * 2.0f), h + spacing};

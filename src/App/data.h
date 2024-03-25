@@ -9,11 +9,14 @@
 #endif //BOX2D_COLLIDERS_DATA_H
 
 #include "../Graphics/graphics.h"
-#include "Bounding_Boxes/polygon.h"
-#include "Bounding_Boxes/point.h"
-#include "Bounding_Boxes/aabb.h"
-#include "Bounding_Boxes/circle.h"
-#include "Bounding_Boxes/line_segment.h"
+//#include "Bounding_Boxes/polygon.h"
+//#include "Bounding_Boxes/point.h"
+//#include "Bounding_Boxes/aabb.h"
+//#include "Bounding_Boxes/circle.h"
+//#include "Bounding_Boxes/line_segment.h"
+#include "Bounding_Boxes/shape.h"
+//#include "../UI/scroll_bar.h"
+
 
 namespace Data {
   union Option_Value {
@@ -50,28 +53,12 @@ namespace Data {
     Option_Type type;
   };
 
-  struct Right {
-    std::array<std::string, 18> optionName;
-    std::array<Option_Value, 18> option{};
-    std::array<Option_Input, 18> optionInput{};
-  };
 
-  struct Shape_List {
-    std::array<std::vector<std::string>, Shape::SIZE> shapeList;
-
-    Shape_List () {
-      shapeList[Shape::POINT].emplace_back("Points");
-      shapeList[Shape::CIRCLE].emplace_back("Circles");
-      shapeList[Shape::LINE].emplace_back("Lines");
-      shapeList[Shape::AABB].emplace_back("AABBs");
-      shapeList[Shape::POLYGON].emplace_back("Polygons");
-    }
-  };
 
   struct Center {
     Graphics::Image texture;
     std::array<std::vector<Shape::Shape>, Shape::SIZE> shapes;
-    std::array<Options, Options::SIZE> options{};
+    std::array<Data::Options, Data::Options::SIZE> options{};
 
     int index = 0;
     //list to show/hide polygons
@@ -89,6 +76,13 @@ namespace Data {
 
 
 
+
+  struct Right {
+    std::array<std::string, 18> optionName;
+    std::array<Data::Option_Value, 18> option{};
+    std::array<Data::Option_Input, 18> optionInput{};
+  };
+
   struct Menu {
     std::array<Graphics::Button, 6> buttons;
   };
@@ -100,4 +94,15 @@ namespace Data {
   struct Edit_Buttons {
     std::array<Graphics::Button, 6> buttons;
   };
+
+  struct App_Interface {
+    Left left;
+    Center center;
+    Right right;
+    Menu menu;
+    Shape::Shape_List shapeList;
+    App_Buttons appButtons;
+    Edit_Buttons editButtons;
+  };
+
 }

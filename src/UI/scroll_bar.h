@@ -8,9 +8,9 @@
 
 #endif //BOX2D_COLLIDERS_SCROLL_BAR_H
 #include "../App/core.h"
+#include "../Graphics/graphics.h"
 
 namespace Scroll_Bar {
-
 
   struct Index {
     int min = 0;

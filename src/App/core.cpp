@@ -5,8 +5,52 @@
 #include "core.h"
 #include "../Input/mouse.h"
 #include "../Graphics/text.h"
+#include "../Graphics/graphics.h"
+
+#include "SDL2/SDL_image.h"
 
 namespace App {
+
+
+  Texture Load_Icons(SDL_Renderer *renderer) {
+    Texture texture;
+
+    texture.save = IMG_LoadTexture(renderer, "assets/icons/disk.png");
+    texture.saveAs = IMG_LoadTexture(renderer, "assets/icons/save-as.png");
+    texture.newDocument = IMG_LoadTexture(renderer, "assets/icons/new-document.png");
+    texture.open = IMG_LoadTexture(renderer, "assets/icons/folder.png");
+
+    texture.show = IMG_LoadTexture(renderer, "assets/icons/view.png");
+    texture.hide = IMG_LoadTexture(renderer, "assets/icons/hide.png");
+
+    texture.location = IMG_LoadTexture(renderer, "assets/icons/location.png");
+    texture.point = IMG_LoadTexture(renderer, "assets/icons/point.png");
+    texture.nodes = IMG_LoadTexture(renderer, "assets/icons/nodes.png");
+    texture.vector = IMG_LoadTexture(renderer, "assets/icons/vector.png");
+    texture.pentagon = IMG_LoadTexture(renderer, "assets/icons/pentagon.png");
+
+    texture.deleteShape = IMG_LoadTexture(renderer, "assets/icons/minus.png");
+    texture.deleteVertex = IMG_LoadTexture(renderer, "assets/icons/minus-location.png");
+    texture.addVertex = IMG_LoadTexture(renderer, "assets/icons/add.png");
+
+    texture.up = IMG_LoadTexture(renderer, "assets/icons/up-loading.png");
+    texture.addFolder = IMG_LoadTexture(renderer, "assets/icons/archive.png");
+
+    texture.vertex = IMG_LoadTexture(renderer, "assets/icons/vertex.png");
+    texture.circle = IMG_LoadTexture(renderer, "assets/icons/circle.png");
+    texture.addImage = IMG_LoadTexture(renderer, "assets/icons/add_image.png");
+    texture.deleteImage = IMG_LoadTexture(renderer, "assets/icons/remove_image.png");
+    texture.publish = IMG_LoadTexture(renderer, "assets/icons/publish.png");
+    texture.publishAs = IMG_LoadTexture(renderer, "assets/icons/publish_as.png");
+
+    texture.uncheckedBox = IMG_LoadTexture(renderer, "assets/icons/unchecked.png");
+    texture.checkedBox = IMG_LoadTexture(renderer, "assets/icons/checkbox.png");
+
+    texture.alphaTexture = IMG_LoadTexture(renderer, "assets/images/fogOfWar.png");
+    SDL_SetTextureBlendMode(texture.alphaTexture, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureAlphaMod(texture.alphaTexture, 0);
+    return texture;
+  }
 
   void Set_Textures(App &app) {
     app.panel.mainPanel.center.buttonBar.buttons[0].texture = app.texture.location;
@@ -41,12 +85,12 @@ namespace App {
     app.interface.center = newCenter;
     app.interface.right = newRight;
     //reset shape list
-    Data::Shape_List shapeList;
+    Shape::Shape_List shapeList;
     app.interface.shapeList = shapeList;
-    Vertex vertex;
+    Shape::Vertex vertex;
     app.vertex = vertex;
     app.selectedVertex = vertex;
-    Shape shape;
+    Shape::Fixture shape;
     app.selectedShape = shape;
     app.imageIndex = 0;
     app.filterImages = false;
@@ -104,7 +148,7 @@ namespace App {
   void Init (App &app) {
     app.context = Graphics::CreateWindowAndRenderer();
     app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
-    app.texture = Graphics::Load_Icons(app.context.renderer);
+    app.texture = Load_Icons(app.context.renderer);
     New(app);
     Set_Textures(app);
     app.context.font = Text::Load_Font(app.context.renderer);
@@ -124,18 +168,6 @@ namespace App {
 
 
 
-  Offsets Calc_Offset(const App &app) {
-    SDL_Point size;
-    SDL_QueryTexture(app.interface.center.texture.texture, nullptr, nullptr, &size.x, &size.y);
-    float w = (float) size.x * app.interface.center.texture.scale;
-    float h = (float) size.y * app.interface.center.texture.scale;
-
-    return {
-        (app.panel.mainPanel.center.image.x + ((app.panel.mainPanel.center.image.w - w)) / 2.0f) + (w / 2.0f),
-        (app.panel.mainPanel.center.image.y + ((app.panel.mainPanel.center.image.h - h)) / 2.0f) + (h / 2.0f),
-        (float) app.vertexRadius * app.interface.center.texture.scale
-    };
-  }
 
   SDL_FPoint Offset_From_Image_Center(const App &app, const SDL_FPoint &point) {
     SDL_Point size;
@@ -150,118 +182,6 @@ namespace App {
     gg += (float) app.interface.center.texture.offset.x / app.interface.center.texture.scale;
     hh += (float) app.interface.center.texture.offset.y / app.interface.center.texture.scale;
     return {gg, hh};
-  }
-
-  SDL_FRect Vertex_To_Rect(const App &app, const SDL_FPoint &vertex, const Offsets &o, bool moveVertex) {
-    SDL_FRect rect;
-    rect.x = (vertex.x * app.interface.center.texture.scale) + o.x - o.r;
-    rect.y = (vertex.y * app.interface.center.texture.scale) + o.y - o.r;
-    rect.w = o.r * 2.0f;
-    rect.h = o.r * 2.0f;
-    if (app.moveImage || moveVertex || app.zoomToMouse) {
-      rect.x -= (float) app.offset.x;
-      rect.y -= (float) app.offset.y;
-    }
-    rect.x -= (float) app.interface.center.texture.offset.x;
-    rect.y -= (float) app.interface.center.texture.offset.y;
-    return rect;
-  }
-
-  SDL_FPoint Vertex_To_Screen(const App &app, const SDL_FPoint &vertex, const Offsets &o, bool moveVertex) {
-    SDL_FRect rect;
-    rect.x = (vertex.x * app.interface.center.texture.scale) + o.x;
-    rect.y = (vertex.y * app.interface.center.texture.scale) + o.y;
-    if (app.moveImage || moveVertex || app.zoomToMouse) {
-      rect.x -= (float) app.offset.x;
-      rect.y -= (float) app.offset.y;
-    }
-    rect.x -= (float) app.interface.center.texture.offset.x;
-    rect.y -= (float) app.interface.center.texture.offset.y;
-    return {rect.x, rect.y};
-  }
-
-  Vertex Get_Vertex(App &app, const SDL_FRect &cursor) {
-    auto o = Calc_Offset(app);
-    auto &shape = app.interface.center.shapes;
-
-    for (int k = 0; k < ::Shape::SIZE; ++k) {
-      if (k == ::Shape::CIRCLE) {
-        for (int i = 0; i < shape[k].size(); ++i) {
-          auto vRect = Vertex_To_Rect(app, shape[k][i].vertices[1], o, shape[k][i].moving[1]);
-          if (SDL_HasIntersectionF(&vRect, &cursor)) {
-            shape[k][i].moving[1] = true;
-            return {(::Shape::shape) k, i, 1};
-          }
-        }
-      }
-      else {
-        for (int i = 0; i < shape[k].size(); ++i) {
-          for (int j = 0; j < shape[k][i].vertices.size(); ++j) {
-            auto vRect = Vertex_To_Rect(app, shape[k][i].vertices[j], o, shape[k][i].moving[j]);
-            if (SDL_HasIntersectionF(&vRect, &cursor)) {
-              shape[k][i].moving[j] = true;
-              return {(::Shape::shape)k, i, j};
-            }
-          }
-        }
-      }
-    }
-    return {::Shape::SIZE, 0};
-  }
-
-  Vertex Move (Data::Center &shape, int k, const int &i) {
-    for (auto &&move: shape.shapes[k][i].moving)
-      move = true;
-    return {(::Shape::shape)k, i, -1};
-  }
-
-  Vertex Check_If_Selected(App &app, const SDL_FRect &cursor, const ::Shape::shape &selectedShape, const int &index) {
-    if (selectedShape != ::Shape::SIZE) {
-      auto &shape = app.interface.center;
-      auto o = Calc_Offset(app);
-      std::vector<SDL_FPoint> mouseVertexes;
-      mouseVertexes.push_back({cursor.x, cursor.y});
-      mouseVertexes.push_back({cursor.x + cursor.w, cursor.y});
-      mouseVertexes.push_back({cursor.x + cursor.w, cursor.y + cursor.h});
-      mouseVertexes.push_back({cursor.x, cursor.y + cursor.h});
-      std::vector<SDL_FPoint> shapeVertexes;
-
-      for (int j = 0; j < shape.shapes[selectedShape][index].vertices.size(); ++j) {
-        SDL_FPoint v = Vertex_To_Screen(app, shape.shapes[selectedShape][index].vertices[j], o, shape.shapes[selectedShape][index].moving[j]);
-        shapeVertexes.emplace_back(v);
-      }
-      if (selectedShape == ::Shape::CIRCLE) {
-          if (Circle_Intersect(shapeVertexes[0].x, shapeVertexes[0].y, shapeVertexes[1].y - shapeVertexes[0].y, cursor))
-            return Move(shape, selectedShape, index);
-        }
-      else if (selectedShape == ::Shape::POLYGON) {
-        if (Point_In_Polygon(mouseVertexes, shapeVertexes))
-          return Move(shape, selectedShape, index);
-      }
-      else if (selectedShape == ::Shape::AABB || selectedShape == ::Shape::LINE) {
-        if (PolygonOverlap_SAT(mouseVertexes, shapeVertexes))
-          return Move(shape, selectedShape, index);
-      }
-    }
-    return {::Shape::SIZE, 0};
-  }
-
-  Vertex Get_Shape(App &app, const SDL_FRect &cursor) {
-    auto &shapes = app.interface.center.shapes;
-
-    //check if I already have a shape first, return it if I still have it selected
-    auto shape = Check_If_Selected(app, cursor, app.selectedShape.shape, app.selectedShape.indexPolygon);
-    if (shape.shape != ::Shape::SIZE)
-      return shape;
-
-    for (int k = 0; k < ::Shape::SIZE; ++k) {
-      for (int i = (int)shapes[k].size() - 1; i >= 0; --i) {
-        shape = Check_If_Selected(app, cursor, (::Shape::shape)k, i);
-        if (shape.shape != ::Shape::SIZE)
-          return shape;
-      }
-    }
-    return {::Shape::SIZE, 0};
   }
 
 }

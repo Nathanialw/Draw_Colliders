@@ -16,4 +16,6 @@
 namespace Polygon {
 
   Shape::Shape Create();
+
+  void Render_Polygon(SDL_Renderer *renderer, const std::vector<SDL_FPoint> &points, const SDL_Color &shapeFill);
 }

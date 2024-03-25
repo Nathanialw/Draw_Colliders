@@ -210,7 +210,7 @@ namespace Center::Left {
       app.selectedVertex.shape = Shape::SIZE;
 
       //clear and repopulate shape list
-      Data::Shape_List shapeList;
+      Shape::Shape_List shapeList;
       for (int i = 0; i < Shape::SIZE; ++i) {
         for (int j = 0; j < app.interface.center.shapes[i].size(); ++j) {
           shapeList.shapeList[i].push_back(std::to_string(j));

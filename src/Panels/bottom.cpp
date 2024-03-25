@@ -15,7 +15,6 @@ namespace Bottom {
     SDL_RenderFillRectF(app.context.renderer, &app.panel.bottom);
     Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BORDERS]);
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.bottom);
-    Graphics::Set_Render_Draw_Color(app.context.renderer, Graphics::color[Graphics::BLACK]);
     return true;
   }
 }

@@ -230,46 +230,6 @@ namespace Graphics {
     return imageImport;
   }
 
-  Texture Load_Icons(SDL_Renderer *renderer) {
-    Texture texture;
-
-    texture.save = IMG_LoadTexture(renderer, "assets/icons/disk.png");
-    texture.saveAs = IMG_LoadTexture(renderer, "assets/icons/save-as.png");
-    texture.newDocument = IMG_LoadTexture(renderer, "assets/icons/new-document.png");
-    texture.open = IMG_LoadTexture(renderer, "assets/icons/folder.png");
-
-    texture.show = IMG_LoadTexture(renderer, "assets/icons/view.png");
-    texture.hide = IMG_LoadTexture(renderer, "assets/icons/hide.png");
-
-    texture.location = IMG_LoadTexture(renderer, "assets/icons/location.png");
-    texture.point = IMG_LoadTexture(renderer, "assets/icons/point.png");
-    texture.nodes = IMG_LoadTexture(renderer, "assets/icons/nodes.png");
-    texture.vector = IMG_LoadTexture(renderer, "assets/icons/vector.png");
-    texture.pentagon = IMG_LoadTexture(renderer, "assets/icons/pentagon.png");
-
-    texture.deleteShape = IMG_LoadTexture(renderer, "assets/icons/minus.png");
-    texture.deleteVertex = IMG_LoadTexture(renderer, "assets/icons/minus-location.png");
-    texture.addVertex = IMG_LoadTexture(renderer, "assets/icons/add.png");
-
-    texture.up = IMG_LoadTexture(renderer, "assets/icons/up-loading.png");
-    texture.addFolder = IMG_LoadTexture(renderer, "assets/icons/archive.png");
-
-    texture.vertex = IMG_LoadTexture(renderer, "assets/icons/vertex.png");
-    texture.circle = IMG_LoadTexture(renderer, "assets/icons/circle.png");
-    texture.addImage = IMG_LoadTexture(renderer, "assets/icons/add_image.png");
-    texture.deleteImage = IMG_LoadTexture(renderer, "assets/icons/remove_image.png");
-    texture.publish = IMG_LoadTexture(renderer, "assets/icons/publish.png");
-    texture.publishAs = IMG_LoadTexture(renderer, "assets/icons/publish_as.png");
-
-    texture.uncheckedBox = IMG_LoadTexture(renderer, "assets/icons/unchecked.png");
-    texture.checkedBox = IMG_LoadTexture(renderer, "assets/icons/checkbox.png");
-
-    texture.alphaTexture = IMG_LoadTexture(renderer, "assets/images/fogOfWar.png");
-    SDL_SetTextureBlendMode(texture.alphaTexture, SDL_BLENDMODE_BLEND);
-    SDL_SetTextureAlphaMod(texture.alphaTexture, 0);
-    return texture;
-  }
-
   SDL_Texture* Render_Circle(SDL_Renderer *renderer, const float &x, const float &y, const float &r, const SDL_Color &shapeFill, const SDL_Color &edgeColor) {
     SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, int(r * 2), int(r * 2));
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);

@@ -8,6 +8,12 @@
 #include "../../Graphics/graphics.h"
 #include "../../../lib/nativefiledialog/nfd.h"
 #include <thread>
+#include "../../App/Bounding_Boxes/circle.h"
+#include "../../App/Bounding_Boxes/point.h"
+#include "../../App/Bounding_Boxes/polygon.h"
+#include "../../App/Bounding_Boxes/aabb.h"
+#include "../../App/Bounding_Boxes/line_segment.h"
+
 
 namespace Save {
 
@@ -243,7 +249,7 @@ namespace Save {
 
       if (setCenter) {
         app.interface.center = app.interface.left.images[k];
-        Data::Shape_List shapeList;
+        Shape::Shape_List shapeList;
         for (int i = 0; i < Shape::SIZE; ++i) {
           for (int j = 0; j < app.interface.center.shapes[i].size(); ++j) {
             shapeList.shapeList[i].push_back(std::to_string(j));

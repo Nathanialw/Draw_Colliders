@@ -22,4 +22,5 @@ namespace Circle {
 
   Shape::Shape Create();
   Shape::Shape Create(const float &x, const float &y, const float &y2);
+  void Render_Circle(SDL_Renderer *renderer, const std::vector<SDL_FPoint> &points, const SDL_Color &shapeFill,  const int &selectedShape, const int &selectedIndex, const int &i);
 }

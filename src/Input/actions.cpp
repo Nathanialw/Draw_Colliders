@@ -10,6 +10,12 @@
 #include "../Output/sqlite.h"
 #include "../UI/scroll_bar.h"
 #include "iostream"
+#include "../App/Bounding_Boxes/circle.h"
+#include "../App/Bounding_Boxes/point.h"
+#include "../App/Bounding_Boxes/polygon.h"
+#include "../App/Bounding_Boxes/aabb.h"
+#include "../App/Bounding_Boxes/line_segment.h"
+
 
 namespace Action {
   bool Delete_Shape_(App::App &app, const Shape::shape &shap, const int &shapeIndex) {
@@ -275,8 +281,6 @@ namespace Action {
     return 1;
   };
 
-
-
   typedef Shape::Shape (*CREATE_SHAPE)();
 
   bool Add_Shape(App::App &app, const Shape::shape &shape, const CREATE_SHAPE &Create) {
@@ -286,11 +290,15 @@ namespace Action {
         if (atoi(shapeList[j + 1].c_str()) != j) {
           shapeList.insert(shapeList.begin() + j + 1, std::to_string(j));
           app.interface.center.shapes[shape].insert(app.interface.center.shapes[shape].begin() + j, Create());
+          app.selectedShape.shape = shape;
+          app.selectedShape.indexPolygon = j + 1;
           return true;
         }
       }
       shapeList.emplace_back(std::to_string(app.interface.center.shapes[shape].size()));
       app.interface.center.shapes[shape].emplace_back(Create());
+      app.selectedShape.shape = shape;
+      app.selectedShape.indexPolygon = app.interface.center.shapes[shape].size() - 1;
       return true;
     }
     return false;

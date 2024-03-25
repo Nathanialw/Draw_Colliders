@@ -144,7 +144,7 @@ namespace Mouse {
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor)) {
               // check for vertex under mouse
               // select a vertex
-              app.vertex = App::Get_Vertex(app, cursor);
+              app.vertex = Shape::Get_Vertex(app.interface.center.texture, app.interface.center.shapes, app.vertexRadius, app.panel.mainPanel.center.image, cursor, app.offset, app.moveImage, app.zoomToMouse);
               bool vertexSelected = false;
               if (app.vertex.shape != Shape::SIZE) {
                 vertexSelected = true;
@@ -159,7 +159,7 @@ namespace Mouse {
               }
               // select a shape
               // we want to grab the vertices too so we can move them when we move the shape
-              app.vertex = App::Get_Shape(app, cursor);
+              app.vertex = Shape::Get_Shape(app.interface.center.texture, app.interface.center.shapes, app.vertexRadius, app.panel.mainPanel.center.image, app.offset, app.moveImage, app.zoomToMouse, cursor, app.selectedShape);
               if (app.vertex.shape == Shape::SIZE)
                 return false;
               else {
@@ -293,7 +293,7 @@ namespace Mouse {
           }
         }
         //run regardless of where the mouse is when it is released, probably for all mouse button release actions
-        Center::Center::Set_Vertex(app);
+        Shape::Set_Vertex(app.interface.center.shapes, app.selectedShape, app.vertex, app.offset, app.interface.center.texture.scale, app.moveVertex, app.max);
         return true;
       }
 
@@ -338,7 +338,7 @@ namespace Mouse {
         }
 
         //run regardless of where the mouse is when it is released, probably for all mouse button release actions
-        Center::Center::Set(app, app.interface.center.texture.offset);
+        Center::Center::Set(app.max, app.offset, app.interface.center.texture.offset, app.moveImage);
         return true;
       }
       return true;

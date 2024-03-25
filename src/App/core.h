@@ -11,35 +11,48 @@
 #include "Settings/serialise.h"
 #include "../Utils/utils.h"
 #include "../Graphics/graphics.h"
+//#include "Bounding_Boxes/shape.h"
 
 namespace App {
 
-  struct App_Interface {
-    Data::Left left;
-    Data::Center center;
-    Data::Right right;
-    Data::Menu menu;
-    Data::Shape_List shapeList;
-    Data::App_Buttons appButtons;
-    Data::Edit_Buttons editButtons;
+  struct Texture {
+    SDL_Texture* checkedBox = nullptr;
+    SDL_Texture* uncheckedBox = nullptr;
+    SDL_Texture* deleteShape = nullptr;
+    SDL_Texture* addVertex = nullptr;
+    SDL_Texture* deleteVertex = nullptr;
+    SDL_Texture* save = nullptr;
+    SDL_Texture* saveAs = nullptr;
+    SDL_Texture* location = nullptr;
+    SDL_Texture* nodes = nullptr;
+    SDL_Texture* pentagon = nullptr;
+    SDL_Texture* point = nullptr;
+    SDL_Texture* unchecked = nullptr;
+    SDL_Texture* up = nullptr;
+    SDL_Texture* vector = nullptr;
+    SDL_Texture* view = nullptr;
+    SDL_Texture* newDocument = nullptr;
+    SDL_Texture* open = nullptr;
+    SDL_Texture* show = nullptr;
+    SDL_Texture* hide = nullptr;
+    SDL_Texture* addFolder = nullptr;
+    SDL_Texture* circle = nullptr;
+    SDL_Texture* vertex = nullptr;
+    SDL_Texture* publish = nullptr;
+    SDL_Texture* publishAs = nullptr;
+    SDL_Texture* deleteImage = nullptr;
+    SDL_Texture* addImage = nullptr;
+    SDL_Texture* alphaTexture = nullptr;
+
+    //image index // shape type // shape index
+    std::vector<std::array<std::vector<SDL_Texture*>, Shape::SIZE>> shapes{};
+    // imported images
+    std::vector<SDL_Texture*> images;
+
+    //maybe for the preview images on the lft
+    std::vector<SDL_Texture*> smallImages;
   };
 
-  struct Offsets {
-    float x = 0.0f;
-    float y = 0.0f;
-    float r = 0.0f;
-  };
-
-  struct Vertex {
-    ::Shape::shape shape = ::Shape::SIZE;
-    int indexPolygon = 0;
-    int indexVertex = 0;
-  };
-
-  struct Shape {
-    ::Shape::shape shape = ::Shape::SIZE;
-    int indexPolygon = 0;
-  };
 
   enum Mouse_Selected {
     NONE,
@@ -58,12 +71,14 @@ namespace App {
     SIZE
   };
 
+
+
   struct App {
     Graphics::UI_Panels uiPanels;
     Graphics::Panels panel;
     Graphics::Context context;
 
-    App_Interface interface{};
+    Data::App_Interface interface{};
     float vertexRadius = 5.0f;
 
     bool running = true;
@@ -81,9 +96,9 @@ namespace App {
     SDL_FPoint offset = {0.0f, 0.0f};
     bool moveImage = false;
     bool moveVertex = false;
-    Shape selectedShape;
-    Vertex selectedVertex;
-    Vertex vertex;
+    Shape::Fixture selectedShape;
+    Shape::Vertex selectedVertex;
+    Shape::Vertex vertex;
 
     Mouse_Selected selected = NONE;
     float cachedScrollBarPosition = 0.0f;
@@ -95,7 +110,7 @@ namespace App {
     std::string filterTextDefault = "Filter...";
 
     Serialise::Datafile datafile;
-    Graphics::Texture texture;
+    Texture texture;
     std::string saveName;
   };
 
@@ -104,11 +119,9 @@ namespace App {
   void New(App &app);
   void Set_Textures(App &app);
   void Init (App &app);
-  Offsets Calc_Offset(const App &app);
+  ::Shape::Offsets Calc_Offset(const App &app);
   SDL_FPoint Offset_From_Image_Center(const App &app, const SDL_FPoint &point);
-  SDL_FRect Vertex_To_Rect(const App &app, const SDL_FPoint &vertex, const Offsets &o, bool moveVertex);
+  SDL_FRect Vertex_To_Rect(const App &app, const SDL_FPoint &vertex, const ::Shape::Offsets &o, bool moveVertex);
 
-  Vertex Get_Vertex(App &app, const SDL_FRect &cursor);
-  Vertex Get_Shape(App &app, const SDL_FRect &cursor);
 
 }

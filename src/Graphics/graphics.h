@@ -8,9 +8,11 @@
 #include "vector"
 #include "array"
 #include "../../lib/SDL_FontCache/SDL_FontCache.h"
-#include "../App/Bounding_Boxes/shape.h"
+//#include "../UI/scroll_bar.h"
 
 namespace Graphics {
+
+#define global_variable static;
 
 //  dark indigo #2C2C54 44 44 84
 //  deep purple-gray #474787 71 71 135
@@ -21,24 +23,38 @@ namespace Graphics {
     DARK_BORDERS,
     SELECTED,
     BACKGROUND,
+    LIGHTBACKGROUND,
     BORDERS,
     SHAPESELECTED,
     SHAPE,
+    ICONBACKGROUND,
     BLACK,
     WHITE,
     SIZE,
   };
 
   static SDL_Color color[(int)Color::SIZE] = {
-      {44, 44, 84, 255},
-      {71, 71, 135, 255},
-      {170, 171, 184, 255},
-      {236, 236, 236, 255},
+      {44, 44, 84, 255},      //dark indigo
+      {170, 171, 184, 255},   //deep purple
+      {100, 100, 135, 255},    //light
+      {236, 236, 236, 255},   //light-gray
+      {71, 71, 135, 255},     //purple-gray
       {0, 255, 255, 255},
       {255, 0, 0, 255},
+      {130, 130, 135, 255},     //Icon back
       {0, 0, 0, 255},
       {200, 200, 200, 255},
   };
+
+
+  struct ScrollBar {
+    SDL_FRect panel{};
+    SDL_FRect bar{};
+    float elementHeight = 0.0f;
+    float elementSpacing = 0.0f;
+    bool show = false;
+  };
+
 
   struct Image_Import {
     SDL_Texture* texture = nullptr;
@@ -57,13 +73,22 @@ namespace Graphics {
     std::string label;
   };
 
-  struct ScrollBar {
+  const int menuSize = 11;
+  struct Top {
     SDL_FRect panel{};
-    SDL_FRect bar{};
-    float elementHeight = 0.0f;
-    float elementSpacing = 0.0f;
-    bool show = false;
+    std::array<Button, menuSize> buttons{};
   };
+
+  struct Menu {
+    SDL_FRect panel{};
+  };
+
+  struct Right_Panel {
+    SDL_FRect panel{};
+    SDL_FRect body{};
+    ScrollBar scroll;
+  };
+
 
   struct Left_Panel {
     SDL_FRect panel{};
@@ -72,18 +97,18 @@ namespace Graphics {
     SDL_FRect search{};
   };
 
+  struct Shapes {
+    SDL_FRect panel{};
+//    std::array<std::vector<SDL_FRect>, SIZE> shapes;
+    Graphics::ScrollBar scroll{};
+    SDL_FRect expanderLeft{};
+    SDL_FRect body{};
+  };
+
   const int ButtonBarSize = 9;
   struct Button_Bar {
     SDL_FRect panel{};
-    std::array<Button, ButtonBarSize> buttons;
-  };
-
-  struct Shapes {
-    SDL_FRect panel{};
-    std::array<std::vector<SDL_FRect>, Shape::SIZE> shapes;
-    ScrollBar scroll{};
-    SDL_FRect expanderLeft{};
-    SDL_FRect body{};
+    std::array<Graphics::Button, ButtonBarSize> buttons;
   };
 
   struct Center_Panel {
@@ -95,27 +120,12 @@ namespace Graphics {
     SDL_FRect expanderRight{};
   };
 
-  struct Right_Panel {
-    SDL_FRect panel{};
-    SDL_FRect body{};
-    ScrollBar scroll;
-  };
-
   struct Main_Panel {
     Left_Panel left{};
     Center_Panel center{};
     Right_Panel right{};
   };
 
-  const int menuSize = 11;
-  struct Top {
-    SDL_FRect panel{};
-    std::array<Button, menuSize> buttons{};
-  };
-
-  struct Menu {
-    SDL_FRect panel{};
-  };
 
   struct Panels {
     //width adjusts with screen width
@@ -136,44 +146,6 @@ namespace Graphics {
     int height{};
     Uint32 flags{};
     const char* title{};
-  };
-
-  struct Texture {
-    SDL_Texture* checkedBox = nullptr;
-    SDL_Texture* uncheckedBox = nullptr;
-    SDL_Texture* deleteShape = nullptr;
-    SDL_Texture* addVertex = nullptr;
-    SDL_Texture* deleteVertex = nullptr;
-    SDL_Texture* save = nullptr;
-    SDL_Texture* saveAs = nullptr;
-    SDL_Texture* location = nullptr;
-    SDL_Texture* nodes = nullptr;
-    SDL_Texture* pentagon = nullptr;
-    SDL_Texture* point = nullptr;
-    SDL_Texture* unchecked = nullptr;
-    SDL_Texture* up = nullptr;
-    SDL_Texture* vector = nullptr;
-    SDL_Texture* view = nullptr;
-    SDL_Texture* newDocument = nullptr;
-    SDL_Texture* open = nullptr;
-    SDL_Texture* show = nullptr;
-    SDL_Texture* hide = nullptr;
-    SDL_Texture* addFolder = nullptr;
-    SDL_Texture* circle = nullptr;
-    SDL_Texture* vertex = nullptr;
-    SDL_Texture* publish = nullptr;
-    SDL_Texture* publishAs = nullptr;
-    SDL_Texture* deleteImage = nullptr;
-    SDL_Texture* addImage = nullptr;
-    SDL_Texture* alphaTexture = nullptr;
-
-    //image index // shape type // shape index
-    std::vector<std::array<std::vector<SDL_Texture*>, Shape::SIZE>> shapes{};
-    // imported images
-    std::vector<SDL_Texture*> images;
-
-    //maybe for the preview images on the lft
-    std::vector<SDL_Texture*> smallImages;
   };
 
   struct UI_Panels {
@@ -217,7 +189,6 @@ namespace Graphics {
   void Set_Render_Draw_Color(SDL_Renderer *renderer, const SDL_Color &color);
   void Set_Render_Draw_Color(SDL_Renderer *renderer, const int &r, const int &g, const int &b, const int &a);
   void Reset_Render_Draw_Color(SDL_Renderer *renderer);
-  Texture Load_Icons(SDL_Renderer *renderer);
   void Show_Overlay(const Context &context);
   void Wait(bool &loaded);
   SDL_Texture* Render_Circle(SDL_Renderer *renderer, const float &x, const float &y, const float &r, const SDL_Color &shapeFill, const SDL_Color &edgeColor);

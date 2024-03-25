@@ -1,16 +1,14 @@
 
 
 NEEDS
--right side buttons
--scroll bars
+-right side number inputs
+-hide scroll bars
 -show/hide shapes
 -enforce unique image names
--colour scheme
--always have selected shape render on top
 -dialogue boxes
--load side images as small images to not waste VRAM
 
 WANTS
+-load side images as small images to not waste VRAM
 -select box to grab multiple shapes
 -add capsule shape
 -options/preferences
@@ -24,8 +22,6 @@ WANTS
 -import a folder of images
 -rename fixtures
 -show vertices in dropdown menu in fixture list
-
-
 
 //buggy, can render to texture but SDL_Destroy() will not destroy that texture so it just gobbles up VRAM
 -render aaFilledPolygonRBGA to texture so I only

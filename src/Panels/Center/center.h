@@ -16,13 +16,12 @@ namespace Center::Center {
 
   bool Set_Scale(App::App &app, Sint32 direction);
   bool Move(App::App &app);
+  bool Set(int &max, SDL_FPoint &offset, SDL_FPoint &point, bool &moveImage);
   bool Move_Vertex(App::App &app);
-  bool Set(App::App &app, SDL_FPoint &point);
-  bool Set_Vertex(App::App &app);
   bool Update_Image(App::App &app);
 
   bool Scroll(App::App &app, const Sint32 &scroll);
-  App::Shape Select_From_Shape_List_Names(App::App &app);
+  Shape::Fixture Select_From_Shape_List_Names(App::App &app);
 
   void Set_Expander(App::App &app);
 
