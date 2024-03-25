@@ -38,8 +38,8 @@ namespace XML {
       numFixtures += app.interface.left.images[i].shapes[Graphics::CIRCLE].size();
       numFixtures += app.interface.left.images[i].shapes[Graphics::LINE].size();
       body->SetAttribute("numFixtures", numFixtures);
-      body->SetAttribute("isDynamic", app.interface.left.images[i].isDynamic);
-      body->SetAttribute("isBullet", app.interface.left.images[i].isBullet);
+//      body->SetAttribute("isDynamic", app.interface.left.images[i].isDynamic);
+//      body->SetAttribute("isBullet", app.interface.left.images[i].isBullet);
 
       for (int j = 0; j < Graphics::SIZE; ++j) {
         for (const auto &shape : app.interface.left.images[i].shapes[j]) {

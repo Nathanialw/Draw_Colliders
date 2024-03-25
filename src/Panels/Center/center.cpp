@@ -17,72 +17,17 @@ namespace Center::Center {
   int appMax = 10;
   int imageMoveMax = 20;
 
-  typedef Shape::Shape (*CREATE_SHAPE)();
-
-  bool Add_Shape(App::App &app, const Graphics::Shape &shape, const CREATE_SHAPE &Create) {
-    if (app.interface.center.texture.texture) {
-      auto &shapeList = app.interface.shapeList.shapeList[shape];
-      for (int j = 0; j < app.interface.center.shapes[shape].size(); ++j) {
-        if (atoi(shapeList[j + 1].c_str()) != j) {
-          shapeList.insert(shapeList.begin() + j + 1, std::to_string(j));
-          app.interface.center.shapes[shape].insert(app.interface.center.shapes[shape].begin() + j, Create());
-          return true;
-        }
-      }
-      shapeList.emplace_back(std::to_string(app.interface.center.shapes[shape].size()));
-      app.interface.center.shapes[shape].emplace_back(Create());
-      return true;
-    }
-    return false;
-  }
-
-  int Create_Circle_Button(App::App &app) {
-    Add_Shape(app, Graphics::CIRCLE, Circle::Create);
-    return 0;
-  }
-  int Create_Point_Button(App::App &app) {
-    Add_Shape(app, Graphics::POINT, Point::Create);
-    return 1;
-  }
-  int Create_Polygon_Button(App::App &app) {
-    Add_Shape(app, Graphics::POLYGON, Polygon::Create);
-    return 2;
-  }
-  int Create_Rect_Button(App::App &app) {
-    Add_Shape(app, Graphics::AABB, AABB::Create);
-    return 3;
-  }
-  int Create_Line_Button(App::App &app) {
-    Add_Shape(app, Graphics::LINE, Line_Segment::Create);
-    return 4;
-  }
-  int Delete_Selected_Shape(App::App &app) {
-    Action::Delete_Shape(app);
-    return 5;
-  }
-  int Create_Vertex_If_Polygon_Selected(App::App &app) {
-    Action::Add_Vertex_Center(app);
-    return 5;
-  }
-  int Delete_Vertex_If_Polygon_Selected(App::App &app) {
-    Action::Delete_Vertex(app);
-    return 5;
-  }
-  int Unused(App::App &app) {
-    return 5;
-  }
-
-  std::array<Edit_Button, Graphics::ButtonBarSize> editButtons = {
-      Create_Point_Button,
-      Create_Circle_Button,
-      Create_Line_Button,
-      Create_Rect_Button,
-      Create_Polygon_Button,
-      Unused,
-      Delete_Selected_Shape,
-      //maybe grey them out if a polygon is not selected
-      Create_Vertex_If_Polygon_Selected,
-      Delete_Vertex_If_Polygon_Selected,
+  std::array<Action::Button, Graphics::ButtonBarSize> editButtons = {
+      Action::Create_Point,
+      Action::Create_Circle,
+      Action::Create_Line,
+      Action::Create_Rect,
+      Action::Create_Polygon,
+      Action::Unused,
+      Action::Delete_Selected_Shape,
+//    //maybe grey them out if a polygon is not selected
+      Action::Create_Vertex_If_Polygon_Selected,
+      Action::Delete_Vertex_If_Polygon_Selected,
   };
 
   int Click_Button(App::App &app, const int &i) {

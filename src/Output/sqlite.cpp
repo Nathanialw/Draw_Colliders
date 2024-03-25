@@ -143,9 +143,9 @@ namespace SQLite {
       numFixtures += body.shapes[Graphics::LINE].size();
 
       char* err;
-      std::string sql = "INSERT INTO BODYDEF (name, isDynamic, isBullet, numFixtures) VALUES (" + Append_Quotes(name) + ", " + Append_Quotes(body.isDynamic) + ", " + Append_Quotes(body.isBullet) + ", " + Append_Quotes(numFixtures) + ")";
-
-      auto rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &err);
+//      std::string sql = "INSERT INTO BODYDEF (name, isDynamic, isBullet, numFixtures) VALUES (" + Append_Quotes(name) + ", " + Append_Quotes(body.isDynamic) + ", " + Append_Quotes(body.isBullet) + ", " + Append_Quotes(numFixtures) + ")";
+//
+//      auto rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &err);
       if (err != SQLITE_OK)
         std::cout << err << std::endl;
 

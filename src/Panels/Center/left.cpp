@@ -35,7 +35,7 @@ namespace Center::Left {
     SDL_RenderDrawRectF(app.context.renderer, &app.panel.mainPanel.left.search);
     SDL_SetRenderDrawColor(app.context.renderer, 0, 0, 0, 255);
 
-    auto caretRect = Text::Render(app.context.renderer, app.context.font, app.filterText.c_str(), app.panel.mainPanel.left.search.x, app.panel.mainPanel.left.search.y);
+    auto caretRect = Text::Render(app.context.renderer, app.context.font, app.filterText.c_str(), app.panel.mainPanel.left.search.x + app.uiPanels.spacing, app.panel.mainPanel.left.search.y);
 
     if (app.filterImages) { //render caret
       SDL_SetRenderDrawColor(app.context.renderer, 255, 255, 255, 255);

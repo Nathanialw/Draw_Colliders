@@ -1,3 +1,4 @@
+#pragma once
 //
 // Created by nathanial on 17/03/24.
 //
@@ -10,7 +11,6 @@
 #include "../App/core.h"
 
 namespace Action {
-
 
   bool Delete_Shape(App::App &app);
   bool Delete_Vertex(App::App &app);
@@ -29,5 +29,20 @@ namespace Action {
   bool Save(App::App &app);
   bool Save_As(App::App &app);
   bool Load(App::App &app);
+
+  typedef int (*Button)(App::App &app);
+
+  typedef Shape::Shape (*CREATE_SHAPE)();
+
+  int Create_Circle(App::App &app);
+  int Create_Point(App::App &app);
+  int Create_Polygon(App::App &app);
+  int Create_Rect(App::App &app);
+  int Create_Line(App::App &app);
+  int Delete_Selected_Shape(App::App &app);
+  int Create_Vertex_If_Polygon_Selected(App::App &app);
+  int Delete_Vertex_If_Polygon_Selected(App::App &app);
+  int Unused(App::App &app);
+
 
 }

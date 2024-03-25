@@ -16,6 +16,46 @@
 #include "Bounding_Boxes/line_segment.h"
 
 namespace Data {
+  union Option_Value {
+    int numValue;
+    bool isChecked;
+  };
+
+  enum Options {
+    body_label,
+    isDynamic,
+    isSensor,
+    isBullet,
+    filter_category_bits,
+    filter_mask_bits,
+    bounce,
+    density,
+    group,
+    restitution,
+    friction,
+    SIZE,
+  };
+
+
+  enum Option_Type {
+    NONE,
+    LABEL,
+    CHECKBOX,
+    NUMINPUT,
+    TEXTINPUT
+  };
+
+  struct Option_Input {
+//    Graphics::Button checkBox;
+    Option_Type type;
+  };
+
+  struct Right {
+    std::array<std::string, 18> optionName;
+    std::array<Option_Value, 18> option{};
+    std::array<Option_Input, 18> optionInput{};
+  };
+
   struct Shape_List {
     std::array<std::vector<std::string>, Graphics::Shape::SIZE> shapeList;
 
@@ -31,8 +71,7 @@ namespace Data {
   struct Center {
     Graphics::Image texture;
     std::array<std::vector<Shape::Shape>, Graphics::SIZE> shapes;
-    bool isDynamic = false;
-    bool isBullet = false;
+    std::array<Options, Options::SIZE> options{};
 
     int index = 0;
     //list to show/hide polygons
@@ -48,26 +87,7 @@ namespace Data {
     std::vector<Graphics::Image> imageNames;
   };
 
-  union Option_Value {
-    int numValue;
-    bool isChecked;
-  };
 
-  enum Option_Type {
-    checkBox,
-    numInput
-  };
-
-  struct Option_Input {
-    Graphics::Button checkBox;
-    Option_Type type;
-  };
-
-  struct Right {
-    std::array<std::string, 9> optionName;
-    std::array<Option_Value, 9> option;
-    std::array<Option_Input, 9> optionInput;
-  };
 
   struct Menu {
     std::array<Graphics::Button, 6> buttons;

@@ -79,30 +79,6 @@ namespace Graphics {
     SDL_FRect panel;
     SDL_FRect body;
     ScrollBar scroll;
-
-    //options
-    SDL_FRect exportType;
-    SDL_FRect fileName;
-    SDL_FRect size; // in pixels
-
-    SDL_FRect anchorPoint;
-    SDL_FRect bodyLabel;
-
-    SDL_FRect fixRotation;
-    SDL_FRect linearDampening;
-    SDL_FRect angularDampening;
-
-    SDL_FRect bounce;
-    SDL_FRect affectedByGravity;
-
-    SDL_FRect isDynamic;
-    SDL_FRect isBullet;
-    SDL_FRect isSensor;
-    SDL_FRect density;
-    SDL_FRect restitution;
-    SDL_FRect friction;
-    SDL_FRect group;
-    //bitmask stuff
   };
 
   struct Main_Panel {
@@ -117,10 +93,8 @@ namespace Graphics {
     std::array<Button, menuSize> buttons{};
   };
 
-  const int numMenuButtons = 6;
   struct Menu {
     SDL_FRect panel{};
-    std::array<SDL_FRect, numMenuButtons> buttons{};
   };
 
   struct Panels {
@@ -145,7 +119,8 @@ namespace Graphics {
   };
 
   struct Texture {
-    SDL_Texture* checkbox = nullptr;
+    SDL_Texture* checkedBox = nullptr;
+    SDL_Texture* uncheckedBox = nullptr;
     SDL_Texture* deleteShape = nullptr;
     SDL_Texture* addVertex = nullptr;
     SDL_Texture* deleteVertex = nullptr;

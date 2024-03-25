@@ -79,7 +79,18 @@ namespace Mouse {
           if (Menu::Open(app)) {
             return true;
           }
-        Menu::Clear(app);
+
+        if (Menu::Is_Open()) {
+          if (Menu::SubMenu_Select(app)) {
+            return true;
+            //action
+          } else {
+            Menu::Clear(app);
+            return false;
+            //close
+          }
+        }
+
 
         if (SDL_HasIntersectionF(&app.panel.top.panel, &cursor))
           return Top::Click_Menu_Button(app, Mouse::Cursor_Point());
@@ -99,6 +110,7 @@ namespace Mouse {
               return true;
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.right.body, &cursor)) {
+              Center::Right::Select_Option(app);
               return true;
             }
             // modify settings

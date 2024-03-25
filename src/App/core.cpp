@@ -36,15 +36,45 @@ namespace App {
     app.context = Graphics::CreateWindowAndRenderer();
     app.panel = Graphics::Set_Panels(app.context.window, app.uiPanels);
     app.interface.right.optionName = {
+        "Export:",
+        "format",
+        "",
+        "Body:",
+        "body_label",
+        "isDynamic",
+        "",
+        "Fixture:",
+        "isSensor",
+        "isBullet",
+        "",
         "filter_category_bits",
         "filter_mask_bits",
         "bounce",
         "density",
         "group",
         "restitution",
-        "isBullet",
-        "isDynamic",
-        "isSensor",
+        "friction",
+    };
+
+    app.interface.right.optionInput = {
+        Data::Option_Type::LABEL,
+        Data::Option_Type::NUMINPUT,
+        Data::Option_Type::NONE,
+        Data::Option_Type::LABEL,
+        Data::Option_Type::TEXTINPUT,
+        Data::Option_Type::CHECKBOX,
+        Data::Option_Type::NONE,
+        Data::Option_Type::LABEL,
+        Data::Option_Type::CHECKBOX,
+        Data::Option_Type::CHECKBOX,
+        Data::Option_Type::NONE,
+        Data::Option_Type::NUMINPUT,
+        Data::Option_Type::NUMINPUT,
+        Data::Option_Type::NUMINPUT,
+        Data::Option_Type::NUMINPUT,
+        Data::Option_Type::NUMINPUT,
+        Data::Option_Type::NUMINPUT,
+        Data::Option_Type::NUMINPUT,
     };
     app.texture = Graphics::Load_Icons(app.context.renderer);
     Set_Textures(app);

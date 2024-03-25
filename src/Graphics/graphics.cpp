@@ -233,8 +233,6 @@ namespace Graphics {
 
   Texture Load_Icons(SDL_Renderer *renderer) {
     Texture texture;
-    texture.checkbox = IMG_LoadTexture(renderer, "assets/icons/checkbox.png");
-    texture.unchecked = IMG_LoadTexture(renderer, "assets/icons/unchecked.png");
 
     texture.save = IMG_LoadTexture(renderer, "assets/icons/disk.png");
     texture.saveAs = IMG_LoadTexture(renderer, "assets/icons/save-as.png");
@@ -263,6 +261,9 @@ namespace Graphics {
     texture.deleteImage = IMG_LoadTexture(renderer, "assets/icons/remove_image.png");
     texture.publish = IMG_LoadTexture(renderer, "assets/icons/publish.png");
     texture.publishAs = IMG_LoadTexture(renderer, "assets/icons/publish_as.png");
+
+    texture.uncheckedBox = IMG_LoadTexture(renderer, "assets/icons/unchecked.png");
+    texture.checkedBox = IMG_LoadTexture(renderer, "assets/icons/checkbox.png");
 
     texture.alphaTexture = IMG_LoadTexture(renderer, "assets/images/fogOfWar.png");
     SDL_SetTextureBlendMode(texture.alphaTexture, SDL_BLENDMODE_BLEND);

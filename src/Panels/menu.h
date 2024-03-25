@@ -12,6 +12,10 @@
 
 namespace Menu {
 
+  bool SubMenu_Select(App::App &app);
+  void Init(App::App &app);
+  bool Is_Open();
+
   void Clear(App::App& app);
   bool Open(App::App& app);
   void Update(App::App& app);

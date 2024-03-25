@@ -6,7 +6,7 @@
 namespace Text {
   FC_Font* Load_Font(SDL_Renderer *renderer) {
     FC_Font *font = FC_CreateFont();
-    FC_LoadFont(font, renderer, "assets/fonts/EagleLake-Regular.ttf", 15, FC_MakeColor(255, 255, 255, 255), TTF_STYLE_NORMAL);
+    FC_LoadFont(font, renderer, "assets/fonts/liberation-mono/LiberationMono-Regular.ttf", 15, FC_MakeColor(255, 255, 255, 255), TTF_STYLE_NORMAL);
     return font;
   }
 

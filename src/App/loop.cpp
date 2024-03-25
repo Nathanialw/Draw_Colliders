@@ -49,6 +49,7 @@ namespace App {
   }
 
   void Run(App &app) {
+    Menu::Init(app);
     Render::Present(app);
     while (app.running) {
       Input(app);

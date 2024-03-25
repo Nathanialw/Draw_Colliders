@@ -14,5 +14,6 @@
 namespace Center::Right {
   void Render(App::App &app);
   bool Scroll(App::App &app, const Sint32 &scroll);
+  void Select_Option(App::App &app);
 
 }

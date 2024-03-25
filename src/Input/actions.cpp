@@ -9,6 +9,8 @@
 #include "../Output/xml.h"
 #include "../Output/sqlite.h"
 #include "../UI/scroll_bar.h"
+#include "iostream"
+
 namespace Action {
   bool Delete_Shape(App::App &app, const Graphics::Shape &shap, const int &shapeIndex) {
     auto &shape = app.interface.center.shapes[shap];
@@ -259,7 +261,61 @@ namespace Action {
 
 
 
+  typedef Shape::Shape (*CREATE_SHAPE)();
 
+  bool Add_Shape(App::App &app, const Graphics::Shape &shape, const CREATE_SHAPE &Create) {
+    if (app.interface.center.texture.texture) {
+      auto &shapeList = app.interface.shapeList.shapeList[shape];
+      for (int j = 0; j < app.interface.center.shapes[shape].size(); ++j) {
+        if (atoi(shapeList[j + 1].c_str()) != j) {
+          shapeList.insert(shapeList.begin() + j + 1, std::to_string(j));
+          app.interface.center.shapes[shape].insert(app.interface.center.shapes[shape].begin() + j, Create());
+          return true;
+        }
+      }
+      shapeList.emplace_back(std::to_string(app.interface.center.shapes[shape].size()));
+      app.interface.center.shapes[shape].emplace_back(Create());
+      return true;
+    }
+    return false;
+  }
+
+  int Create_Circle(App::App &app) {
+    Add_Shape(app, Graphics::CIRCLE, Circle::Create);
+    return 0;
+  }
+  int Create_Point(App::App &app) {
+    Add_Shape(app, Graphics::POINT, Point::Create);
+    return 1;
+  }
+  int Create_Polygon(App::App &app) {
+    Add_Shape(app, Graphics::POLYGON, Polygon::Create);
+    return 2;
+  }
+  int Create_Rect(App::App &app) {
+    Add_Shape(app, Graphics::AABB, AABB::Create);
+    return 3;
+  }
+  int Create_Line(App::App &app) {
+    Add_Shape(app, Graphics::LINE, Line_Segment::Create);
+    return 4;
+  }
+  int Delete_Selected_Shape(App::App &app) {
+    Action::Delete_Shape(app);
+    return 5;
+  }
+  int Create_Vertex_If_Polygon_Selected(App::App &app) {
+    Action::Add_Vertex_Center(app);
+    return 5;
+  }
+  int Delete_Vertex_If_Polygon_Selected(App::App &app) {
+    Action::Delete_Vertex(app);
+    return 5;
+  }
+  int Unused(App::App &app) {
+    std::cout << "button unassigned" << std::endl;
+    return 5;
+  }
 
 
 
