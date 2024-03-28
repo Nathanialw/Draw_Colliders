@@ -37,7 +37,12 @@ namespace Keyboard {
         switch (event.key.keysym.sym) {
           case SDLK_BACKSPACE: {
             if (!app.filterText.empty()) {
-              app.filterText = app.filterText.erase(app.filterText.size() - 1);
+              const Uint8 *keys = SDL_GetKeyboardState(nullptr);
+              if (keys[SDL_SCANCODE_LCTRL])
+                app.filterText = "";
+              else
+                app.filterText = app.filterText.erase(app.filterText.size() - 1);
+
               Filter(app);
               if (app.filterText.empty())
                 app.interface.left.filteredIndexes.clear();

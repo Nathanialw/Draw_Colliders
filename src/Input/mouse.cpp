@@ -98,13 +98,13 @@ namespace Mouse {
         if (SDL_HasIntersectionF(&app.panel.center, &cursor)) {
           if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor)) {
             if (SDL_HasIntersectionF(&app.panel.mainPanel.right.scroll.bar, &cursor)) {
-              app.selected = App::SCROLLBAR_RIGHT;
+              app.selected = SCROLLBAR_RIGHT;
               app.cachedScrollBarPosition = (Mouse::Cursor_Point().y - app.panel.mainPanel.right.scroll.bar.y);
               return true;
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {
               // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
-              app.selected = App::EXPANDER_RIGHT;
+              app.selected = EXPANDER_RIGHT;
               return true;
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.right.body, &cursor)) {
@@ -124,12 +124,12 @@ namespace Mouse {
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {
               // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
-              app.selected = App::EXPANDER_LEFT;
+              app.selected = EXPANDER_LEFT;
               return true;
             }
             // use scroll
             if (SDL_HasIntersectionF(&app.panel.mainPanel.left.scroll.bar, &cursor)) {
-              app.selected = App::SCROLLBAR_LEFT;
+              app.selected = SCROLLBAR_LEFT;
               app.cachedScrollBarPosition = (Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.bar.y);
               return true;
             }
@@ -137,7 +137,7 @@ namespace Mouse {
           if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {
               // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
-              app.selected = App::EXPANDER_LEFT;
+              app.selected = EXPANDER_LEFT;
               return true;
             }
 
@@ -188,7 +188,7 @@ namespace Mouse {
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {
               // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
-              app.selected = App::EXPANDER_RIGHT;
+              app.selected = EXPANDER_RIGHT;
               return true;
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
@@ -200,7 +200,7 @@ namespace Mouse {
             }
             if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.panel, &cursor)) {
               if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.expanderLeft, &cursor)) {
-                app.selected = App::EXPANDER_FIXTURES;
+                app.selected = EXPANDER_FIXTURES;
                 return true;
               }
               if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.body, &cursor)) {
@@ -209,7 +209,7 @@ namespace Mouse {
                 return true;
               }
               if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.scroll.bar, &cursor)) {
-                app.selected = App::SCROLLBAR_FIXTURES;
+                app.selected = SCROLLBAR_FIXTURES;
                 app.cachedScrollBarPosition = Mouse::Cursor_Point().y - app.panel.mainPanel.center.shapes.scroll.bar.y;
                 return true;
               }

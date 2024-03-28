@@ -14,6 +14,24 @@
 #include "SDL2/SDL.h"
 
 namespace Mouse {
+  enum Mouse_Selected {
+    NONE,
+    EXPANDER_LEFT,
+    EXPANDER_RIGHT,
+    EXPANDER_FIXTURES,
+    SCROLLBAR_LEFT,
+    SCROLLBAR_RIGHT,
+    SCROLLBAR_FIXTURES,
+    SHAPE,
+    VERTEX,
+    VERTEX_LIST,
+    IMAGE_LIST,
+    MENU,
+    FILTERBOX,
+    SIZE
+  };
+
+
   SDL_FRect Cursor();
   SDL_FPoint Cursor_Point();
   bool Update_Cursor(App::App &app);

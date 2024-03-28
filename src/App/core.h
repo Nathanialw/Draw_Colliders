@@ -10,10 +10,14 @@
 #include "data.h"
 #include "Settings/serialise.h"
 #include "../Utils/utils.h"
-#include "../Graphics/graphics.h"
+//#include "../Graphics/graphics.h"
 //#include "Bounding_Boxes/shape.h"
 
+//import Graphics;
+
 namespace App {
+
+//  typedef Length;
 
   struct Texture {
     SDL_Texture* checkedBox = nullptr;
@@ -44,6 +48,8 @@ namespace App {
     SDL_Texture* addImage = nullptr;
     SDL_Texture* alphaTexture = nullptr;
 
+
+
     //image index // shape type // shape index
     std::vector<std::array<std::vector<SDL_Texture*>, Shape::SIZE>> shapes{};
     // imported images
@@ -53,25 +59,18 @@ namespace App {
     std::vector<SDL_Texture*> smallImages;
   };
 
-
-  enum Mouse_Selected {
+  enum Text_Box_Selected {
     NONE,
-    EXPANDER_LEFT,
-    EXPANDER_RIGHT,
-    EXPANDER_FIXTURES,
-    SCROLLBAR_LEFT,
-    SCROLLBAR_RIGHT,
-    SCROLLBAR_FIXTURES,
-    SHAPE,
-    VERTEX,
-    VERTEX_LIST,
-    IMAGE_LIST,
-    MENU,
-    FILTERBOX,
-    SIZE
+    BODY,
+    FILTER,
+    FILTER_CATEGORY,
+    FILTER_MASK,
+    GROUP,
+    FRICTION,
+    BOUNCE,
+    DENSITY,
+    RESTITUTION,
   };
-
-
 
   struct App {
     Graphics::UI_Panels uiPanels;
@@ -100,7 +99,8 @@ namespace App {
     Shape::Vertex selectedVertex;
     Shape::Vertex vertex;
 
-    Mouse_Selected selected = NONE;
+//    std::array<bool, SIZE> textBoxSelected;
+    int selected = 0;
     float cachedScrollBarPosition = 0.0f;
 
     int imageIndex = 0;
@@ -119,9 +119,5 @@ namespace App {
   void New(App &app);
   void Set_Textures(App &app);
   void Init (App &app);
-  ::Shape::Offsets Calc_Offset(const App &app);
   SDL_FPoint Offset_From_Image_Center(const App &app, const SDL_FPoint &point);
-  SDL_FRect Vertex_To_Rect(const App &app, const SDL_FPoint &vertex, const ::Shape::Offsets &o, bool moveVertex);
-
-
 }

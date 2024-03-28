@@ -1,6 +1,8 @@
 //
 // Created by nathanial on 3/9/24.
 //
+//import Graphics.
+
 #ifdef __linux__
 #include <SDL2/SDL.h>
 #elif defined(_WIN32)
@@ -17,7 +19,6 @@
 
 
 namespace Graphics {
-  using namespace Graphics;
 
   struct Window {
     int w;
@@ -31,10 +32,10 @@ namespace Graphics {
     context.flags = SDL_WINDOW_RESIZABLE;
     context.title = "Collider";
     context.window = SDL_CreateWindow(context.title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, context.width, context.height, context.flags);
-    context.renderer = SDL_CreateRenderer(context.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
+//    context.renderer = SDL_CreateRenderer(context.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
+    context.renderer = SDL_CreateRenderer(context.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     SDL_SetRenderDrawBlendMode(context.renderer, SDL_BLENDMODE_BLEND);
 
-//    context.renderer = SDL_CreateRenderer(context.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     return context;
   }
 

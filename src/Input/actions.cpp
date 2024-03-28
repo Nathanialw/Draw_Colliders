@@ -142,7 +142,12 @@ namespace Action {
     image.index = left.images.size();
 
     left.images.emplace_back(image);
-    left.imageNameStr.emplace_back(Text::Get_File_Name(imageImport.fileName));
+    auto name = Text::Get_File_Name(imageImport.fileName);
+    for (const auto &nameStr: left.imageNameStr) {
+      if (nameStr == name)
+        name += "_copy";
+    }
+    left.imageNameStr.emplace_back(name);
     left.imagePathStr.emplace_back(imageImport.fileName);
 
     // load the image to the center if there is no image

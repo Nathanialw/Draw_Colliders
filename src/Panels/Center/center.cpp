@@ -250,10 +250,10 @@ namespace Center::Center {
 
 
   void Set_Expander(App::App &app) {
-    if (app.selected == App::NONE)
+    if (app.selected == Mouse::NONE)
       return;
 
-    app.selected = App::NONE;
+    app.selected = Mouse::NONE;
   }
 
   bool Scroll(App::App &app, const Sint32 &scroll) {

@@ -4,8 +4,8 @@ NEEDS
 -right side number inputs
 -hide scroll bars
 -show/hide shapes
--enforce unique image names
--dialogue boxes
+-hover over hint boxes
+-fit icons properly
 
 WANTS
 -load side images as small images to not waste VRAM
@@ -22,6 +22,7 @@ WANTS
 -import a folder of images
 -rename fixtures
 -show vertices in dropdown menu in fixture list
+-show size of image in pixels
 
 //buggy, can render to texture but SDL_Destroy() will not destroy that texture so it just gobbles up VRAM
 -render aaFilledPolygonRBGA to texture so I only

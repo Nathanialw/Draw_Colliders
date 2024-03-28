@@ -1,3 +1,4 @@
+//export module Graphics;
 #pragma once
 //
 // Created by nathanial on 3/9/24.
@@ -9,6 +10,7 @@
 #include "array"
 #include "../../lib/SDL_FontCache/SDL_FontCache.h"
 //#include "../UI/scroll_bar.h"
+
 
 namespace Graphics {
 
@@ -28,18 +30,20 @@ namespace Graphics {
     SHAPESELECTED,
     SHAPE,
     ICONBACKGROUND,
+    ICON,
     BLACK,
     WHITE,
     SIZE,
   };
 
   static SDL_Color color[(int)Color::SIZE] = {
-      {44, 44, 84, 255},      //dark indigo
+      {71, 71, 135, 255},     //purple-gray
       {170, 171, 184, 255},   //deep purple
       {100, 100, 135, 255},    //light
       {236, 236, 236, 255},   //light-gray
-      {71, 71, 135, 255},     //purple-gray
+      {44, 44, 84, 255},      //dark indigo
       {0, 255, 255, 255},
+      {200, 200, 184, 255},
       {255, 0, 0, 255},
       {130, 130, 135, 255},     //Icon back
       {0, 0, 0, 255},
