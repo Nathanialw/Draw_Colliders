@@ -4,7 +4,7 @@
 
 #include "circle.h"
 #include "shape.h"
-#include "../../../lib/SDL2_gxf/SDL2_gfxPrimitives.h"
+#include "SDL2_gxf/SDL2_gfxPrimitives.h"
 
 namespace Circle {
   Shape::Shape Create() {

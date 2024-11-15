@@ -6,16 +6,17 @@
 #ifdef __linux__
 #include <SDL2/SDL.h>
 #elif defined(_WIN32)
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #endif
 #include <thread>
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include "iostream"
+#include <limits>
 #include "graphics.h"
-#include "../../lib/nativefiledialog/nfd.h"
-#include "../../lib/SDL2_gxf/SDL2_gfxPrimitives.h"
+#include "nativefiledialog/nfd.h"
+#include "SDL2_gxf/SDL2_gfxPrimitives.h"
 
 
 namespace Graphics {
@@ -254,7 +255,7 @@ namespace Graphics {
     SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, h);
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     SDL_SetRenderTarget(renderer, texture);
-    double lowestX = MAXFLOAT;
+    double lowestX =  std::numeric_limits<double>::max();
     for (const auto &num: xPolygonPoints) {
       if (num < lowestX)
         lowestX = num;
@@ -262,7 +263,8 @@ namespace Graphics {
     for (auto &num: xPolygonPoints) {
       num -= lowestX;
     }
-    double lowestY = MAXFLOAT;
+
+    double lowestY =  std::numeric_limits<double>::max();
     for (const auto &num: yPolygonPoints) {
       if (num < lowestY)
         lowestY = num;

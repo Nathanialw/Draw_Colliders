@@ -6,7 +6,7 @@
 #include "save.h"
 #include "../../Graphics/text.h"
 #include "../../Graphics/graphics.h"
-#include "../../../lib/nativefiledialog/nfd.h"
+#include "nativefiledialog/nfd.h"
 #include <thread>
 #include "../../App/Bounding_Boxes/circle.h"
 #include "../../App/Bounding_Boxes/point.h"

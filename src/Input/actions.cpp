@@ -68,7 +68,7 @@ namespace Action {
   }
 
   int Get_Vertex_Position_(const std::vector<SDL_FPoint> &vertexes, const SDL_FPoint &point) {
-    float distance = MAXFLOAT;
+    float distance =  std::numeric_limits<float>::max();
     int index = 0;
 //    check each line segment
     for (int i = 0; i < vertexes.size() - 1; ++i) {

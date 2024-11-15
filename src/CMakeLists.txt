@@ -1,0 +1,7 @@
+add_subdirectory(App)
+add_subdirectory(Graphics)
+add_subdirectory(Input)
+add_subdirectory(Output)
+add_subdirectory(Panels)
+add_subdirectory(UI)
+add_subdirectory(Utils)

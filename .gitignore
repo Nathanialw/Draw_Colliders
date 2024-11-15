@@ -9,6 +9,7 @@ cmake-build-minsizerel-64-bit
 CMakeFiles
 .cmake
 .idea
+.gitignore
 cmake_install.cmake
 CMakeCache.txt
 Makefile

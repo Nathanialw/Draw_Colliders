@@ -5,7 +5,7 @@
 
 #include "iostream"
 
-#include "../../lib/sqlite/sqlite3.h"
+#include "sqlite/sqlite3.h"
 
 #include "sqlite.h"
 

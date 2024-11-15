@@ -7,7 +7,7 @@
 #define BOX2D_COLLIDERS_TEXT_H
 
 #endif //BOX2D_COLLIDERS_TEXT_H
-#include "../../lib/SDL_FontCache/SDL_FontCache.h"
+#include "SDL_FontCache/SDL_FontCache.h"
 #include "string"
 
 

@@ -8,7 +8,7 @@
 #include "string"
 #include "vector"
 #include "array"
-#include "../../lib/SDL_FontCache/SDL_FontCache.h"
+#include "SDL_FontCache/SDL_FontCache.h"
 //#include "../UI/scroll_bar.h"
 
 

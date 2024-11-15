@@ -4,7 +4,7 @@
 #include "fstream"
 #include "iostream"
 
-#include "../../lib/nlohmann/json.hpp"
+#include "nlohmann/json.hpp"
 
 #include "../App/core.h"
 

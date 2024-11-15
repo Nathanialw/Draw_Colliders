@@ -36,3 +36,5 @@ UI
 bugs
 -circles stop rendering if you zoom into them too closely
 -vertices sprite renders too small
+-if you select OPEN from the menu it resets the colliders you have drawn
+-search carat doesn't move when you use space

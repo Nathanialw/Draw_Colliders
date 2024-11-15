@@ -4,7 +4,7 @@
 // Created by nathanial on 3/10/24.
 //
 
-#include "../../lib/tinyxml2/tinyxml2.h"
+#include "tinyxml2/tinyxml2.h"
 #include "string"
 #include "xml.h"
 
