@@ -21,3 +21,4 @@ release
 build.ninja
 /save.txt
 /build/
+sqlite.db
