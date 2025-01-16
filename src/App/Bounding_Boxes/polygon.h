@@ -11,7 +11,7 @@
 
 #include "line_segment.h"
 #include "../../Graphics/graphics.h"
-#include "shape.h"
+#include "e_shape.h"
 
 namespace Polygon {
 

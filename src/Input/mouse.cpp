@@ -72,7 +72,7 @@ namespace Mouse {
       }
 
       if (event.button.button == SDL_BUTTON_LEFT) {
-        if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor))
+        if (Rect_Intersect(app.panel.menu.panel, cursor))
           if (Menu::Open(app)) {
             return true;
           }
@@ -90,58 +90,58 @@ namespace Mouse {
         }
 
 
-        if (SDL_HasIntersectionF(&app.panel.top.panel, &cursor))
+        if (Rect_Intersect(app.panel.top.panel, cursor))
           return Top::Click_Menu_Button(app, Mouse::Cursor_Point());
-        if (SDL_HasIntersectionF(&app.panel.bottom, &cursor))
+        if (Rect_Intersect(app.panel.bottom, cursor))
           return Bottom::Bottom_Panel();
 
-        if (SDL_HasIntersectionF(&app.panel.center, &cursor)) {
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor)) {
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.right.scroll.bar, &cursor)) {
+        if (Rect_Intersect(app.panel.center, cursor)) {
+          if (Rect_Intersect(app.panel.mainPanel.right.panel, cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.right.scroll.bar, cursor)) {
               app.selected = SCROLLBAR_RIGHT;
               app.cachedScrollBarPosition = (Mouse::Cursor_Point().y - app.panel.mainPanel.right.scroll.bar.y);
               return true;
             }
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.center.expanderRight, cursor)) {
               // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
               app.selected = EXPANDER_RIGHT;
               return true;
             }
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.right.body, &cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.right.body, cursor)) {
               Center::Right::Select_Option(app);
               return true;
             }
             // modify settings
           }
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor)) {
+          if (Rect_Intersect(app.panel.mainPanel.left.panel, cursor)) {
             // select image
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.body, &cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.left.body, cursor)) {
               return Center::Left::Set_Image(app);
             }
             // use search box
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.search, &cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.left.search, cursor)) {
               return Center::Left::Filter_Images(app);
             }
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.center.expanderLeft, cursor)) {
               // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
               app.selected = EXPANDER_LEFT;
               return true;
             }
             // use scroll
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.left.scroll.bar, &cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.left.scroll.bar, cursor)) {
               app.selected = SCROLLBAR_LEFT;
               app.cachedScrollBarPosition = (Mouse::Cursor_Point().y - app.panel.mainPanel.left.scroll.bar.y);
               return true;
             }
           };
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {
+          if (Rect_Intersect(app.panel.mainPanel.center.panel, cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.center.expanderLeft, cursor)) {
               // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
               app.selected = EXPANDER_LEFT;
               return true;
             }
 
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.center.image, cursor)) {
               // check for vertex under mouse
               // select a vertex
               app.vertex = Shape::Get_Vertex(app.interface.center.texture, app.interface.center.shapes, app.vertexRadius, app.panel.mainPanel.center.image, cursor, app.offset, app.moveImage, app.zoomToMouse);
@@ -186,29 +186,29 @@ namespace Mouse {
               // use scroll bar for shape list
               return true;
             }
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.center.expanderRight, cursor)) {
               // while held save the offset of where the mouse was clicked and the current mouse position when released save the offset to the original value
               app.selected = EXPANDER_RIGHT;
               return true;
             }
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.center.buttonBar.panel, cursor)) {
               for (int i = 0; i < app.panel.mainPanel.center.buttonBar.buttons.size(); ++i) {
-                if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.buttons[i].button, &cursor)) {
+                if (Rect_Intersect(app.panel.mainPanel.center.buttonBar.buttons[i].button, cursor)) {
                   Center::Center::Click_Button(app, i);
                 };
               }
             }
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.panel, &cursor)) {
-              if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.expanderLeft, &cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.center.shapes.panel, cursor)) {
+              if (Rect_Intersect(app.panel.mainPanel.center.shapes.expanderLeft, cursor)) {
                 app.selected = EXPANDER_FIXTURES;
                 return true;
               }
-              if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.body, &cursor)) {
+              if (Rect_Intersect(app.panel.mainPanel.center.shapes.body, cursor)) {
                 auto vertex = Center::Center::Select_From_Shape_List_Names(app);
                 app.selectedShape = {vertex.shape, vertex.indexPolygon};
                 return true;
               }
-              if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.scroll.bar, &cursor)) {
+              if (Rect_Intersect(app.panel.mainPanel.center.shapes.scroll.bar, cursor)) {
                 app.selected = SCROLLBAR_FIXTURES;
                 app.cachedScrollBarPosition = Mouse::Cursor_Point().y - app.panel.mainPanel.center.shapes.scroll.bar.y;
                 return true;
@@ -220,45 +220,45 @@ namespace Mouse {
       }
 
       else if (event.button.button == SDL_BUTTON_RIGHT) {
-        if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor)) {
+        if (Rect_Intersect(app.panel.menu.panel, cursor)) {
           return true;
         }
-        if (SDL_HasIntersectionF(&app.panel.top.panel, &cursor))
+        if (Rect_Intersect(app.panel.top.panel, cursor))
           return true;
-        if (SDL_HasIntersectionF(&app.panel.bottom, &cursor))
+        if (Rect_Intersect(app.panel.bottom, cursor))
           return true;
-        if (SDL_HasIntersectionF(&app.panel.center, &cursor)) {
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor))
+        if (Rect_Intersect(app.panel.center, cursor)) {
+          if (Rect_Intersect(app.panel.mainPanel.right.panel, cursor))
             return true;
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor))
+          if (Rect_Intersect(app.panel.mainPanel.left.panel, cursor))
             return true;
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor))
+          if (Rect_Intersect(app.panel.mainPanel.center.panel, cursor))
             return true;
         }
         return true;
       }
 
       else if (event.button.button == SDL_BUTTON_MIDDLE) {
-        if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor)) {
+        if (Rect_Intersect(app.panel.menu.panel, cursor)) {
           return true;
         }
-        if (SDL_HasIntersectionF(&app.panel.top.panel, &cursor))
+        if (Rect_Intersect(app.panel.top.panel, cursor))
           return true;
-        if (SDL_HasIntersectionF(&app.panel.bottom, &cursor))
+        if (Rect_Intersect(app.panel.bottom, cursor))
           return true;
-        if (SDL_HasIntersectionF(&app.panel.center, &cursor)) {
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor))
+        if (Rect_Intersect(app.panel.center, cursor)) {
+          if (Rect_Intersect(app.panel.mainPanel.right.panel, cursor))
             return true;
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor))
+          if (Rect_Intersect(app.panel.mainPanel.left.panel, cursor))
             return true;
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor))
+          if (Rect_Intersect(app.panel.mainPanel.center.panel, cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.center.image, cursor))
               return Center::Center::Move(app);
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor))
+            if (Rect_Intersect(app.panel.mainPanel.center.expanderRight, cursor))
               return true;
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor))
+            if (Rect_Intersect(app.panel.mainPanel.center.expanderLeft, cursor))
               return true;
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor))
+            if (Rect_Intersect(app.panel.mainPanel.center.buttonBar.panel, cursor))
               return true;
           }
         }
@@ -275,19 +275,19 @@ namespace Mouse {
     if (event.type == SDL_MOUSEBUTTONUP) {
       if (event.button.button == SDL_BUTTON_LEFT) {
         Center::Center::Set_Expander(app);
-        if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor)) {}
-        else if (SDL_HasIntersectionF(&app.panel.top.panel, &cursor)) {}
-        else if (SDL_HasIntersectionF(&app.panel.bottom, &cursor)) {}
-        else if (SDL_HasIntersectionF(&app.panel.center, &cursor)) {
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor)) {}
-          else if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor)) {}
-          else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor)) {}
-            else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {}
-            else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {}
-            else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
+        if (Rect_Intersect(app.panel.menu.panel, cursor)) {}
+        else if (Rect_Intersect(app.panel.top.panel, cursor)) {}
+        else if (Rect_Intersect(app.panel.bottom, cursor)) {}
+        else if (Rect_Intersect(app.panel.center, cursor)) {
+          if (Rect_Intersect(app.panel.mainPanel.right.panel, cursor)) {}
+          else if (Rect_Intersect(app.panel.mainPanel.left.panel, cursor)) {}
+          else if (Rect_Intersect(app.panel.mainPanel.center.panel, cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.center.image, cursor)) {}
+            else if (Rect_Intersect(app.panel.mainPanel.center.expanderRight, cursor)) {}
+            else if (Rect_Intersect(app.panel.mainPanel.center.expanderLeft, cursor)) {}
+            else if (Rect_Intersect(app.panel.mainPanel.center.buttonBar.panel, cursor)) {
               for (const auto &button : app.panel.mainPanel.center.buttonBar.buttons) {
-                if (SDL_HasIntersectionF(&button.button, &cursor)) {};
+                if (Rect_Intersect(button.button, cursor)) {};
               }
             }
           }
@@ -298,19 +298,19 @@ namespace Mouse {
       }
 
       else if (event.button.button == SDL_BUTTON_RIGHT) {
-        if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor)) {}
-        else if (SDL_HasIntersectionF(&app.panel.top.panel, &cursor)) {}
-        else if (SDL_HasIntersectionF(&app.panel.bottom, &cursor)){}
-        else if (SDL_HasIntersectionF(&app.panel.center, &cursor)) {
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor)) {}
-          else if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor)) {}
-          else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor)) {}
-            else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {}
-            else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {}
-            else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
+        if (Rect_Intersect(app.panel.menu.panel, cursor)) {}
+        else if (Rect_Intersect(app.panel.top.panel, cursor)) {}
+        else if (Rect_Intersect(app.panel.bottom, cursor)){}
+        else if (Rect_Intersect(app.panel.center, cursor)) {
+          if (Rect_Intersect(app.panel.mainPanel.right.panel, cursor)) {}
+          else if (Rect_Intersect(app.panel.mainPanel.left.panel, cursor)) {}
+          else if (Rect_Intersect(app.panel.mainPanel.center.panel, cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.center.image, cursor)) {}
+            else if (Rect_Intersect(app.panel.mainPanel.center.expanderRight, cursor)) {}
+            else if (Rect_Intersect(app.panel.mainPanel.center.expanderLeft, cursor)) {}
+            else if (Rect_Intersect(app.panel.mainPanel.center.buttonBar.panel, cursor)) {
               for (const auto &button : app.panel.mainPanel.center.buttonBar.buttons) {
-                if (SDL_HasIntersectionF(&button.button, &cursor)) {};
+                if (Rect_Intersect(button.button, cursor)) {};
               }
             }
           }
@@ -319,19 +319,19 @@ namespace Mouse {
       }
 
       else if (event.button.button == SDL_BUTTON_MIDDLE) {
-        if (SDL_HasIntersectionF(&app.panel.menu.panel, &cursor)) {}
-        else if (SDL_HasIntersectionF(&app.panel.top.panel, &cursor)) {}
-        else if (SDL_HasIntersectionF(&app.panel.bottom, &cursor)){}
-        else if (SDL_HasIntersectionF(&app.panel.center, &cursor)) {
-          if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor)) {}
-          else if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor)) {}
-          else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
-            if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor)) {}
-            else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderRight, &cursor)) {}
-            else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.expanderLeft, &cursor)) {}
-            else if (SDL_HasIntersectionF(&app.panel.mainPanel.center.buttonBar.panel, &cursor)) {
+        if (Rect_Intersect(app.panel.menu.panel, cursor)) {}
+        else if (Rect_Intersect(app.panel.top.panel, cursor)) {}
+        else if (Rect_Intersect(app.panel.bottom, cursor)){}
+        else if (Rect_Intersect(app.panel.center, cursor)) {
+          if (Rect_Intersect(app.panel.mainPanel.right.panel, cursor)) {}
+          else if (Rect_Intersect(app.panel.mainPanel.left.panel, cursor)) {}
+          else if (Rect_Intersect(app.panel.mainPanel.center.panel, cursor)) {
+            if (Rect_Intersect(app.panel.mainPanel.center.image, cursor)) {}
+            else if (Rect_Intersect(app.panel.mainPanel.center.expanderRight, cursor)) {}
+            else if (Rect_Intersect(app.panel.mainPanel.center.expanderLeft, cursor)) {}
+            else if (Rect_Intersect(app.panel.mainPanel.center.buttonBar.panel, cursor)) {
               for (const auto &button : app.panel.mainPanel.center.buttonBar.buttons) {
-                if (SDL_HasIntersectionF(&button.button, &cursor)) {};
+                if (Rect_Intersect(button.button, cursor)) {};
               }
             }
           }
@@ -345,15 +345,15 @@ namespace Mouse {
     }
 
     if (event.type == SDL_MOUSEWHEEL) {
-      if (SDL_HasIntersectionF(&app.panel.mainPanel.center.panel, &cursor)) {
-        if (SDL_HasIntersectionF(&app.panel.mainPanel.center.image, &cursor))
+      if (Rect_Intersect(app.panel.mainPanel.center.panel, cursor)) {
+        if (Rect_Intersect(app.panel.mainPanel.center.image, cursor))
           return Center::Center::Set_Scale(app, event.wheel.y);
-        if (SDL_HasIntersectionF(&app.panel.mainPanel.center.shapes.body, &cursor))
+        if (Rect_Intersect(app.panel.mainPanel.center.shapes.body, cursor))
           return Center::Center::Scroll(app, event.wheel.y);
       }
-      if (SDL_HasIntersectionF(&app.panel.mainPanel.left.panel, &cursor))
+      if (Rect_Intersect(app.panel.mainPanel.left.panel, cursor))
         return Center::Left::Scroll(app, event.wheel.y);
-      if (SDL_HasIntersectionF(&app.panel.mainPanel.right.panel, &cursor))
+      if (Rect_Intersect(app.panel.mainPanel.right.panel, cursor))
         return Center::Right::Scroll(app, event.wheel.y);
       return true;
     }

@@ -15,10 +15,11 @@
 #include "../App/Bounding_Boxes/polygon.h"
 #include "../App/Bounding_Boxes/aabb.h"
 #include "../App/Bounding_Boxes/line_segment.h"
+#include "limits"
 
 
 namespace Action {
-  bool Delete_Shape_(App::App &app, const Shape::shape &shap, const int &shapeIndex) {
+  bool Delete_Shape_(App::App &app, const Shape::e_shape &shap, const int &shapeIndex) {
     auto &shape = app.interface.center.shapes[shap];
     shape.erase(shape.begin() + shapeIndex, shape.begin() + shapeIndex + 1);
     shape.shrink_to_fit();
@@ -288,7 +289,7 @@ namespace Action {
 
   typedef Shape::Shape (*CREATE_SHAPE)();
 
-  bool Add_Shape(App::App &app, const Shape::shape &shape, const CREATE_SHAPE &Create) {
+  bool Add_Shape(App::App &app, const Shape::e_shape &shape, const CREATE_SHAPE &Create) {
     if (app.interface.center.texture.texture) {
       auto &shapeList = app.interface.shapeList.shapeList[shape];
       for (int j = 0; j < app.interface.center.shapes[shape].size(); ++j) {

@@ -1,22 +1,22 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.22)
 project(Box2D_Colliders)
 
 set(CMAKE_CXX_STANDARD 23)
-
 include_directories(include/all)
 
 if(UNIX)
     add_executable(Box2D_Colliders
-        src/main.cpp
-        include/all/nativefiledialog/nfd_zenity.c
-        include/all/nativefiledialog/nfd_common.c
-        include/all/SDL_FontCache/SDL_FontCache.c
-        include/all/SDL2_gxf/SDL2_gfxPrimitives.c
-        include/all/SDL2_gxf/SDL2_rotozoom.c
-        include/all/tinyxml2/tinyxml2.cpp
-        include/all/sqlite/sqlite3.c
+            src/main.cpp
+            include/all/nativefiledialog/nfd_zenity.c
+            include/all/nativefiledialog/nfd_common.c
+            include/all/SDL_FontCache/SDL_FontCache.c
+            include/all/SDL2_gxf/SDL2_gfxPrimitives.c
+            include/all/SDL2_gxf/SDL2_rotozoom.c
+            include/all/tinyxml2/tinyxml2.cpp
+            include/all/sqlite/sqlite3.c
     )
-    target_link_libraries(Box2D_Colliders -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer)
+
+    target_link_libraries(Box2D_Colliders SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 elseif(WIN32)
     add_executable(Box2D_Colliders
             src/main.cpp
@@ -39,5 +39,6 @@ elseif(WIN32)
     )
     target_compile_definitions(Box2D_Colliders PRIVATE SDL_MAIN_HANDLED)
 endif()
+
 
 add_subdirectory(src)

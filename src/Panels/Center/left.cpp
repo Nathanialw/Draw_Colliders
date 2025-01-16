@@ -10,7 +10,6 @@
 #include "../../Graphics/text.h"
 
 #include <iterator>
-//#include <unistd.h>
 #include <vector>
 #include <ranges>
 #include <iostream>
@@ -142,7 +141,7 @@ namespace Center::Left {
     auto cursor = Mouse::Cursor();
     for (int i = 0; i < app.interface.left.images.size(); ++i) {
       SDL_FRect dRect = {x + app.panel.mainPanel.left.scroll.elementSpacing, y + app.panel.mainPanel.left.scroll.elementSpacing, app.panel.mainPanel.left.body.w - (app.panel.mainPanel.left.scroll.elementSpacing * 3.0f), app.panel.mainPanel.left.scroll.elementHeight};
-      if (SDL_HasIntersectionF(&cursor, &dRect)) {
+      if (Rect_Intersect(cursor, dRect)) {
         return true;
       }
       y += app.panel.mainPanel.left.scroll.elementHeight + app.panel.mainPanel.left.scroll.elementSpacing;
@@ -166,7 +165,7 @@ namespace Center::Left {
         const int &index = app.interface.left.filteredIndexes[i];
 
         SDL_FRect dRect = {x + app.uiPanels.spacing, y + app.uiPanels.spacing, app.panel.mainPanel.left.body.w - (app.uiPanels.spacing * 3.0f), app.uiPanels.h};
-        if (SDL_HasIntersectionF(&cursor, &dRect)) {
+        if (Rect_Intersect(cursor, dRect)) {
           app.imageIndex = index;
           return app.interface.left.images[index];
         }
@@ -182,7 +181,7 @@ namespace Center::Left {
                                       app.uiPanels.numElement);
       for (int i = index.min; i < index.max; ++i) {
         SDL_FRect dRect = {x + app.uiPanels.spacing, y + app.uiPanels.spacing, app.panel.mainPanel.left.body.w - (app.uiPanels.spacing * 3.0f), app.uiPanels.h};
-        if (SDL_HasIntersectionF(&cursor, &dRect)) {
+        if (Rect_Intersect(cursor, dRect)) {
           //mouseover highlighting
     //        app.interface.left.selected = i;
           app.imageIndex = i;

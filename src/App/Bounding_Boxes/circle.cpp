@@ -3,7 +3,7 @@
 //
 
 #include "circle.h"
-#include "shape.h"
+#include "e_shape.h"
 #include "SDL2_gxf/SDL2_gfxPrimitives.h"
 
 namespace Circle {

@@ -9,7 +9,7 @@
 #endif //BOX2D_COLLIDERS_AABB_H
 
 #include "../../Graphics/graphics.h"
-#include "shape.h"
+#include "e_shape.h"
 
 
 namespace AABB {

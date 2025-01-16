@@ -8,7 +8,7 @@
 
 #endif //BOX2D_COLLIDERS_LINE_SEGMENT_H
 #include "../../Graphics/graphics.h"
-#include "shape.h"
+#include "e_shape.h"
 
 
 namespace Line_Segment {
