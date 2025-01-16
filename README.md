@@ -29,7 +29,7 @@ Note: it mostly works, but it seems the dialog box library is not working proper
     cd build
     cmake ..                           #outputs a visual studio solution
     cmake --build . --config Release
-    cd Realease 
+    cd Release 
     cp -r ../../assets .               #copies the assets folder to the bin directory
     cp -r ../../dlls/* .               #copies the dlls folder to the bin directory
 
