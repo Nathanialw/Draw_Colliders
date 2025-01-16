@@ -23,7 +23,7 @@ Run instructions:
 Will NOT run properly using WSL on Windows 10
 <h3>Native</h3>
 Note: it mostly works, but it seems the dialog box library is not working properly and causing crashes.<br>
-You will need to have at least CMake 3.22 installed. https://github.com/Kitware/CMake/releases/download/v3.31.4/cmake-3.31.4-windows-x86_64.msi 
+You will need to have at least CMake 3.22 installed. https://github.com/Kitware/CMake/releases/download/v3.31.4/cmake-3.31.4-windows-x86_64.msi <br> 
 
 Create the visual studio solution:
 
