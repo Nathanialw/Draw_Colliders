@@ -11,7 +11,7 @@ Required Libraries:
 
 Run instructions:
 
-    git clone git@github.com:Nathanialw/Draw_Colliders.git
+    git clone https://github.com/Nathanialw/Draw_Colliders.git
     cd Draw_Colliders
     chmod +x build.sh           #makes the build.sh file executable
     ./build.sh                  #will launch upon successful build 
