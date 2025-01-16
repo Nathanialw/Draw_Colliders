@@ -26,6 +26,7 @@ Note: it mostly works, but it seems the dialog box library is not working proper
     git clone git@github.com:Nathanialw/Draw_Colliders.git
     cd Draw_Colliders
     mkdir build
+    cd build
     cmake ..                           #outputs a visual studio solution
     cmake --build . --config Release
     cd Realease 
